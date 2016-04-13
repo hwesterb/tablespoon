@@ -1,1 +1,3 @@
-/agent/data.json
+/agent/collectl-riemann-python-prototype/data.json
+/agent/collectl-riemann-client/target
+/agent/collectl-riemann-client/bin
