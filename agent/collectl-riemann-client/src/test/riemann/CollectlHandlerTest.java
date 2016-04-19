@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import events.EventLayout;
 import events.Format;
+import handlers.CollectlHandler;
 
 public class CollectlHandlerTest {
 

@@ -1,12 +1,13 @@
 package riemann;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
 import events.EventLayout;
 import events.EventType;
 import events.Format;
+import handlers.StringParser;
 
 public class StringParserTest {
 
