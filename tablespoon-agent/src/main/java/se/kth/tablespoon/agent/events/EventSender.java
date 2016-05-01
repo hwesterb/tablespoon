@@ -1,5 +1,6 @@
-package se.kth.tablespoon.agent.handlers;
+package se.kth.tablespoon.agent.events;
 
+import se.kth.tablespoon.agent.main.Start;
 import java.io.IOException;
 import java.util.Queue;
 
@@ -8,14 +9,14 @@ import org.slf4j.LoggerFactory;
 
 import com.aphyr.riemann.client.RiemannClient;
 
-import se.kth.tablespoon.agent.events.EventLayout;
+import se.kth.tablespoon.agent.handlers.CollectlStringParser;
 
 public class EventSender {
 
 	private Queue<String> rowQueue;
 	private EventLayout[] els;
 	private RiemannClient rClient;
-	private final Logger slf4jLogger = LoggerFactory.getLogger(Main.class);
+	private final Logger slf4jLogger = LoggerFactory.getLogger(Start.class);
 
 	public EventSender(Queue<String> rowQueue, EventLayout[] els, RiemannClient rClient) {
 		this.rowQueue = rowQueue;

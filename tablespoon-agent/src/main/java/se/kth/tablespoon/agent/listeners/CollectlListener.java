@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import se.kth.tablespoon.agent.events.EventLayout;
 import se.kth.tablespoon.agent.handlers.CollectlStringParser;
-import se.kth.tablespoon.agent.handlers.Main;
+import se.kth.tablespoon.agent.main.Start;
 
 public class CollectlListener implements Runnable {
 
@@ -25,7 +25,7 @@ public class CollectlListener implements Runnable {
 	private boolean restartRequest = false;
 	private boolean running = true;
 	private String collectlConfig;
-	private final Logger slf4jLogger = LoggerFactory.getLogger(Main.class);
+	private final Logger slf4jLogger = LoggerFactory.getLogger(Start.class);
 
 
 	public void requestInterrupt()  {
