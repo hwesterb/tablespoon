@@ -1,5 +1,6 @@
 package se.kth.tablespoon.agent.handlers;
 
+import se.kth.tablespoon.agent.general.CollectlStringParser;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
@@ -8,7 +9,7 @@ import se.kth.tablespoon.agent.events.EventLayout;
 import se.kth.tablespoon.agent.events.EventType;
 import se.kth.tablespoon.agent.events.Format;
 
-public class StringParserTest {
+public class CollectlStringParserTest {
 
 	@Test
 	public void findTypeTest() {

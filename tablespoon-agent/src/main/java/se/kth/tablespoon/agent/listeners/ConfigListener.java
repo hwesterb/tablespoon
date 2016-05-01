@@ -1,70 +1,41 @@
 package se.kth.tablespoon.agent.listeners;
 
-import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-
-import com.google.gson.Gson;
-
-import se.kth.tablespoon.agent.handlers.ConfigMessageHandler;
-import se.kth.tablespoon.agent.json.JsonMessage;
+import se.kth.tablespoon.agent.general.ConfigurationHandler;
 
 public class ConfigListener implements Runnable {
 
 	private boolean interruptRequest = false;
-	private boolean handlingMessage = false;
-	private ServerSocket serverSocket;
-	private Socket clientSocket;
-	private int portNumber;
-	private ConfigMessageHandler cmh;
+    private final ConfigurationHandler configurationHandler;
 
-	public ConfigListener(int portNumber, ConfigMessageHandler cmh) {
-		this.portNumber = portNumber;
-		this.cmh = cmh;
+	public ConfigListener(ConfigurationHandler configurationHandler) {
+      this.configurationHandler = configurationHandler;
 	}
 
-	public void listen(int portNumber) throws IOException {
-		//the last parameter restricts access outside localhost
-		serverSocket = new ServerSocket(portNumber, 0, InetAddress.getByName("localhost"));
-		Gson gson = new Gson();
+	public void look() throws IOException {
 		while (true) {
-			clientSocket = serverSocket.accept();
+			if (new File("configuration/config.properties").listFiles().length > 1) {
+              configurationHandler.reconfigure();
+            }
 			if (interruptRequest) break;
-			handlingMessage = true;
-			BufferedReader br = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));			
-			JsonMessage jm = gson.fromJson(br, JsonMessage.class);
-			cmh.handleMessage(jm);
-			clientSocket.close();
-			handlingMessage = false;
 		}
-		serverSocket.close();
-	}
+    }
 
 	@Override
 	public void run() {
 		try {
-			listen(portNumber);
+			look();
 		} catch (IOException e) {
 			System.out.println("Exception caught: " + e.getMessage() + ".");
 		}
-		System.out.println("Ending socket-thread.");
+		System.out.println("Ending looking-thread.");
 	}
 	
 	//this is called from another thread
 	public void requestInterrupt()  {
 		//the other thread requests interrupt
 		interruptRequest = true;
-		
-		//if the other thread is busy accepting
-		try {
-			if (clientSocket!=null && !clientSocket.isClosed() && !handlingMessage) clientSocket.close();
-			if (serverSocket!=null && !serverSocket.isClosed()) serverSocket.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 
