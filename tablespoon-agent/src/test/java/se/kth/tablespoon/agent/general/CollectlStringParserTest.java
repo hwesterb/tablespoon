@@ -1,4 +1,4 @@
-package se.kth.tablespoon.agent.handlers;
+package se.kth.tablespoon.agent.general;
 
 import se.kth.tablespoon.agent.general.CollectlStringParser;
 import static org.junit.Assert.assertEquals;

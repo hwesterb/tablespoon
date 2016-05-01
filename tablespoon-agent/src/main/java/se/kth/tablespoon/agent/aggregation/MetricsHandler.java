@@ -1,4 +1,4 @@
-package se.kth.tablespoon.agent.general.aggregation;
+package se.kth.tablespoon.agent.aggregation;
 
 public class MetricsHandler {
 	

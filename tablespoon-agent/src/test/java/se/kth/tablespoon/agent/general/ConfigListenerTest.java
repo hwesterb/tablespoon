@@ -1,3 +1,5 @@
+package se.kth.tablespoon.agent.general;
+
 //package se.kth.tablespoon.agent.handlers;
 //
 //import static org.junit.Assert.assertFalse;
