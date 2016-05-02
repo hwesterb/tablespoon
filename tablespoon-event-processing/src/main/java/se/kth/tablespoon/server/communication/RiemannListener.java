@@ -1,4 +1,4 @@
-package se.kth.tablespoon.event.processing.communication;
+package se.kth.tablespoon.server.communication;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,7 +9,7 @@ import java.net.Socket;
 
 import com.google.gson.Gson;
 
-import se.kth.tablespoon.event.processing.json.RiemannEvent;
+import se.kth.tablespoon.server.json.RiemannEvent;
 
 
 public class RiemannListener implements Runnable {

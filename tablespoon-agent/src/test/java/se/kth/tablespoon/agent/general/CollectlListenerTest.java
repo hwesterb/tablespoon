@@ -6,10 +6,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import se.kth.tablespoon.agent.events.EventLayout;
-import se.kth.tablespoon.agent.events.Format;
-import se.kth.tablespoon.agent.general.Configuration;
-import se.kth.tablespoon.agent.general.ConfigurationHandler;
+import se.kth.tablespoon.agent.metrics.MetricLayout;
+import se.kth.tablespoon.agent.metrics.MetricFormat;
 import se.kth.tablespoon.agent.listeners.CollectlListener;
 import se.kth.tablespoon.agent.util.Sleep;
 
@@ -21,6 +19,7 @@ public class CollectlListenerTest {
     ch.loadNewConfiguration();
     System.out.println("Configuration loaded.");
     Configuration config = ch.getConfig();
+    System.out.println(config);
     CollectlListener cl = new CollectlListener(config);
     Thread t = new Thread(cl);
     t.start();
@@ -29,10 +28,10 @@ public class CollectlListenerTest {
       Sleep.now(300);
     }
     assertEquals("User", cl.getEventLayouts()[0].getName());
-    assertEquals(Format.PERSEC, cl.getEventLayouts()[9].getFormat());
+    assertEquals(MetricFormat.PERSEC, cl.getEventLayouts()[9].getFormat());
     int i = 0;
-    for (EventLayout el : cl.getEventLayouts()) {
-      assertNotNull("Iteration " + i + " failed.", el.getType());
+    for (MetricLayout el : cl.getEventLayouts()) {
+      assertNotNull("Iteration " + i + " failed.", el.getSource());
       i++;
     }
     cl.requestInterrupt();
@@ -57,7 +56,7 @@ public class CollectlListenerTest {
       Sleep.now(300);
     }
     
-    cl.restartCollectl();
+    cl.requestRestart();
     assertTrue(cl.isRestarting());
     
     while(cl.isRestarting()) {

@@ -5,6 +5,7 @@
  */
 package se.kth.tablespoon.event.processing.communication;
 
+import se.kth.tablespoon.server.communication.RiemannListener;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

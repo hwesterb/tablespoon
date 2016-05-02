@@ -1,4 +1,4 @@
-package se.kth.tablespoon.event.processing.json;
+package se.kth.tablespoon.server.json;
 
 import java.util.Arrays;
 

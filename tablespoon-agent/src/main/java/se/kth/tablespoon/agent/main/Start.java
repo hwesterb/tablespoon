@@ -1,8 +1,9 @@
 package se.kth.tablespoon.agent.main;
 
-import java.io.IOException;
 
 import com.aphyr.riemann.client.RiemannClient;
+import java.io.IOException;
+import java.util.Queue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.kth.tablespoon.agent.general.Configuration;
@@ -11,6 +12,7 @@ import se.kth.tablespoon.agent.general.ConfigurationHandler;
 
 import se.kth.tablespoon.agent.listeners.CollectlListener;
 import se.kth.tablespoon.agent.listeners.ConfigListener;
+import se.kth.tablespoon.agent.metrics.Metric;
 import se.kth.tablespoon.agent.util.Sleep;
 
 public class Start {
@@ -63,15 +65,17 @@ public class Start {
       slf4jLogger.info("Established connection with host:" +
           config.getRiemannHost() + " port:" + config.getRiemannPort());
       tries = 0; //resetting number of tries
-      es = new EventSender(collectlListener.getRowQueue(),
-          collectlListener.getEventLayouts(),
+      Queue<Metric> metricQueue = collectlListener.getMetricQueue();
+      es = new EventSender(metricQueue,
           riemannClient,
           config);
       while (true) {
         // it apparently needs some headroom.
         Sleep.now(READ_QUEUE_TIME);
-        if (!collectlListener.queueIsEmpty()) {
-          es.sendMetrics();
+        synchronized (metricQueue) {
+          if (!collectlListener.queueIsEmpty()) {
+            es.sendMetrics();
+          }
         }
       }
     } catch (IOException e) {
@@ -86,6 +90,7 @@ public class Start {
       }
     }
   }
+  
   
   private static void setUpHook() {
     Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {

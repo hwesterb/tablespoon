@@ -5,6 +5,12 @@
 */
 package se.kth.tablespoon.agent.general;
 
+import com.google.gson.Gson;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.kth.tablespoon.agent.listeners.CollectlListener;
@@ -22,14 +28,11 @@ public class ConfigurationHandler {
   
   public void loadNewConfiguration() {
     try {
-      config = new Configuration();
+      load();
       // If configuration has been loaded before it needs to be reconfigured.
       if (hasLoadedConfig) reconfigure();
       hasLoadedConfig = true;
-    } catch (MissingPropertyException |
-        MissingConfigurationException |
-        BooleanFormatException |
-        NumberFormatException e) {
+    } catch (MissingConfigurationException e) {
       slf4jLogger.error(e.getMessage());
       if (hasLoadedConfig) slf4jLogger.debug("Configuration could not be"
           + " loaded, continues with old configuration.");
@@ -39,21 +42,36 @@ public class ConfigurationHandler {
       }
     }
   }
-
+  
+  
+  private void load() throws MissingConfigurationException {
+    try {
+      ClassLoader loader = Thread.currentThread().getContextClassLoader();
+      InputStream is = loader.getResourceAsStream("configuration/config.json");
+      try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
+        Gson gson = new Gson();
+        config = gson.fromJson(br, Configuration.class);
+        br.close();
+      }
+    } catch (NullPointerException | IOException e) {
+      throw new MissingConfigurationException("The configuration file could not be located.");
+    }
+  }
+  
+  
   public void setCollectlListener(CollectlListener collectlListener) {
     this.collectlListener = collectlListener;
   }
   
   
-  public void reconfigure() {
-    if (config.restartCollectl()) {
-      collectlListener.restartCollectl();
+  private void reconfigure() {
+    if (config.isCollectlRestart()) {
+      collectlListener.requestRestart();
     }
-    
   }
   
   public Configuration getConfig() {
     return config;
   }
- 
+  
 }

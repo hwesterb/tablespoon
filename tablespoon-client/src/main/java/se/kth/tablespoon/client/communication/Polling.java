@@ -3,16 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package se.kth.tablespoon.agent.general;
+package se.kth.tablespoon.client.communication;
 
 /**
  *
  * @author henke
  */
-public class MissingPropertyException extends Exception {
-
-  public MissingPropertyException(String property) {
-    super("Could not load property " + property + ".");
-  }
+public class Polling {
+  
+  
   
 }

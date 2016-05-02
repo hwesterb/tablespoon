@@ -1,6 +1,6 @@
-package se.kth.tablespoon.event.processing.handlers;
+package se.kth.tablespoon.server.handlers;
 
-import se.kth.tablespoon.event.processing.communication.RiemannListener;
+import se.kth.tablespoon.server.communication.RiemannListener;
 
 public class Start {
 

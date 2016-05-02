@@ -1,4 +1,4 @@
-package communication;
+package se.kth.tablespoon.server.communication;
 
 import clojure.lang.RT;
 
