@@ -29,6 +29,7 @@ public class Start {
   private final static Logger slf4jLogger = LoggerFactory.getLogger(Start.class);
   
   public static void main(String[] args) {
+    slf4jLogger.info("Starting tablespoon agent.");
     setUpHook();
     ConfigurationHandler ch = new ConfigurationHandler();
     ch.loadNewConfiguration();
@@ -52,7 +53,7 @@ public class Start {
   }
   
   private static void startConfigThread() {
-    configThread = new Thread(collectlListener);
+    configThread = new Thread(configListener);
     configThread.start();
   }
   

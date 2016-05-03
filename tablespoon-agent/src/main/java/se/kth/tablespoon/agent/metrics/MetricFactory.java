@@ -6,7 +6,6 @@
 package se.kth.tablespoon.agent.metrics;
 
 import java.util.ArrayList;
-import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.kth.tablespoon.agent.general.CollectlStringParser;
@@ -22,7 +21,7 @@ public class MetricFactory {
     long timeStamp = Math.round(Double.parseDouble(rowArray[0]));
     double[] numericRowArray =  new double[mls.length];
     // The first column is a time stamp, and shall be included in every
-    // message. Therefore it should not be part of the numericRowArray.
+    // message. Therefore it should not be partectlStri of the numericRowArray.
     for (int i = 1; i <  rowArray.length; i++) {
       numericRowArray[i-1] = Double.parseDouble(rowArray[i]);
     }

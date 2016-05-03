@@ -15,7 +15,7 @@ public class ConfigListener implements Runnable {
   
   public void look() throws IOException {
     while (true) {
-      if (new File("configuration/config.properties").listFiles().length > 1) {
+      if (new File("configuration/config.json").listFiles().length > 1) {
         configurationHandler.loadNewConfiguration();
       }
       if (interruptRequest) break;

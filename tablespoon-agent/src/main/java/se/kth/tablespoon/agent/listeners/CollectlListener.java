@@ -26,7 +26,7 @@ public class CollectlListener implements Runnable {
   private boolean headersDefined = false;
   private boolean interruptRequest = false;
   private boolean restartRequest = false;
-  private Configuration config;
+  private final Configuration config;
   private final Logger slf4jLogger = LoggerFactory.getLogger(Start.class);
   
   public CollectlListener(Configuration config) {
@@ -62,6 +62,7 @@ public class CollectlListener implements Runnable {
         }
         continue;
       }
+     
       // add events to the queue
       Metric[] events = MetricFactory.createMetrics(line, mls, config);
       for (Metric event : events) {
