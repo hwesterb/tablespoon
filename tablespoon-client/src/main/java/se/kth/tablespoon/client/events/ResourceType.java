@@ -3,18 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package se.kth.tablespoon.client.api;
-
-import se.kth.tablespoon.client.events.EventDefinition;
+package se.kth.tablespoon.client.events;
 
 /**
  *
  * @author henke
  */
-public interface TablespoonAPI {
-  
-  
-  public void subscribeToEvent(EventDefinition ed);
-  
-  
+public enum ResourceType {
+  CPU_PERCENTAGE, RAM_PERCENTAGE
 }

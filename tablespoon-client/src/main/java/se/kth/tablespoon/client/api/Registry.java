@@ -5,16 +5,10 @@
  */
 package se.kth.tablespoon.client.api;
 
-import se.kth.tablespoon.client.events.EventDefinition;
-
 /**
  *
  * @author henke
  */
-public interface TablespoonAPI {
-  
-  
-  public void subscribeToEvent(EventDefinition ed);
-  
+public class Registry {
   
 }

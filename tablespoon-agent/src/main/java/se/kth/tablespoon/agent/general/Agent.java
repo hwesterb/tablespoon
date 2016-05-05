@@ -10,7 +10,6 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.kth.tablespoon.agent.events.EventSender;
-import se.kth.tablespoon.agent.listeners.CollectlListener;
 import se.kth.tablespoon.agent.listeners.MetricListener;
 import se.kth.tablespoon.agent.main.Start;
 import se.kth.tablespoon.agent.util.Sleep;
