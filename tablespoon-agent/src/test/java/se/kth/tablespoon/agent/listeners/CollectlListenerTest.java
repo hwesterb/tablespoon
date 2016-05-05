@@ -1,10 +1,12 @@
-package se.kth.tablespoon.agent.general;
+package se.kth.tablespoon.agent.listeners;
 
 
 import static org.junit.Assert.*;
 
 
 import org.junit.Test;
+import se.kth.tablespoon.agent.general.Configuration;
+import se.kth.tablespoon.agent.general.ConfigurationHandler;
 
 import se.kth.tablespoon.agent.metrics.MetricLayout;
 import se.kth.tablespoon.agent.metrics.MetricFormat;
@@ -23,6 +25,7 @@ public class CollectlListenerTest {
     CollectlListener cl = new CollectlListener(config);
     Thread t = new Thread(cl);
     t.start();
+    assertTrue(t.isAlive());
     while(cl.queueIsEmpty()) {
       System.out.println("waiting for queue to fill...");
       Sleep.now(300);

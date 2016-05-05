@@ -13,6 +13,7 @@ import java.io.InputStreamReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.kth.tablespoon.agent.listeners.CollectlListener;
+import se.kth.tablespoon.agent.listeners.MetricListener;
 
 /**
  *
@@ -22,7 +23,7 @@ public class ConfigurationHandler {
   
   private Configuration config;
   private static boolean hasLoadedConfig = false;
-  private CollectlListener collectlListener;
+  private MetricListener metricListener;
   private final static Logger slf4jLogger = LoggerFactory.getLogger(ConfigurationHandler.class);
   
   public void loadNewConfiguration() {
@@ -58,14 +59,14 @@ public class ConfigurationHandler {
   }
   
   
-  public void setCollectlListener(CollectlListener collectlListener) {
-    this.collectlListener = collectlListener;
+  public void setMetricListener(MetricListener metricListener) {
+    this.metricListener = metricListener;
   }
   
   
   private void reconfigure() {
     if (config.isCollectlRestart()) {
-      collectlListener.requestRestart();
+      metricListener.requestRestart();
     }
   }
   

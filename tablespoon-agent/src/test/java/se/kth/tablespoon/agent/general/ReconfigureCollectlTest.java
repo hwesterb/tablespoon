@@ -1,6 +1,4 @@
-package se.kth.tablespoon.agent.general;
-
-//package se.kth.tablespoon.agent.handlers;
+//package se.kth.tablespoon.agent.general;
 //
 //import static org.junit.Assert.assertFalse;
 //
@@ -20,7 +18,7 @@ package se.kth.tablespoon.agent.general;
 //import se.kth.tablespoon.agent.listeners.ConfigListener;
 //import se.kth.tablespoon.agent.util.Sleep;
 //
-//public class ConfigListenerTest {
+//public class ReconfigureCollectlTest {
 //
 //	private static ConfigListener configListener;
 //	private static CollectlListener collectlListener;

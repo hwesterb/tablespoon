@@ -26,6 +26,20 @@ public class Configuration {
       filter[i] = subscriptions.get(i).getCollectlIndex();
     }
   }
+
+  // this constructor is for creating testconfiguration
+  public Configuration(String riemannHost, int riemannPort, int riemannReconnectionTries, int riemannReconnectionTime, int riemannSendRate, int riemannEventTtl, int riemannDereferenceTime, boolean collectlRestart, double collectlCollectionRate) {
+    this.riemannHost = riemannHost;
+    this.riemannPort = riemannPort;
+    this.riemannReconnectionTries = riemannReconnectionTries;
+    this.riemannReconnectionTime = riemannReconnectionTime;
+    this.riemannSendRate = riemannSendRate;
+    this.riemannEventTtl = riemannEventTtl;
+    this.riemannDereferenceTime = riemannDereferenceTime;
+    this.collectlRestart = collectlRestart;
+    this.collectlCollectionRate = collectlCollectionRate;
+  }
+  
   
   public HashMap<Integer, EventDefinition> getSubscriptions() {
     return subscriptions;

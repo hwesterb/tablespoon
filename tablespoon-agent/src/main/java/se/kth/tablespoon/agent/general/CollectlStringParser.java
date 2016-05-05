@@ -70,7 +70,7 @@ public class CollectlStringParser {
       if (matcher.groupCount() == 3) {
         //Example:  [CPU]User%
         //group 1 type "CPU"
-        ml.setType(findType(matcher.group(1)));
+        ml.setSource(findType(matcher.group(1)));
         //group 2 name "User"
         ml.setName(matcher.group(2));
         //group 3 format "%"
