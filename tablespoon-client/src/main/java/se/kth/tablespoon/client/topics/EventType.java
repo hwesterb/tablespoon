@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package se.kth.tablespoon.client.events;
+package se.kth.tablespoon.client.topics;
 
 /**
  *
  * @author henke
  */
-public enum ResourceType {
-  CPU_PERCENTAGE, RAM_PERCENTAGE
+public enum EventType {
+  GROUP_AVERAGE, REGULAR 
 }

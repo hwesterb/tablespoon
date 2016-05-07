@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.kth.tablespoon.agent.general.Configuration;
 import se.kth.tablespoon.agent.general.Agent;
-import se.kth.tablespoon.agent.general.ConfigurationHandler;
+import se.kth.tablespoon.agent.general.ConfigurationLoader;
 
 import se.kth.tablespoon.agent.listeners.CollectlListener;
 import se.kth.tablespoon.agent.listeners.ConfigListener;
@@ -28,7 +28,7 @@ public class Start {
   public static void main(String[] args) {
     slf4jLogger.info("Starting tablespoon agent.");
     setUpHook();
-    ConfigurationHandler ch = new ConfigurationHandler();
+    ConfigurationLoader ch = new ConfigurationLoader();
     ch.loadNewConfiguration();
     config = ch.getConfig();
     metricListener = new CollectlListener(config);

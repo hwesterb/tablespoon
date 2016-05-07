@@ -14,7 +14,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import se.kth.tablespoon.agent.general.ConfigurationHandler;
+import se.kth.tablespoon.agent.general.ConfigurationLoader;
 import se.kth.tablespoon.agent.util.Sleep;
 
 /**
@@ -48,7 +48,7 @@ public class ConfigListenerTest {
   @Test
   public void testLook() throws Exception {
     System.out.println("look");
-    ConfigurationHandler ch = new ConfigurationHandler();
+    ConfigurationLoader ch = new ConfigurationLoader();
     ConfigListener cl = new ConfigListener(ch);
 
     ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
@@ -58,7 +58,7 @@ public class ConfigListenerTest {
 
   @Test
   public void testLookMethod() {
-    ConfigurationHandler ch = new ConfigurationHandler();
+    ConfigurationLoader ch = new ConfigurationLoader();
     ConfigListener cl = new ConfigListener(ch);
     Thread clt = new Thread(cl);
     clt.start();
@@ -74,7 +74,7 @@ public class ConfigListenerTest {
   @Test
   public void testRequestInterrupt() throws IOException {
     System.out.println("requestInterrupt");
-    ConfigurationHandler ch = new ConfigurationHandler();
+    ConfigurationLoader ch = new ConfigurationLoader();
     ConfigListener cl = new ConfigListener(ch);
     Thread clt = new Thread(cl);
     clt.start();

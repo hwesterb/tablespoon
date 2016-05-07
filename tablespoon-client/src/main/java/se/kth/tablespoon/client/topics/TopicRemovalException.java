@@ -3,28 +3,28 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package se.kth.tablespoon.client.events;
+package se.kth.tablespoon.client.topics;
 
 /**
  *
  * @author henke
  */
-public class ThresholdException extends Exception {
+public class TopicRemovalException extends Exception {
 
   /**
-   * Creates a new instance of <code>ThresholdException</code> without detail
+   * Creates a new instance of <code>TopicRemovalException</code> without detail
    * message.
    */
-  public ThresholdException() {
+  public TopicRemovalException() {
   }
 
   /**
-   * Constructs an instance of <code>ThresholdException</code> with the
+   * Constructs an instance of <code>TopicRemovalException</code> with the
    * specified detail message.
    *
    * @param msg the detail message.
    */
-  public ThresholdException(String msg) {
+  public TopicRemovalException(String msg) {
     super(msg);
   }
 }

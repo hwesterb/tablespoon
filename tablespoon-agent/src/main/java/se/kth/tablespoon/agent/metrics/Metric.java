@@ -2,12 +2,12 @@ package se.kth.tablespoon.agent.metrics;
 
 public class Metric {
   
-  private int collectIndex;
-  private MetricSource source;
-  private MetricFormat format;
-  private long timeStamp;
-  private String name;
-  private double value;
+  private final int collectIndex;
+  private final MetricSource source;
+  private final MetricFormat format;
+  private final long timeStamp;
+  private final String name;
+  private final double value;
 
   public Metric(int collectIndex, MetricSource source, MetricFormat format, long timeStamp, String name, double value) {
     this.collectIndex = collectIndex;

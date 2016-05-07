@@ -3,12 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package se.kth.tablespoon.client.api;
+package se.kth.tablespoon.client.main;
 
 /**
  *
  * @author henke
  */
-public class Registry {
+public class Start {
+  
+  public static void main(String args[]) {
+    
+  }
+  
   
 }

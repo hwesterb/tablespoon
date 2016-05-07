@@ -6,13 +6,11 @@
 package se.kth.tablespoon.agent.listeners;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.kth.tablespoon.agent.general.Configuration;
-import se.kth.tablespoon.agent.main.Start;
 import se.kth.tablespoon.agent.metrics.Metric;
 import se.kth.tablespoon.agent.metrics.MetricLayout;
 

@@ -39,37 +39,37 @@ public class ConfigurationHandlerTest {
   }
 
   /**
-   * Test of loadNewConfiguration method, of class ConfigurationHandler.
+   * Test of loadNewConfiguration method, of class ConfigurationLoader.
    */
   @Test
   public void testLoadNewConfiguration() {
     System.out.println("loadNewConfiguration");
-    ConfigurationHandler instance = new ConfigurationHandler();
+    ConfigurationLoader instance = new ConfigurationLoader();
     instance.loadNewConfiguration();
     // TODO review the generated test code and remove the default call to fail.
     fail("The test case is a prototype.");
   }
 
   /**
-   * Test of setMetricListener method, of class ConfigurationHandler.
+   * Test of setMetricListener method, of class ConfigurationLoader.
    */
   @Test
   public void testSetMetricListener() {
     System.out.println("setMetricListener");
     MetricListener metricListener = null;
-    ConfigurationHandler instance = new ConfigurationHandler();
+    ConfigurationLoader instance = new ConfigurationLoader();
     instance.setMetricListener(metricListener);
     // TODO review the generated test code and remove the default call to fail.
     fail("The test case is a prototype.");
   }
 
   /**
-   * Test of getConfig method, of class ConfigurationHandler.
+   * Test of getConfig method, of class ConfigurationLoader.
    */
   @Test
   public void testGetConfig() {
     System.out.println("getConfig");
-    ConfigurationHandler instance = new ConfigurationHandler();
+    ConfigurationLoader instance = new ConfigurationLoader();
     Configuration expResult = null;
     Configuration result = instance.getConfig();
     assertEquals(expResult, result);

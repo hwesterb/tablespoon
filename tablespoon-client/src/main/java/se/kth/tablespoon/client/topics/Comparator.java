@@ -3,15 +3,12 @@
 * To change this template file, choose Tools | Templates
 * and open the template in the editor.
 */
-package se.kth.tablespoon.client.events;
+package se.kth.tablespoon.client.topics;
 
 /**
  *
  * @author henke
  */
-public class Threshold {
-  
-  double percentage;
-  Comparator comparator;
-  
+public enum Comparator {
+  GREATER_THAN, GREATER_THAN_OR_EQUAL, LESS_THAN, LESS_THAN_OR_EQUAL;
 }

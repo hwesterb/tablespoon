@@ -2,14 +2,14 @@ package se.kth.tablespoon.agent.listeners;
 
 import java.io.File;
 import java.io.IOException;
-import se.kth.tablespoon.agent.general.ConfigurationHandler;
+import se.kth.tablespoon.agent.general.ConfigurationLoader;
 
 public class ConfigListener implements Runnable {
 
   private boolean interruptRequest = false;
-  private final ConfigurationHandler configurationHandler;
+  private final ConfigurationLoader configurationHandler;
 
-  public ConfigListener(ConfigurationHandler configurationHandler) {
+  public ConfigListener(ConfigurationLoader configurationHandler) {
     this.configurationHandler = configurationHandler;
   }
 

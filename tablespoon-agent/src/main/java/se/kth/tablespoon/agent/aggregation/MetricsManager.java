@@ -8,7 +8,7 @@ import com.codahale.metrics.riemann.RiemannReporter;
 import com.codahale.metrics.riemann.RiemannReporter.Builder;
 import java.io.IOException;
 
-public class MetricsHandler {
+public class MetricsManager {
 	
 //	TODO: Use metrics to pre process messages before sending them.
 	public void create(String host, int port) {

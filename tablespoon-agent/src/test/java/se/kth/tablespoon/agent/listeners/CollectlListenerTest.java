@@ -6,7 +6,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 import se.kth.tablespoon.agent.general.Configuration;
-import se.kth.tablespoon.agent.general.ConfigurationHandler;
+import se.kth.tablespoon.agent.general.ConfigurationLoader;
 
 import se.kth.tablespoon.agent.metrics.MetricLayout;
 import se.kth.tablespoon.agent.metrics.MetricFormat;
@@ -17,7 +17,7 @@ public class CollectlListenerTest {
   
   @Test
   public void test() {
-    ConfigurationHandler ch = new ConfigurationHandler();
+    ConfigurationLoader ch = new ConfigurationLoader();
     ch.loadNewConfiguration();
     System.out.println("Configuration loaded.");
     Configuration config = ch.getConfig();
@@ -47,7 +47,7 @@ public class CollectlListenerTest {
   
   @Test
   public void restartTest() {
-    ConfigurationHandler ch = new ConfigurationHandler();
+    ConfigurationLoader ch = new ConfigurationLoader();
     ch.loadNewConfiguration();
     Configuration config = ch.getConfig();
     CollectlListener cl = new CollectlListener(config);

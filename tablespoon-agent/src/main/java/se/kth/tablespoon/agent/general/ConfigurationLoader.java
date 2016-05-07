@@ -12,19 +12,18 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.kth.tablespoon.agent.listeners.CollectlListener;
 import se.kth.tablespoon.agent.listeners.MetricListener;
 
 /**
  *
  * @author henke
  */
-public class ConfigurationHandler {
+public class ConfigurationLoader {
   
   private Configuration config;
   private static boolean hasLoadedConfig = false;
   private MetricListener metricListener;
-  private final static Logger slf4jLogger = LoggerFactory.getLogger(ConfigurationHandler.class);
+  private final static Logger slf4jLogger = LoggerFactory.getLogger(ConfigurationLoader.class);
   
   public void loadNewConfiguration() {
     try {
