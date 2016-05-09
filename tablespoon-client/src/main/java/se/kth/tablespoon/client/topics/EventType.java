@@ -10,5 +10,5 @@ package se.kth.tablespoon.client.topics;
  * @author henke
  */
 public enum EventType {
-  GROUP_AVERAGE, REGULAR 
+  GROUP_AVERAGE, REGULAR, VISUAL_MONITORING
 }

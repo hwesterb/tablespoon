@@ -5,15 +5,23 @@
  */
 package se.kth.tablespoon.client.main;
 
+import se.kth.tablespoon.client.api.TablespoonAPI;
+
 /**
  *
  * @author henke
  */
 public class Start {
   
+  
+  
   public static void main(String args[]) {
     
   }
   
+  
+  public void startClient() {
+    
+  }
   
 }

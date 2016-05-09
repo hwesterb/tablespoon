@@ -18,6 +18,11 @@ public class Groups implements Iterable<String> {
   private final TreeMap<String, Group> groups = new TreeMap<>();
   private final ArrayList<String> machineSnapshot = new ArrayList<>();
   
+  public void addMachine(String groupId, String machine) {
+    Group group = groups.get(groupId);
+    group.addMachine(machine);
+  }
+  
   public void add(Group group) {
     groups.put(group.getGroupId(), group);
   }
@@ -38,7 +43,7 @@ public class Groups implements Iterable<String> {
   }
   
   public void retainWithSnapshot(ArrayList<String> machines) {
-    machineSnapshot.retainAll(machines);
+    machines.retainAll(machineSnapshot);
   }
   
   @Override
@@ -50,37 +55,40 @@ public class Groups implements Iterable<String> {
     
     private final Iterator<Group> groupIterator;
     private Iterator<String> machineIterator;
-    private boolean nextInnerLevel = false;
     
     public MachineIterator(TreeMap<String, Group> groups) {
       groupIterator = groups.values().iterator();
+      
+    }
+    
+    private boolean hasNextGroup() {
+      machineIterator = groupIterator.next().getMachines().iterator();
+      if (machineIterator.hasNext()) return true;
+      else return false;
     }
     
     @Override
     public boolean hasNext() {
-      if (machineIterator.hasNext()) {
-        nextInnerLevel = true;
+      if (machineIterator!=null && machineIterator.hasNext()) {
         return true;
-      } else if (groupIterator.hasNext()) {
-        nextInnerLevel = false;
-        return true;
+      }
+      if (groupIterator.hasNext() && machineIterator==null) {
+        return hasNextGroup();
+      } else if (groupIterator.hasNext() && !machineIterator.hasNext()) {
+        return hasNextGroup();
       }
       return false;
     }
     
     @Override
     public String next() {
-      if (nextInnerLevel) return machineIterator.next();
-      else {
-        machineIterator = groupIterator.next().getMachines().iterator();
-        return machineIterator.next();
-      }
+      return machineIterator.next();
     }
     
     @Override
     public void remove() {
-      throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }    
+      throw new UnsupportedOperationException("Not supported yet.");
+    }
   }
   
   

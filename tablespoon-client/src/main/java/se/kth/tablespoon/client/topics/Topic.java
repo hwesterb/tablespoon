@@ -1,30 +1,27 @@
 /*
-* To change this license header, choose License Headers in Project Properties.
-* To change this template file, choose Tools | Templates
+* To topicHasChanged this license header, choose License Headers in Project Properties.
+* To topicHasChanged this template file, choose Tools | Templates
 * and open the template in the editor.
 */
 package se.kth.tablespoon.client.topics;
 
-import se.kth.tablespoon.client.main.Group;
-import se.kth.tablespoon.client.main.Groups;
 import com.fasterxml.jackson.jr.ob.JSON;
 import com.fasterxml.jackson.jr.ob.JSONComposer;
 import com.fasterxml.jackson.jr.ob.comp.ObjectComposer;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.TreeMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import se.kth.tablespoon.client.main.Groups;
 
 /**
  *
  * @author henke
  */
-public class Topic {
+public abstract class Topic {
   
-  private final Lock lock = new ReentrantLock();
-  private final ArrayList<String> machines;
+  private final Lock reentrantLock = new ReentrantLock();
+  protected final ArrayList<String> machines;
   private final ArrayList<String> machinesNotified = new ArrayList<>();
   private final int index;
   private final long startTime;
@@ -36,51 +33,38 @@ public class Topic {
   private Threshold low;
   private final String uniqueId;
   private final String groupId;
-  private String json;
+  private String json = "";
   private boolean scheduledForRemoval = false;
   
-  public Topic(int index, long startTime, String uniqueId, EventType type) {
-    this.lock.lock();
-    this.index = index;
-    this.startTime = startTime;
-    this.uniqueId = uniqueId;
-    this.type = type;
-    this.machines = new ArrayList<>();
-    this.groupId = "not specified";
-  }
   
-  public Topic(int index, long startTime, String uniqueId, EventType type, Group group) {
-    this.lock.lock();
+    public Topic(int index, long startTime, String uniqueId, EventType type, ArrayList<String> machines, String groupId) {
+    this.reentrantLock.lock();
     this.index = index;
     this.startTime = startTime;
     this.uniqueId = uniqueId;
     this.type = type;
-    this.machines = group.getMachines();
-    this.groupId = group.getGroupId();
+    this.machines = machines;
+    this.groupId = groupId;
   }
   
   public void lock() {
-    this.lock.lock();
+    this.reentrantLock.lock();
   }
   
   public void unlock() {
-    this.lock.unlock();
+    this.reentrantLock.unlock();
   }
   
-  public void scheduleForRemoval() throws TopicRemovalException {
+  public void scheduledForRemoval() throws TopicRemovalException {
     if (duration > 0) throw new TopicRemovalException("The event will expire when duration is over.");
     scheduledForRemoval = true;
   }
   
-  // Whenever a change occurs, the machines are no longer notified.
+  // Whenever a topicHasChanged occurs, the machines are no longer notified.
   // Json is no longer valid.
-  private void change() {
+  public void topicHasChanged() {
     machinesNotified.clear();
     json = "";
-  }
-  
-  public void removeDeadMachines(Groups groups) {
-    groups.retainWithSnapshot(machines);
   }
   
   public ArrayList<String> getMachinesToNotify() {
@@ -93,6 +77,9 @@ public class Topic {
     return machinesToNotify;
   }
   
+  
+  public abstract void removeDeadMachines(Groups groups);
+  
   public boolean hasNoLiveMachines() {
     return machines.isEmpty();
   }
@@ -101,30 +88,29 @@ public class Topic {
     machines.add(machine);
   }
   
+  public void addToNotifiedMachines(String machine) {
+    machinesNotified.add(machine);
+  }
+  
   public void setSendRate(double sendRate) {
-    change();
     this.sendRate = sendRate;
   }
   
   public void setCollectionRate(double collectionRate) {
-    change();
     this.collectionRate = collectionRate;
   }
   
   public void setDuration(int duration) {
-    change();
     this.duration = duration;
   }
   
   public void setHigh(Threshold high) {
-    change();
     //changing high removes the low threshold
     this.low = null;
     this.high = high;
   }
   
   public void setLow(Threshold low) throws ThresholdException {
-    change();
     if (high==null ||
         getNormalizedComparatorType(high.comparator) == getNormalizedComparatorType(low.comparator) ||
         high.percentage <= low.percentage) {
@@ -190,6 +176,7 @@ public class Topic {
         .put("uniqueId", uniqueId)
         .put("groupId", groupId)
         .put("type", type.toString());
+    if (scheduledForRemoval) obj.put("scheduledForRemoval", true);
     if (duration > 0) obj.put("duration", duration);
     if (high!= null) obj.startObjectField("high")
         .put("percentage", high.percentage)

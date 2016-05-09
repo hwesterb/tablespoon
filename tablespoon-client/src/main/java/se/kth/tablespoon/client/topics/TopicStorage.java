@@ -6,7 +6,6 @@
 package se.kth.tablespoon.client.topics;
 
 import se.kth.tablespoon.client.main.Groups;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map.Entry;
@@ -27,34 +26,32 @@ public class TopicStorage {
     this.groups = groups;
   }
   
-  public void add(Topic event) {
-    storage.put(event.getUniqueId(), event);
-    changed = true;
+  public void add(Topic topic) {
+    storage.put(topic.getUniqueId(), topic);
   }
   
   public Topic getAndChange(String uniqueId) throws MissingTopicException {
     Topic topic = storage.get(uniqueId);
     if (topic==null) throw new MissingTopicException();
     topic.lock();
-    changed();
+    topic.topicHasChanged();
     return topic;
   }
   
   public void remove(String uniqueId) throws TopicRemovalException, MissingTopicException {
     Topic topic = storage.get(uniqueId);
     if (topic==null) throw new MissingTopicException();
-    topic.scheduleForRemoval();
-    changed();
+    topic.scheduledForRemoval();
   }
   
-  private void  changed () {
+  public void notifyBroadcaster() {
     synchronized (this) {
-      changed = true;
-      notify();
+      storageHasChanged(true);
+      this.notify();
     }
   }
 
-  public void setChanged(boolean changed) {
+  public void storageHasChanged(boolean changed) {
     this.changed = changed;
   }
   
@@ -70,15 +67,12 @@ public class TopicStorage {
       Entry<String, Topic> entry = entries.next();
       Topic topic = entry.getValue();
       topic.lock();
+      topic.removeDeadMachines(groups);
       if (topic.getDuration() > 0 &&
           (topic.getStartTime() + topic.getDuration()) < now) {
         entries.remove();
-        continue;
-      }
-      topic.removeDeadMachines(groups);
-      if (topic.hasNoLiveMachines()) {
+      } else if (topic.hasNoLiveMachines()) {
         entries.remove();
-        continue;
       }
       topic.unlock();
     }
@@ -93,14 +87,9 @@ public class TopicStorage {
     return storage.isEmpty();
   }
 
-  public boolean isChanged() {
+  public boolean isStorageChanged() {
     return changed;
   }
-
-  public void clean(Object object) {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
-  
   
   
 }

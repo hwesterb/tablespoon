@@ -11,27 +11,30 @@ import se.kth.tablespoon.client.topics.TopicStorage;
  *
  * @author henke
  */
-public class AgentBroadcaster implements Runnable {
+public class AgentBroadcasterAssistant implements Runnable {
   
   private Broadcaster broadcaster;
   private final TopicStorage storage;
-  private final static Logger slf4jLogger = LoggerFactory.getLogger(AgentBroadcaster.class);
+  private final static Logger slf4jLogger = LoggerFactory.getLogger(AgentBroadcasterAssistant.class);
   
-  public AgentBroadcaster(TopicStorage storage) {
+  public AgentBroadcasterAssistant(TopicStorage storage) {
     this.storage = storage;
   }
   
   private void broadcastTopics() {
     for (Topic topic : storage.getTopics()) {
       topic.lock();
-      ArrayList<String> machines = topic.getMachinesToNotify();
-      if (machines.size() > 0) try {
-        topic.generateJson();
-      } catch (IOException ex) {
-        slf4jLogger.debug(ex.getMessage());
-      }
-      for (String machine : machines) {
-        broadcaster.sendToMachine(machine, topic.getJson());
+      ArrayList<String> machinesToNotify = topic.getMachinesToNotify();
+      if (machinesToNotify.size() > 0) {
+        try {
+          topic.generateJson();
+        } catch (IOException ex) {
+          slf4jLogger.debug(ex.getMessage());
+        }
+        for (String machine : machinesToNotify) {
+          broadcaster.sendToMachine(machine, topic.getJson());
+          topic.addToNotifiedMachines(machine);
+        }
       }
       topic.unlock();
     }
@@ -43,19 +46,21 @@ public class AgentBroadcaster implements Runnable {
   
   @Override
   public void run() {
-    broadcastTopics();
-    storage.clean();
-    waitForChange();
+    while (true) {
+      broadcastTopics();
+      storage.clean();
+      waitForChange();
+    }
   }
   
   
   private void waitForChange() {
     synchronized (storage) {
       try {
-        while (!storage.isChanged()) {
-          wait();
+        while (!storage.isStorageChanged()) {
+          storage.wait();
         }
-        storage.setChanged(false);
+        storage.storageHasChanged(false);
       } catch (InterruptedException ex) {
         slf4jLogger.debug(ex.getMessage());
       }

@@ -15,36 +15,34 @@ import java.util.UUID;
 public class TopicFactory {
   
   
-  public static Topic create(TopicStorage storage, EventType type, ResourceType rt) {
-    int index = collectlMapping(rt);
-    return makeTopic(storage, index, type);
+   public static Topic create(TopicStorage storage, EventType type, int index, Group group) {
+    return makeGroupTopic(storage, index, type, group);
   }
   
   public static Topic create(TopicStorage storage, EventType type, ResourceType rt, Group group) {
     int index = collectlMapping(rt);
-    return makeTopic(storage, index, type, group);
+    return makeGroupTopic(storage, index, type, group);
   }
   
   public static Topic create(TopicStorage storage, EventType type, int index) {
-    return makeTopic(storage, index, type);
+    return makeMachineTopic(storage, index, type);
   }
   
-  public static Topic create(TopicStorage storage, EventType type, int index, Group group) {
-    return makeTopic(storage, index, type, group);
+   public static Topic create(TopicStorage storage, EventType type, ResourceType rt) {
+    int index = collectlMapping(rt);
+    return makeMachineTopic(storage, index, type);
   }
   
-  private static Topic makeTopic(TopicStorage storage, int index, EventType type) {
-    String uniqueId = createUniqueId(storage);
+  private static Topic makeMachineTopic(TopicStorage storage, int index, EventType type) {
     long now = System.currentTimeMillis() / 1000L;
-    Topic topic = new Topic(index, now, uniqueId, type);
+    Topic topic = new MachineTopic(index, now, createUniqueId(storage), type);
     storage.add(topic);
     return topic;
   }
   
-  private static Topic makeTopic(TopicStorage storage, int index, EventType type, Group group) {
-    String uniqueId = createUniqueId(storage);
+  private static Topic makeGroupTopic(TopicStorage storage, int index, EventType type, Group group) {
     long now = System.currentTimeMillis() / 1000L;
-    Topic topic = new Topic(index, now, uniqueId, type, group);
+    Topic topic = new GroupTopic(index, now, createUniqueId(storage), type, group);
     storage.add(topic);
     return topic;
   }
@@ -54,7 +52,6 @@ public class TopicFactory {
     if (rt == ResourceType.CPU_PERCENTAGE) return 0;
     else return 10;
   }
-  
   
   @SuppressWarnings("empty-statement")
   private static String createUniqueId(TopicStorage storage) {

@@ -34,7 +34,7 @@ public class TablespoonAPI {
   }
   
   /**
-   * This call creates a new topic which applies to one group. Two thresholds are
+   * This call creates a new topic which applies to one group. No thresholds are
    * active upon creation. This can be changed with the <code>changeTopic</code>
    * call.
    * @param subscriber A <code>Subscriber</code> which receives <code>Event</code>.
@@ -48,11 +48,12 @@ public class TablespoonAPI {
       ResourceType resourceType, int duration) {
     Topic topic = registerNewTopic(groupId, eventType, resourceType, duration);
     topic.unlock();
+    storage.notifyBroadcaster();
     subscriber.setUniqueId(topic.getUniqueId());
   }
   
   /**
-   * This call creates a new topic which applies to one group. Two thresholds are
+   * This call creates a new topic which applies to one group. One thresholds are
    * active upon creation. This can be changed with the <code>changeTopic</code>
    * call.
    * @param subscriber A <code>Subscriber</code> which receives <code>Event</code>.
@@ -69,6 +70,7 @@ public class TablespoonAPI {
     Topic topic = registerNewTopic(groupId, eventType, resourceType, duration);
     topic.setHigh(high);
     topic.unlock();
+    storage.notifyBroadcaster();
     subscriber.setUniqueId(topic.getUniqueId());
   }
   
@@ -95,6 +97,7 @@ public class TablespoonAPI {
     topic.setHigh(high);
     topic.setLow(low);
     topic.unlock();
+    storage.notifyBroadcaster();
     subscriber.setUniqueId(topic.getUniqueId());
   }
   
@@ -117,6 +120,7 @@ public class TablespoonAPI {
     Topic topic = storage.getAndChange(uniqueId);
     topic.setHigh(high);
     topic.unlock();
+    storage.notifyBroadcaster();
   }
   /**
    * This call changes a topic. It will block if the specific
@@ -135,6 +139,7 @@ public class TablespoonAPI {
     topic.setHigh(high);
     topic.setLow(low);
     topic.unlock();
+    storage.notifyBroadcaster();
   }
   
   /**
@@ -146,6 +151,7 @@ public class TablespoonAPI {
    */
   public void removeTopic(String uniqueId) throws TopicRemovalException, MissingTopicException {
     storage.remove(uniqueId);
+    storage.notifyBroadcaster();
   }
   
 }

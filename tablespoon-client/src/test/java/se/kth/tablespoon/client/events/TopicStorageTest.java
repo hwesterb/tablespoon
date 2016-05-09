@@ -9,7 +9,6 @@ import se.kth.tablespoon.client.topics.EventType;
 import se.kth.tablespoon.client.topics.Topic;
 import se.kth.tablespoon.client.topics.TopicFactory;
 import se.kth.tablespoon.client.topics.TopicStorage;
-import java.util.ArrayList;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import se.kth.tablespoon.client.main.Group;
