@@ -37,7 +37,7 @@ public abstract class Topic {
   private boolean scheduledForRemoval = false;
   
   
-    public Topic(int index, long startTime, String uniqueId, EventType type, ArrayList<String> machines, String groupId) {
+  public Topic(int index, long startTime, String uniqueId, EventType type, ArrayList<String> machines, String groupId) {
     this.reentrantLock.lock();
     this.index = index;
     this.startTime = startTime;
@@ -176,18 +176,21 @@ public abstract class Topic {
         .put("uniqueId", uniqueId)
         .put("groupId", groupId)
         .put("type", type.toString());
-    if (scheduledForRemoval) obj.put("scheduledForRemoval", true);
-    if (duration > 0) obj.put("duration", duration);
-    if (high!= null) obj.startObjectField("high")
-        .put("percentage", high.percentage)
-        .put("comparator", high.comparator.toString())
-        .end();
-    if (low!= null) obj.startObjectField("low")
-        .put("percentage", low.percentage)
-        .put("comparator", low.comparator.toString())
-        .end();
-    if (sendRate > 0) obj.put("sendRate", sendRate);
-    if (collectionRate > 0) obj.put("collectionRate", collectionRate);
+    if (scheduledForRemoval) {
+      obj.put("scheduledForRemoval", true);
+    } else {
+      if (duration > 0) obj.put("duration", duration);
+      if (high!= null) obj.startObjectField("high")
+          .put("percentage", high.percentage)
+          .put("comparator", high.comparator.toString())
+          .end();
+      if (low!= null) obj.startObjectField("low")
+          .put("percentage", low.percentage)
+          .put("comparator", low.comparator.toString())
+          .end();
+      if (sendRate > 0) obj.put("sendRate", sendRate);
+      if (collectionRate > 0) obj.put("collectionRate", collectionRate);
+    }
     obj.end();
     json = composer.finish();
   }

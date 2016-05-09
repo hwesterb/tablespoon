@@ -59,6 +59,7 @@ public class TablespoonAPITest {
     abt = new AgentBroadcasterTester();
     subscriberB = new SubscriberTester();
     subscriberA = new SubscriberTester();
+    Sleep.now(100); //wait for threads to start
   }
   
   
@@ -67,6 +68,9 @@ public class TablespoonAPITest {
     Sleep.now(100); //get thread into wait position
   }
   
+    /**
+   * Test of createTopic method, of class TablespoonAPI.
+   */
   @Test
   public void testCreateTopic() {
     System.out.println("\n*** createTopic ***\n");
@@ -81,7 +85,6 @@ public class TablespoonAPITest {
     assertEquals(2, abt.getRecievedRequests());
   }
   
-  
   /**
    * Test of changeTopic method, of class TablespoonAPI.
    */
@@ -93,7 +96,9 @@ public class TablespoonAPITest {
     assertEquals(4, abt.getRecievedRequests());
   }
   
-  
+  /**
+   * Test of createTopic method, of class TablespoonAPI.
+   */
   @Test
   public void testCreateSecondTopic() throws Exception {
     System.out.println("\n*** secondTopic ***\n");

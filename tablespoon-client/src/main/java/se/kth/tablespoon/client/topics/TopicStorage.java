@@ -42,6 +42,7 @@ public class TopicStorage {
     Topic topic = storage.get(uniqueId);
     if (topic==null) throw new MissingTopicException();
     topic.scheduledForRemoval();
+    topic.topicHasChanged();
   }
   
   public void notifyBroadcaster() {
