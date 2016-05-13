@@ -1,4 +1,4 @@
-package se.kth.tablespoon.agent.events;
+package se.kth.tablespoon.agent.general;
 
 import se.kth.tablespoon.agent.metrics.Metric;
 import java.io.IOException;
@@ -8,8 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aphyr.riemann.client.RiemannClient;
+import se.kth.tablespoon.agent.events.TopicDefinition;
 
-import se.kth.tablespoon.agent.general.Configuration;
+import se.kth.tablespoon.agent.file.Configuration;
 
 public class EventSender {
   
@@ -28,7 +29,7 @@ public class EventSender {
   public void sendMetrics() throws IOException {
     
     Metric metric = metricQueue.poll();
-    EventDefinition ed = config.getSubscriptions().get(metric.getCollectIndex());
+    TopicDefinition ed = config.getSubscriptions().get(metric.getCollectIndex());
     
     // This metric is not part of a subscription.
     if (ed == null) return;
@@ -52,7 +53,7 @@ public class EventSender {
   }
   
   
-  private boolean durationHasEnded(Metric metric, EventDefinition ed) {
+  private boolean durationHasEnded(Metric metric, TopicDefinition ed) {
     if (ed.hasDuration()) {
       if (ed.hasStarted()) {
         long now = System.currentTimeMillis() / 1000L;

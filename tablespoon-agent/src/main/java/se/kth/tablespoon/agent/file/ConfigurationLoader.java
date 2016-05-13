@@ -3,9 +3,9 @@
 * To change this template file, choose Tools | Templates
 * and open the template in the editor.
 */
-package se.kth.tablespoon.agent.general;
+package se.kth.tablespoon.agent.file;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.jr.ob.JSON;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,8 +48,7 @@ public class ConfigurationLoader {
       ClassLoader loader = Thread.currentThread().getContextClassLoader();
       InputStream is = loader.getResourceAsStream("configuration/config.json");
       try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
-        Gson gson = new Gson();
-        config = gson.fromJson(br, Configuration.class);
+        config = JSON.std.beanFrom(Configuration.class, br);
         br.close();
       }
     } catch (NullPointerException | IOException e) {

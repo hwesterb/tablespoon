@@ -1,9 +1,9 @@
-package se.kth.tablespoon.agent.general;
+package se.kth.tablespoon.agent.file;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.fasterxml.jackson.jr.ob.JSON;
+import java.io.IOException;
 import java.util.HashMap;
-import se.kth.tablespoon.agent.events.EventDefinition;
+import se.kth.tablespoon.agent.events.TopicDefinition;
 
 public class Configuration {
   
@@ -17,7 +17,7 @@ public class Configuration {
   private int riemannDereferenceTime;
   private boolean collectlRestart;
   private double collectlCollectionRate;
-  private HashMap<Integer, EventDefinition> subscriptions = new HashMap<Integer, EventDefinition>();
+  private HashMap<Integer, TopicDefinition> subscriptions = new HashMap<Integer, TopicDefinition>();
   private int[] filter;
   
   public Configuration() {
@@ -26,7 +26,7 @@ public class Configuration {
       filter[i] = subscriptions.get(i).getCollectlIndex();
     }
   }
-
+  
   // this constructor is for creating testconfiguration
   public Configuration(String riemannHost, int riemannPort, int riemannReconnectionTries, int riemannReconnectionTime, int riemannSendRate, int riemannEventTtl, int riemannDereferenceTime, boolean collectlRestart, double collectlCollectionRate) {
     this.riemannHost = riemannHost;
@@ -41,7 +41,7 @@ public class Configuration {
   }
   
   
-  public HashMap<Integer, EventDefinition> getSubscriptions() {
+  public HashMap<Integer, TopicDefinition> getSubscriptions() {
     return subscriptions;
   }
   
@@ -87,8 +87,15 @@ public class Configuration {
   
   @Override
   public String toString() {
-    Gson gson =  new GsonBuilder().setPrettyPrinting().create();
-    return gson.toJson(this);
+    try {
+      return JSON.std
+          .with(JSON.Feature.PRETTY_PRINT_OUTPUT)
+          .without(JSON.Feature.FAIL_ON_DUPLICATE_MAP_KEYS)
+          .asString(this);
+    } catch (IOException ex) {
+      System.err.println(ex.getMessage());
+    }
+    return "Could not process json.";
   }
   
   

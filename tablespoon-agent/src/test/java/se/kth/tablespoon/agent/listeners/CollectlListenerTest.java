@@ -1,19 +1,25 @@
 package se.kth.tablespoon.agent.listeners;
 
 
-import static org.junit.Assert.*;
-
-
+import org.junit.After;
+import org.junit.AfterClass;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
-import se.kth.tablespoon.agent.general.Configuration;
-import se.kth.tablespoon.agent.general.ConfigurationLoader;
+import se.kth.tablespoon.agent.file.Configuration;
+import se.kth.tablespoon.agent.file.ConfigurationLoader;
 
 import se.kth.tablespoon.agent.metrics.MetricLayout;
 import se.kth.tablespoon.agent.metrics.MetricFormat;
-import se.kth.tablespoon.agent.listeners.CollectlListener;
 import se.kth.tablespoon.agent.util.Sleep;
 
 public class CollectlListenerTest {
+  
+  public CollectlListenerTest() {
+  }
   
   @Test
   public void test() {

@@ -2,7 +2,7 @@ package se.kth.tablespoon.agent.listeners;
 
 import java.io.File;
 import java.io.IOException;
-import se.kth.tablespoon.agent.general.ConfigurationLoader;
+import se.kth.tablespoon.agent.file.ConfigurationLoader;
 
 public class ConfigListener implements Runnable {
 

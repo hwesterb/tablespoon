@@ -9,50 +9,50 @@ package se.kth.tablespoon.agent.events;
  *
  * @author henke
  */
-public class EventDefinition {
+public class TopicDefinition {
   
-  private int collectlIndex;
-  private boolean hasDuration;
+  private int index;
+  private int version;
+  private long startTime;
+  private String uniqueId;
+  private String groupId;
+  private String type;
+  private boolean scheduledForRemoval;
+  private boolean hasStarted;
   private int duration;
   private double threshold;
-  private boolean hasStarted;
-  private long startTime;
- 
-
+  private Threshold high;
+  private Threshold low;
+  
+  
   public int getCollectlIndex() {
-    return collectlIndex;
+    return index;
   }
-
+  
   public boolean hasDuration() {
-    return hasDuration;
+    if (duration > 0) return true;
+    else return false;
   }
-
+  
   public int getDuration() {
     return duration;
   }
-
-  public double getThreshold() {
-    return threshold;
-  }
-
+  
   public boolean hasStarted() {
     return hasStarted;
   }
-
+  
   public void setStarted(boolean hasStarted) {
     this.hasStarted = hasStarted;
   }
-
+  
   public long getStartTime() {
     return startTime;
   }
-
+  
   public void setStartTime(long startTime) {
     this.startTime = startTime;
   }
-  
-  
-  
   
   
   

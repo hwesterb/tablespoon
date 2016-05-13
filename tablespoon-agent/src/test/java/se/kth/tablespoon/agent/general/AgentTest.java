@@ -5,6 +5,7 @@
  */
 package se.kth.tablespoon.agent.general;
 
+import se.kth.tablespoon.agent.file.Configuration;
 import com.aphyr.riemann.client.RiemannClient;
 import java.io.IOException;
 import java.net.ServerSocket;

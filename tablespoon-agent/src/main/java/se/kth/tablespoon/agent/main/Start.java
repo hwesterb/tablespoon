@@ -3,9 +3,9 @@ package se.kth.tablespoon.agent.main;
 import com.aphyr.riemann.client.RiemannClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.kth.tablespoon.agent.general.Configuration;
+import se.kth.tablespoon.agent.file.Configuration;
 import se.kth.tablespoon.agent.general.Agent;
-import se.kth.tablespoon.agent.general.ConfigurationLoader;
+import se.kth.tablespoon.agent.file.ConfigurationLoader;
 
 import se.kth.tablespoon.agent.listeners.CollectlListener;
 import se.kth.tablespoon.agent.listeners.ConfigListener;

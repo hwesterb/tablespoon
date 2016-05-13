@@ -7,14 +7,13 @@ package se.kth.tablespoon.agent.listeners;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import se.kth.tablespoon.agent.general.ConfigurationLoader;
+import se.kth.tablespoon.agent.file.ConfigurationLoader;
 import se.kth.tablespoon.agent.util.Sleep;
 
 /**
