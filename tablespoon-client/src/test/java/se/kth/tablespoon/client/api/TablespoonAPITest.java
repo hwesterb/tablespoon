@@ -1,3 +1,4 @@
+
 /*
 * To change this license header, choose License Headers in Project Properties.
 * To change this template file, choose Tools | Templates
@@ -59,7 +60,7 @@ public class TablespoonAPITest {
     abt = new AgentBroadcasterTester();
     subscriberB = new SubscriberTester();
     subscriberA = new SubscriberTester();
-    Sleep.now(100); //wait for threads to start
+    Sleep.now(400); //wait for threads to start
   }
   
   
@@ -118,8 +119,6 @@ public class TablespoonAPITest {
     api.removeTopic(subscriberA.getUniqueId());
     Sleep.now(100);
     assertEquals(12, abt.getRecievedRequests());
-  }
-  
-  
+  }  
   
 }

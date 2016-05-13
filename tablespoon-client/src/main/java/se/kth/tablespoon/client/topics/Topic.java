@@ -24,6 +24,7 @@ public abstract class Topic {
   protected final ArrayList<String> machines;
   private final ArrayList<String> machinesNotified = new ArrayList<>();
   private final int index;
+  private int version;
   private final long startTime;
   private double collectionRate = 0.0;
   private double sendRate = 0.0;
@@ -45,6 +46,7 @@ public abstract class Topic {
     this.type = type;
     this.machines = machines;
     this.groupId = groupId;
+    version = 0;
   }
   
   public void lock() {
@@ -62,9 +64,11 @@ public abstract class Topic {
   
   // Whenever a topicHasChanged occurs, the machines are no longer notified.
   // Json is no longer valid.
+  // The version has changed.
   public void topicHasChanged() {
     machinesNotified.clear();
     json = "";
+    version++;
   }
   
   public ArrayList<String> getMachinesToNotify() {
@@ -173,6 +177,8 @@ public abstract class Topic {
         .composeString();
     ObjectComposer obj = composer.startObject();
     obj.put("index", index)
+        .put("version", version)
+        .put("startTime", startTime)
         .put("uniqueId", uniqueId)
         .put("groupId", groupId)
         .put("type", type.toString());
