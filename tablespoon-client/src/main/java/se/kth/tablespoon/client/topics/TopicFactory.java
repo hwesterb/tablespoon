@@ -49,14 +49,14 @@ public class TopicFactory {
   
   
   private static int collectlMapping(ResourceType rt) {
-    if (rt == ResourceType.CPU_PERCENTAGE) return 0;
+    if (rt == ResourceType.CPU) return 0;
     else return 10;
   }
   
   @SuppressWarnings("empty-statement")
   private static String createUniqueId(TopicStorage storage) {
     String uniqueId;
-    while (storage.uniqueIdExists(uniqueId = UUID.randomUUID().toString()));
+    while (storage.uniqueIdExists(uniqueId = UUID.randomUUID().toString().replaceAll("_", "-")));
     return uniqueId;
   }
   

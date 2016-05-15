@@ -29,7 +29,7 @@ public class TopicTest {
   @Test
   public void test() throws ThresholdException {
     TopicStorage storage = new TopicStorage(new Groups());
-    Topic topic = TopicFactory.create(storage, EventType.REGULAR, ResourceType.CPU_PERCENTAGE);
+    Topic topic = TopicFactory.create(storage, EventType.REGULAR, ResourceType.CPU);
     topic.setCollectionRate(0.2);
     topic.setDuration(12);
     topic.setHigh(new Threshold(0.4, Comparator.GREATER_THAN));

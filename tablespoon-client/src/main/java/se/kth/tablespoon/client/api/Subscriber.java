@@ -7,7 +7,6 @@ package se.kth.tablespoon.client.api;
 
 public interface Subscriber {
 
-  public void setUniqueId(String uniqueId);
   public void onEventArrival(Event event);
   
 }

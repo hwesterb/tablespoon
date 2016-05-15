@@ -43,13 +43,14 @@ public class TablespoonAPI {
    * @param resourceType Type of resource which should be collected.
    * @param duration Duration of a topic. Will expire automatically after duration.
    * Set value 0 for topic without time bound.
+   * @return An unique id which specifies the topic.
    */
-  public void createTopic(Subscriber subscriber, String groupId, EventType eventType,
+  public String createTopic(Subscriber subscriber, String groupId, EventType eventType,
       ResourceType resourceType, int duration) {
     Topic topic = registerNewTopic(groupId, eventType, resourceType, duration);
     topic.unlock();
     storage.notifyBroadcaster();
-    subscriber.setUniqueId(topic.getUniqueId());
+    return topic.getUniqueId();
   }
   
   /**
@@ -62,16 +63,17 @@ public class TablespoonAPI {
    * @param resourceType Type of resource which should be collected.
    * @param duration Duration of a topic. Will expire automatically after duration.
    * Set value 0 for topic without time bound.
-   * @param high A <code>Threshold</code> that determines the percentage or
+   * @param threshold A <code>Threshold</code> that determines the percentage or
    * percentile when filtering events.
+   * @return An unique id which specifies the topic.
    */
-  public void createTopic(Subscriber subscriber, String groupId, EventType eventType,
-      ResourceType resourceType, int duration, Threshold high) {
+  public String createTopic(Subscriber subscriber, String groupId, EventType eventType,
+      ResourceType resourceType, int duration, Threshold threshold) {
     Topic topic = registerNewTopic(groupId, eventType, resourceType, duration);
-    topic.setHigh(high);
+    topic.setHigh(threshold);
     topic.unlock();
     storage.notifyBroadcaster();
-    subscriber.setUniqueId(topic.getUniqueId());
+    return topic.getUniqueId();
   }
   
   /**
@@ -88,17 +90,18 @@ public class TablespoonAPI {
    * percentile when filtering events.
    * @param low A <code>Threshold</code> that determines the percentage or
    * percentile when filtering events.
+   * @return An unique id which specifies the topic.
    * @throws ThresholdException Thrown if low >= high, or if <code>Comparator</code>
    * are incompatible.
    */
-  public void createTopic(Subscriber subscriber, String groupId, EventType eventType, ResourceType resourceType, int duration,
+  public String createTopic(Subscriber subscriber, String groupId, EventType eventType, ResourceType resourceType, int duration,
       Threshold high, Threshold low) throws ThresholdException {
     Topic topic = registerNewTopic(groupId, eventType, resourceType, duration);
     topic.setHigh(high);
     topic.setLow(low);
     topic.unlock();
     storage.notifyBroadcaster();
-    subscriber.setUniqueId(topic.getUniqueId());
+    return topic.getUniqueId();
   }
   
   private Topic registerNewTopic(String groupId, EventType eventType, ResourceType resourceType, int duration) {
@@ -112,13 +115,13 @@ public class TablespoonAPI {
    * This call changes a topic. It will block if the specific
    * topic is currently being handled.
    * @param uniqueId An unique id which specifies the topic.
-   * @param high A <code>Threshold</code> that determines the percentage or
+   * @param threshold A <code>Threshold</code> that determines the percentage or
    * percentile when filtering events.
    * @throws MissingTopicException Thrown if the topic is not present in the storage.
    */
-  public void changeTopic(String uniqueId, Threshold high) throws MissingTopicException {
+  public void changeTopic(String uniqueId, Threshold threshold) throws MissingTopicException {
     Topic topic = storage.getAndChange(uniqueId);
-    topic.setHigh(high);
+    topic.setHigh(threshold);
     topic.unlock();
     storage.notifyBroadcaster();
   }

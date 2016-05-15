@@ -10,5 +10,5 @@ package se.kth.tablespoon.client.topics;
  * @author henke
  */
 public enum ResourceType {
-  CPU_PERCENTAGE, RAM_PERCENTAGE
+  CPU, RAM
 }

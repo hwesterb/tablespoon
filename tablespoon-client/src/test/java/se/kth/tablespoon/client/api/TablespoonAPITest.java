@@ -60,7 +60,7 @@ public class TablespoonAPITest {
     abt = new AgentBroadcasterTester();
     subscriberB = new SubscriberTester();
     subscriberA = new SubscriberTester();
-    Sleep.now(400); //wait for threads to start
+    Sleep.now(1000); //wait for threads to start
   }
   
   
@@ -77,10 +77,10 @@ public class TablespoonAPITest {
     System.out.println("\n*** createTopic ***\n");
     String groupId = "B";
     EventType eventType = EventType.REGULAR;
-    ResourceType resourceType = ResourceType.CPU_PERCENTAGE;
+    ResourceType resourceType = ResourceType.CPU;
     int duration = 10;
     api = new TablespoonAPI(storage, groups);
-    api.createTopic(subscriberB, groupId, eventType, resourceType, duration);
+    subscriberB.setUniqueId(api.createTopic(subscriberB, groupId, eventType, resourceType, duration));
     aba.registerBroadcaster(abt);
     Sleep.now(100);
     assertEquals(2, abt.getRecievedRequests());
@@ -105,7 +105,7 @@ public class TablespoonAPITest {
     System.out.println("\n*** secondTopic ***\n");
     Threshold high = new Threshold(0.6, Comparator.GREATER_THAN);
     Threshold low = new Threshold(0.3, Comparator.LESS_THAN);
-    api.createTopic(subscriberA, "A", EventType.GROUP_AVERAGE, ResourceType.CPU_PERCENTAGE, 0, high, low);
+    subscriberA.setUniqueId(api.createTopic(subscriberA, "A", EventType.GROUP_AVERAGE, ResourceType.CPU, 0, high, low));
     Sleep.now(100);
     assertEquals(8, abt.getRecievedRequests());
   }

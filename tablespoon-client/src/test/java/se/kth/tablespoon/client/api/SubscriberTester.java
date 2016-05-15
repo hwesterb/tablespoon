@@ -14,7 +14,6 @@ public class SubscriberTester implements Subscriber {
   private String uniqueId;
   
   
-  @Override
   public void setUniqueId(String uniqueId) {
     this.uniqueId = uniqueId;
   }
