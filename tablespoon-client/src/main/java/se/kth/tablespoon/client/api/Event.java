@@ -34,6 +34,11 @@ public class Event {
     return groupId;
   }
 
+  public String getMachineId() {
+    return machineId;
+  }
+  
+
   public double getValue() {
     return value;
   }
