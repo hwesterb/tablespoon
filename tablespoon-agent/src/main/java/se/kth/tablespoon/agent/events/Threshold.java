@@ -18,6 +18,11 @@ public class Threshold {
     this.percentage = percentage;
     this.comparator = comparator;
   }
+
+  @Override
+  public String toString() {
+    return "Threshold{" + "percentage=" + percentage + ", comparator=" + comparator + '}';
+  }
   
   
 }

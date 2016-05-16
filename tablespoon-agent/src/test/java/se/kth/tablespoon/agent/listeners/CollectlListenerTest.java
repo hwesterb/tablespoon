@@ -9,7 +9,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import se.kth.tablespoon.agent.file.Configuration;
+import se.kth.tablespoon.agent.events.Configuration;
 import se.kth.tablespoon.agent.file.ConfigurationLoader;
 
 import se.kth.tablespoon.agent.metrics.MetricLayout;
@@ -24,7 +24,7 @@ public class CollectlListenerTest {
   @Test
   public void test() {
     ConfigurationLoader ch = new ConfigurationLoader();
-    ch.loadNewConfiguration();
+    ch.readConfigFile();
     System.out.println("Configuration loaded.");
     Configuration config = ch.getConfig();
     System.out.println(config);
@@ -54,7 +54,7 @@ public class CollectlListenerTest {
   @Test
   public void restartTest() {
     ConfigurationLoader ch = new ConfigurationLoader();
-    ch.loadNewConfiguration();
+    ch.readConfigFile();
     Configuration config = ch.getConfig();
     CollectlListener cl = new CollectlListener(config);
     Thread t = new Thread(cl);

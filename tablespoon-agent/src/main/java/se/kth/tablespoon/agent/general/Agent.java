@@ -5,25 +5,23 @@
  */
 package se.kth.tablespoon.agent.general;
 
-import se.kth.tablespoon.agent.file.Configuration;
+import se.kth.tablespoon.agent.events.Configuration;
 import com.aphyr.riemann.client.RiemannClient;
 import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.kth.tablespoon.agent.file.TopicLoader;
 import se.kth.tablespoon.agent.listeners.MetricListener;
 import se.kth.tablespoon.agent.main.Start;
 import se.kth.tablespoon.agent.util.Sleep;
 
-/**
- *
- * @author te27
- */
 public class Agent {
 
   private static final int READ_QUEUE_TIME = 10;
 
   private final MetricListener metricListener;
-  private final Configuration config;
+  private final TopicLoader topicLoader = new TopicLoader();
+  private final Configuration config = Configuration.getInstance();
   private RiemannClient riemannClient;
   private final EventSender es;
 
@@ -32,10 +30,9 @@ public class Agent {
   }
   private final Logger slf4jLogger = LoggerFactory.getLogger(Start.class);
 
-  public Agent(MetricListener metricListener, Configuration config) {
+  public Agent(MetricListener metricListener) {
     this.metricListener = metricListener;
-    this.config = config;
-    es = new EventSender(metricListener.getMetricQueue(), riemannClient, config);
+    es = new EventSender(metricListener.getMetricQueue(), riemannClient);
     agentCycle(0);
   }
 
@@ -62,6 +59,7 @@ public class Agent {
 
   private void sendCycle() throws IOException {
     while (true) {
+      topicLoader.readTopicFiles();
       // it apparently needs some headroom.
       Sleep.now(READ_QUEUE_TIME);
       synchronized (metricListener.getMetricQueue()) {
@@ -71,6 +69,7 @@ public class Agent {
       }
     }
   }
+  
 
   private void agentCycle(int tries) {
     try {

@@ -1,19 +1,23 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
+*/
 package se.kth.tablespoon.agent.file;
 
+import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import java.util.Map;
+import java.util.TreeMap;
+import org.apache.commons.io.IOUtils;
+import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import org.junit.Test;
-import static org.junit.Assert.*;
+import se.kth.tablespoon.agent.events.Configuration;
+import se.kth.tablespoon.agent.events.Topic;
 
 /**
  *
@@ -21,37 +25,71 @@ import static org.junit.Assert.*;
  */
 public class FileLoaderTest {
   
-
-  
-  public FileLoaderTest() {
+  private void writeNewFile(String json, String directory, String fileName) throws IOException {
+    FileWriter fw = new FileWriter(FileLoader.class.getClassLoader().getResource(directory).getPath() + "/" + fileName);
+    IOUtils.write(json,fw);
+    IOUtils.closeQuietly(fw);
   }
   
-  @BeforeClass
-  public static void setUpClass() {
+  private String someJson(String uniqueId, int version, int duration, double threshold) {    
+    String json = "{\"index\":0,\"version\":" + version 
+        + ",\"startTime\":1463246537,\"uniqueId\": \"" + uniqueId + "\",\"groupId\":\"not specified\",\"type\":\"REGULAR\",\"duration\":" + duration 
+        + ",\"sendRate\":\"NORMAL\",\"high\":{\"percentage\":" + threshold + ",\"comparator\":\"GREATER_THAN\"},\"low\":{\"percentage\":0.1,\"comparator\":\"LESS_THAN\"}}";
+    return json;
   }
   
-  @AfterClass
-  public static void tearDownClass() {
+  private void generateJsonAndWrite(String file, int version, double threshold) throws IOException {
+    writeNewFile(someJson(file, version, 12, threshold), "topics", file + "_" + version + ".json" );
   }
   
-  @Before
-  public void setUp() {
-  }
-  
-  @After
-  public void tearDown() {
-  }
-
   @Test
-  public void testSomeMethod() throws IOException {
-    FileLoader fl = new FileLoader();
-    String directory = "configuration";
-    List<String> list = fl.listFilesInDirectory(directory);
-    String json = fl.loadJsonFromFile(directory, list.get(0));
-    System.out.println(json);
+  public void test1() throws IOException {
     
-    // TODO review the generated test code and remove the default call to fail.
-//    fail("The test case is a prototype.");
+    (new ConfigurationLoader()).readConfigFile();
+    Configuration config = Configuration.getInstance();
+    
+   
+    String fileA = "uniqueIdA";
+    int versionA = 1;
+    generateJsonAndWrite(fileA, versionA, 0.3);
+    TopicLoader tl = new TopicLoader();
+    tl.readTopicFiles();
+    assertEquals(fileA, config.findTopic(fileA).getUniqueId());
+    
+    generateJsonAndWrite(fileA, versionA, 0.4);
+    tl.readTopicFiles();
+    assertNotEquals(0.4, config.findTopic(fileA).getHigh().percentage, 0.01);
+   
+    versionA = 2;
+    generateJsonAndWrite(fileA, versionA, 0.4);
+    tl.readTopicFiles();
+    assertEquals(0.4, config.findTopic(fileA).getHigh().percentage, 0.01);
   }
+  
+  
+  @Test
+  public void test2() throws IOException, OldTopicException {
+    TopicLoader fl = new TopicLoader();
+    Map<String, Topic> topics = new TreeMap<>();
+    String directory = "topics";
+    String fileName = "pqowiepoqwkepoqkwens120392js_1.json";
+    String jsonIn = "{\"index\" : 0,}\"";
+    writeNewFile(jsonIn, directory, fileName);
+    List<String> list = fl.listFilesInDirectory(directory);
+    System.out.println("Number of files found: " + list.size());
+    String jsonOut = "";
+    for (String fileNameFound : list) {
+      if (fileNameFound.contentEquals(fileName)) {
+        jsonOut = fl.getJsonAndDelete(directory, fileNameFound);
+      }
+    }
+    Assert.assertEquals(jsonIn, jsonOut);
+  }
+  
+  
+  
+  
+  
+  
   
 }

@@ -3,23 +3,19 @@ package se.kth.tablespoon.agent.listeners;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import se.kth.tablespoon.agent.metrics.MetricFactory;
-
-import se.kth.tablespoon.agent.metrics.Metric;
 import se.kth.tablespoon.agent.general.CollectlStringParser;
-import se.kth.tablespoon.agent.file.Configuration;
+import se.kth.tablespoon.agent.events.Configuration;
+import se.kth.tablespoon.agent.events.Rate;
+import se.kth.tablespoon.agent.events.RaterInterpreter;
 
 public class CollectlListener extends MetricListener {
   
-  public CollectlListener(Configuration config) {
-    super(config);
-  }
   
   private String[] generateCollectlCommand() {
     return new String[]{
       "/bin/sh",
       "-c",
-      "collectl -P -o U -i " + config.getCollectlCollectionRate()
+      "collectl -P -o U -i " + RaterInterpreter.getNumber(config.getCollectlCollectionRate())
     };
   }
   

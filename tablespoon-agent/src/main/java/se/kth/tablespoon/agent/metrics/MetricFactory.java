@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.kth.tablespoon.agent.general.CollectlStringParser;
-import se.kth.tablespoon.agent.file.Configuration;
+import se.kth.tablespoon.agent.events.Configuration;
 
 
 public class MetricFactory {

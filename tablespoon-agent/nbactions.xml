@@ -51,6 +51,9 @@
             <goals>
                 <goal>install</goal>
             </goals>
+             <properties>
+                <skipTests>true</skipTests>
+            </properties>
         </action>
         <action>
             <actionName>rebuild</actionName>

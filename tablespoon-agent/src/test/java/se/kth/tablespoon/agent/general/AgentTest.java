@@ -5,7 +5,7 @@
  */
 package se.kth.tablespoon.agent.general;
 
-import se.kth.tablespoon.agent.file.Configuration;
+import se.kth.tablespoon.agent.events.Configuration;
 import com.aphyr.riemann.client.RiemannClient;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -30,8 +30,8 @@ import se.kth.tablespoon.agent.util.Sleep;
  */
 public class AgentTest {
 
-  static Configuration config;
-  static MetricListener ml;
+  static Configuration config = Configuration.getInstance();
+  static MetricListener ml =  new MetricListenerTester();
   static Agent agent;
 
   public AgentTest() {
@@ -41,10 +41,7 @@ public class AgentTest {
   public static void setUpClass() {
     ListeningServer ls = new ListeningServer();
     ls.run();
-
-    config = new Configuration("localhost", 2727, 10, 5000, 1000, 60, 5000, false, 1);
-    ml = new MetricListenerTester(config);
-    agent = new Agent(ml, config);
+    agent = new Agent(ml);
 
     Thread mlThread = new Thread(ml);
     mlThread.start();
@@ -98,8 +95,8 @@ public class AgentTest {
 
   private static class MetricListenerTester extends MetricListener {
 
-    public MetricListenerTester(Configuration config) {
-      super(config);
+    public MetricListenerTester() {
+      super();
     }
 
     @Override

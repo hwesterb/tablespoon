@@ -8,20 +8,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aphyr.riemann.client.RiemannClient;
-import se.kth.tablespoon.agent.events.TopicDefinition;
+import java.util.ArrayList;
 
-import se.kth.tablespoon.agent.file.Configuration;
+import se.kth.tablespoon.agent.events.Configuration;
+import se.kth.tablespoon.agent.events.RelatedTopics;
+import se.kth.tablespoon.agent.events.RiemannEvent;
 
 public class EventSender {
   
   
   private final Queue<Metric> metricQueue;
   private final RiemannClient rClient;
-  private final Configuration config;
+  private final Configuration config = Configuration.getInstance();
   private final Logger slf4jLogger = LoggerFactory.getLogger(EventSender.class);
   
-  public EventSender(Queue<Metric> metricQueue, RiemannClient rClient, Configuration config) {
-    this.config = config;
+  public EventSender(Queue<Metric> metricQueue, RiemannClient rClient) {
     this.metricQueue = metricQueue;
     this.rClient = rClient;
   }
@@ -29,43 +30,15 @@ public class EventSender {
   public void sendMetrics() throws IOException {
     
     Metric metric = metricQueue.poll();
-    TopicDefinition ed = config.getSubscriptions().get(metric.getCollectIndex());
-    
-    // This metric is not part of a subscription.
-    if (ed == null) return;
-    
-    // This metric has a duration which has ended.
-    if (durationHasEnded(metric, ed)) {
-      // Write null to remove subscription.
-      config.getSubscriptions().put(ed.getCollectlIndex(), null);
-      return;
-    }
-    
-    rClient.event().
-        service(metric.getSource().toString()).
-        description(metric.getName()).
-        tag(metric.getFormat().toString()).
-        metric(metric.getValue()).
-        time(metric.getTimeStamp()).
-        ttl(config.getRiemannEventTtl()).
-        send().
-        deref(config.getRiemannDereferenceTime(), java.util.concurrent.TimeUnit.MILLISECONDS);
+    RelatedTopics related = config.getRelatedTopicsBeloningToIndex(metric.getCollectIndex());
+    if (related == null) return;    
+    ArrayList<RiemannEvent> riemannEvents = related.extractRiemannEvents(metric);
+      
+     for (RiemannEvent riemannEvent : riemannEvents) {
+       riemannEvent.sendMe(rClient, config.getRiemannDereferenceTime());
+     }
   }
   
   
-  private boolean durationHasEnded(Metric metric, TopicDefinition ed) {
-    if (ed.hasDuration()) {
-      if (ed.hasStarted()) {
-        long now = System.currentTimeMillis() / 1000L;
-        if ((now - metric.getTimeStamp()) > ed.getDuration()) {
-          return true;
-        }
-      } else {
-        ed.setStartTime(metric.getTimeStamp());
-        ed.setStarted(true);
-      }
-    }
-    return false;
-  }
-  
+
 }

@@ -7,15 +7,5 @@
   "riemannEventTtl": 60,
   "riemannDereferenceTime": 5000,
   "collectlRestart": false,
-  "collectlCollectionRate": 1,
-  "subscriptions": {
-    "0": {
-      "collectlIndex": 0,
-      "hasDuration": true,
-      "duration": 10,
-      "threshold": 0.7,
-      "hasStarted": false,
-      "startTime": 0
-    }
-  }
+  "collectlCollectionRate": 1
 }

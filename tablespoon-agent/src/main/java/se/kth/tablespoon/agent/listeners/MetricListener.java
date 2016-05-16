@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.kth.tablespoon.agent.file.Configuration;
+import se.kth.tablespoon.agent.events.Configuration;
 import se.kth.tablespoon.agent.metrics.Metric;
 import se.kth.tablespoon.agent.metrics.MetricFactory;
 import se.kth.tablespoon.agent.metrics.MetricLayout;
@@ -20,12 +20,8 @@ public abstract class MetricListener implements Runnable {
   protected boolean headersDefined = false;
   protected boolean interruptRequest = false;
   protected boolean restartRequest = false;
-  protected final Configuration config;
+  protected final Configuration config = Configuration.getInstance();
   protected final Logger slf4jLogger = LoggerFactory.getLogger(MetricListener.class);
-  
-  public MetricListener(Configuration config) {
-    this.config = config;
-  }
   
   @Override
   public void run() {
