@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import se.kth.tablespoon.client.main.Groups;
+import se.kth.tablespoon.client.topics.Rate;
 
 /**
  *
@@ -30,7 +31,7 @@ public class TopicTest {
   public void test() throws ThresholdException {
     TopicStorage storage = new TopicStorage(new Groups());
     Topic topic = TopicFactory.create(storage, EventType.REGULAR, ResourceType.CPU);
-    topic.setCollectionRate(0.2);
+    topic.setCollectionRate(Rate.NORMAL);
     topic.setDuration(12);
     topic.setHigh(new Threshold(0.4, Comparator.GREATER_THAN));
     boolean shouldfail = false;

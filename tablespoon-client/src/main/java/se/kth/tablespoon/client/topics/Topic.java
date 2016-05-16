@@ -26,8 +26,8 @@ public abstract class Topic {
   private final int index;
   private int version;
   private final long startTime;
-  private double collectionRate = 0.0;
-  private double sendRate = 0.0;
+  private Rate collectionRate;
+  private Rate sendRate;
   private int duration = 0;
   private final EventType type;
   private Threshold high;
@@ -96,11 +96,11 @@ public abstract class Topic {
     machinesNotified.add(machine);
   }
   
-  public void setSendRate(double sendRate) {
+  public void setSendRate(Rate sendRate) {
     this.sendRate = sendRate;
   }
   
-  public void setCollectionRate(double collectionRate) {
+  public void setCollectionRate(Rate collectionRate) {
     this.collectionRate = collectionRate;
   }
   
@@ -147,11 +147,11 @@ public abstract class Topic {
     return type;
   }
   
-  public double getCollectionRate() {
+  public Rate getCollectionRate() {
     return collectionRate;
   }
   
-  public double getSendRate() {
+  public Rate getSendRate() {
     return sendRate;
   }
   
@@ -194,8 +194,8 @@ public abstract class Topic {
           .put("percentage", low.percentage)
           .put("comparator", low.comparator.toString())
           .end();
-      if (sendRate > 0) obj.put("sendRate", sendRate);
-      if (collectionRate > 0) obj.put("collectionRate", collectionRate);
+      if (collectionRate != null) obj.put("collectionRate", collectionRate.toString());
+      if (sendRate != null) obj.put("sendRate", sendRate.toString());
     }
     obj.end();
     json = composer.finish();

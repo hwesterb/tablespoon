@@ -24,6 +24,7 @@ public class AgentBroadcasterAssistant implements Runnable {
   private void broadcastTopics() {
     for (Topic topic : storage.getTopics()) {
       topic.lock();
+      //
       ArrayList<String> machinesToNotify = topic.getMachinesToNotify();
       if (machinesToNotify.size() > 0) {
         try {
