@@ -29,7 +29,6 @@ public class Event {
     this.low = low;
   }
 
-
   public String getGroupId() {
     return groupId;
   }
@@ -38,7 +37,6 @@ public class Event {
     return machineId;
   }
   
-
   public double getValue() {
     return value;
   }

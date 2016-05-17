@@ -7,7 +7,6 @@
     <packaging>pom</packaging>
     <modules>
         <module>tablespoon-agent</module>
-        <module>tablespoon-event-processing</module>
         <module>tablespoon-client</module>
     </modules>
     <properties>
