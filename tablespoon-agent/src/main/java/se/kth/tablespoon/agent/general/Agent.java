@@ -21,10 +21,11 @@ public class Agent {
   private static final int READ_QUEUE_TIME = 10;
   
   private final MetricListener metricListener;
-  private TopicLoader topicLoader;
+  private final TopicLoader topicLoader;
+  private final Topics topics;
   private final Configuration config = Configuration.getInstance();
   private RiemannClient riemannClient;
-  private final EventSender es;
+  private EventSender es;
   
   public RiemannClient getRiemannClient() {
     return riemannClient;
@@ -34,7 +35,7 @@ public class Agent {
   public Agent(MetricListener metricListener, Topics topics) {
     this.metricListener = metricListener;
     this.topicLoader = new TopicLoader(topics);
-    this.es = new EventSender(metricListener.getMetricQueue(), riemannClient, topics);
+    this.topics = topics;
   }
   
   public void start() {
@@ -45,6 +46,7 @@ public class Agent {
     riemannClient = RiemannClient.tcp(config.getRiemannHost(),
         config.getRiemannPort());
     riemannClient.connect();
+    this.es = new EventSender(metricListener.getMetricQueue(), riemannClient, topics);
     slf4jLogger.info("Established connection with host:"
         + config.getRiemannHost() + " port:" + config.getRiemannPort());
   }
@@ -78,7 +80,7 @@ public class Agent {
   
   private void agentCycle(int tries) {
     try {
-      System.out.println("Hey trying to reconnect man.");
+      topicLoader.readTopicFiles();
       connect();
       //resetting number of tries if connection was established
       tries = 0;

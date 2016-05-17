@@ -173,7 +173,7 @@ public abstract class Topic {
   
   public void generateJson() throws IOException {
     JSONComposer<String> composer = JSON.std
-//        .with(JSON.Feature.PRETTY_PRINT_OUTPUT)
+        .with(JSON.Feature.PRETTY_PRINT_OUTPUT)
         .composeString();
     ObjectComposer obj = composer.startObject();
     obj.put("index", index)

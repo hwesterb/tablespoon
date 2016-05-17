@@ -32,7 +32,7 @@ public abstract class MetricListener implements Runnable {
   
   public abstract void collectCycle();
   
-
+  
   protected void addMetricToQueue(String line) {
     ArrayList<Metric> metrics = MetricFactory.createMetrics(line, mls, config);
     createCustomMetrics(metrics);
@@ -49,9 +49,9 @@ public abstract class MetricListener implements Runnable {
       synchronized (metricQueue) {
         metricQueue.remove();
       }
-      expireOldMetrics(i++);
+      expireOldMetrics(++i);
     }
-      slf4jLogger.info("Expired " + i + " metrics.");
+    slf4jLogger.info("Expired " + i + " metrics.");
   }
   
   public void requestInterrupt() {

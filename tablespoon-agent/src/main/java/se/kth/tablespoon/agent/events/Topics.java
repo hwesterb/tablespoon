@@ -31,7 +31,7 @@ public class Topics {
     expireOldTopics(metric);
     ArrayList<RiemannEvent> riemannEvents = new ArrayList<>();
     for (Topic topic : relevantTopics) {
-      topic.expireOldMetrics();
+      if (topic.metricQueueIsEmpty() == false) topic.expireOldMetrics();
       addRiemannEventIfReady(riemannEvents, metric, topic);
     }
     return riemannEvents;

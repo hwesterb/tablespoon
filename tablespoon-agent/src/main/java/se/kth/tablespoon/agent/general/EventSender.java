@@ -40,7 +40,6 @@ public class EventSender {
     //TODO: Aggregate riemannEvents with the same value and timeStamp.
     
     for (RiemannEvent riemannEvent : riemannEvents) {
-      System.out.println("Sending a riemann event!");
       riemannEvent.sendMe(rClient, config.getRiemannDereferenceTime());
     }
   }

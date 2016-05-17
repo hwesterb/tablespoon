@@ -28,8 +28,8 @@ public class RiemannEvent {
   }
   
   public void sendMe(RiemannClient rClient, int dereferenceTime) throws IOException {
-    EventDSL event = rClient.event().
-        service(service).
+    EventDSL event = rClient.event();
+    event.service(service).
         description(description).
         metric(metric).
         state(state).
@@ -41,9 +41,9 @@ public class RiemannEvent {
     event.send().deref(dereferenceTime, java.util.concurrent.TimeUnit.MILLISECONDS);
   }
   
- public double getValue() {
-   return metric;
- }
+  public double getValue() {
+    return metric;
+  }
   
   
 }

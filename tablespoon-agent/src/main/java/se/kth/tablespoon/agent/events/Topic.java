@@ -69,6 +69,10 @@ public class Topic {
     return metrics/counter;
   }
   
+  public boolean metricQueueIsEmpty() {
+    return metricQueue.isEmpty();
+  }
+  
   public int currentCounterValue() {
     return metricQueue.size();
   }

@@ -44,6 +44,8 @@ public class Start {
   
   private static void setUpHook() {
     Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+      
+      @Override
       public void run() {
         if (metricListener != null) {
           metricListener.requestInterrupt();
