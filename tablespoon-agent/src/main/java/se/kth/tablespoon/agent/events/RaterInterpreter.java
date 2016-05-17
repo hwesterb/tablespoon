@@ -11,19 +11,19 @@ package se.kth.tablespoon.agent.events;
  */
 public class RaterInterpreter {
   
-  public static double getNumber(Rate rate) {
+  public static double getCorrespondingNumber(Rate rate) {
     switch (rate) {
       case VERY_SLOW: return 10.0;
       case SLOW: return 5.0;
-      case NORMAL: return 0.0;
+      case NORMAL: return 1.0;
       case FAST: return 0.5;
       case VERY_FAST: return 0.25;
     }
-    return 0.0;
+    return 0;
   }
   
   public static int sendWhenCounterIs(Rate sendRate, Rate collectionRate) {
-    Double d = getNumber(sendRate)/getNumber(collectionRate);
+    Double d = getCorrespondingNumber(sendRate)/getCorrespondingNumber(collectionRate);
     return d.intValue();
   }
   

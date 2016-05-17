@@ -1,16 +1,14 @@
 package se.kth.tablespoon.agent.listeners;
 
 
-import org.junit.After;
-import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import se.kth.tablespoon.agent.events.Configuration;
 import se.kth.tablespoon.agent.file.ConfigurationLoader;
+import se.kth.tablespoon.agent.file.JsonException;
 
 import se.kth.tablespoon.agent.metrics.MetricLayout;
 import se.kth.tablespoon.agent.metrics.MetricFormat;
@@ -21,14 +19,18 @@ public class CollectlListenerTest {
   public CollectlListenerTest() {
   }
   
+  static Configuration config;
+  
+  @BeforeClass
+  public static void setUp() throws JsonException {
+    (new ConfigurationLoader()).readConfigFile();
+    config = Configuration.getInstance();
+    System.out.println(config);
+  }
+  
   @Test
   public void test() {
-    ConfigurationLoader ch = new ConfigurationLoader();
-    ch.readConfigFile();
-    System.out.println("Configuration loaded.");
-    Configuration config = ch.getConfig();
-    System.out.println(config);
-    CollectlListener cl = new CollectlListener(config);
+    CollectlListener cl = new CollectlListener();
     Thread t = new Thread(cl);
     t.start();
     assertTrue(t.isAlive());
@@ -38,11 +40,17 @@ public class CollectlListenerTest {
     }
     assertEquals("User", cl.getEventLayouts()[0].getName());
     assertEquals(MetricFormat.PERSEC, cl.getEventLayouts()[9].getFormat());
+    assertEquals("Tot", cl.getEventLayouts()[19].getName());
+    assertEquals("Used", cl.getEventLayouts()[20].getName());
+    assertEquals(65, cl.getEventLayouts().length);
+    // 65 in every collection + 1 custom = 66
+    assertEquals(0, cl.getMetricQueue().size() % 66);
     int i = 0;
     for (MetricLayout el : cl.getEventLayouts()) {
       assertNotNull("Iteration " + i + " failed.", el.getSource());
       i++;
     }
+    
     cl.requestInterrupt();
     
     while(t.isAlive()) {
@@ -53,10 +61,7 @@ public class CollectlListenerTest {
   
   @Test
   public void restartTest() {
-    ConfigurationLoader ch = new ConfigurationLoader();
-    ch.readConfigFile();
-    Configuration config = ch.getConfig();
-    CollectlListener cl = new CollectlListener(config);
+    CollectlListener cl = new CollectlListener();
     Thread t = new Thread(cl);
     t.start();
     

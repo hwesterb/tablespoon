@@ -2,7 +2,8 @@ package se.kth.tablespoon.agent.events;
 
 import com.fasterxml.jackson.jr.ob.JSON;
 import java.io.IOException;
-import java.util.TreeMap;
+import java.util.Map;
+import se.kth.tablespoon.agent.file.JsonException;
 
 public class Configuration {
   
@@ -11,13 +12,9 @@ public class Configuration {
   private int riemannPort;
   private int riemannReconnectionTries;
   private int riemannReconnectionTime;
-  private int riemannSendRate;
   private int riemannEventTtl;
   private int riemannDereferenceTime;
-  private boolean collectlRestart;
   private Rate collectlCollectionRate;
-  private final TreeMap<Integer, RelatedTopics> relatedTopics = new TreeMap<>();
-  
   private static Configuration instance = null;
   
   protected Configuration() {
@@ -31,29 +28,8 @@ public class Configuration {
     return instance;
   }
   
-  public void addTopic(Topic topic) {
-    RelatedTopics related = relatedTopics.get(topic.getIndex());
-    if (related==null) {
-      related = new RelatedTopics();
-      relatedTopics.put(topic.getIndex(), related);
-    }
-    related.addTopic(topic);
-  }
-  
-  public Topic findTopic(String uniqueId) {
-    Topic topic = null;
-    for (RelatedTopics rt : relatedTopics.values()) {
-      if ((topic = rt.contains(uniqueId)) != null) return topic;
-    }
-    return null;
-  }
-  
   public void incrementCounter() {
     counter++;
-  }
-  
-  public RelatedTopics getRelatedTopicsBeloningToIndex(int index) {
-    return relatedTopics.get(index);
   }
   
   public int getRiemannPort() {
@@ -72,10 +48,6 @@ public class Configuration {
     return riemannReconnectionTime;
   }
   
-  public int getRiemannSendRate() {
-    return riemannSendRate;
-  }
-  
   public int getRiemannEventTtl() {
     return riemannEventTtl;
   }
@@ -84,16 +56,41 @@ public class Configuration {
     return riemannDereferenceTime;
   }
   
-  public boolean isCollectlRestart() {
-    return collectlRestart;
-  }
-  
   public Rate getCollectlCollectionRate() {
     return collectlCollectionRate;
   }
   
   public int currentCounterValue() {
     return counter;
+  }
+  
+  public void interpretJson(String json) throws IOException, JsonException {
+    Map<String,Object> map = JSON.std.mapFrom(json);
+    
+    if (map.get("riemannHost") == null) throw new JsonException("riemannHost");
+    else riemannHost = (String) map.get("riemannHost");
+    
+    if (map.get("riemannPort") == null) throw new JsonException("riemannPort");
+    else riemannPort = (int) map.get("riemannPort");
+    
+    if (map.get("riemannReconnectionTries") == null) throw new JsonException("riemannReconnectionTries");
+    else riemannReconnectionTries = (int) map.get("riemannReconnectionTries");
+    
+    if (map.get("riemannReconnectionTime") == null) throw new JsonException("riemannReconnectionTime");
+    else riemannReconnectionTime = (int) map.get("riemannReconnectionTime");
+    
+    if (map.get("riemannReconnectionTime") == null) throw new JsonException("riemannReconnectionTime");
+    else riemannReconnectionTime = (int) map.get("riemannReconnectionTime");
+    
+    if (map.get("riemannEventTtl") == null) throw new JsonException("riemannEventTtl");
+    else riemannEventTtl = (int) map.get("riemannEventTtl");
+    
+    if (map.get("riemannDereferenceTime") == null) throw new JsonException("riemannDereferenceTime");
+    else riemannDereferenceTime = (int) map.get("riemannDereferenceTime");
+    
+    if (map.get("collectlCollectionRate") == null) throw new JsonException("collectlCollectionRate");
+    else collectlCollectionRate = Rate.valueOf((String) map.get("collectlCollectionRate"));
+    
   }
   
   @Override

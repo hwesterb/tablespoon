@@ -46,28 +46,34 @@ public class CollectlStringParser {
     FormatRegex[] frs = {
       new FormatRegex(MetricFormat.PERSEC, "/sec"),
       new FormatRegex(MetricFormat.TOTAL, "Tot"),
+      new FormatRegex(MetricFormat.TOTAL, "Total"),
       new FormatRegex(MetricFormat.PERCENTAGE, "%"),
       new FormatRegex(MetricFormat.AVG1, "Avg1"),
       new FormatRegex(MetricFormat.AVG5, "Avg5"),
       new FormatRegex(MetricFormat.AVG15, "Avg15"),
       new FormatRegex(MetricFormat.QUE, "Que"),
-      new FormatRegex(MetricFormat.RUN, "Run")
+      new FormatRegex(MetricFormat.RUN, "Run"),
+      new FormatRegex(MetricFormat.FAULTS, "Faults")
     };
     
-    String regexPart = "";
+    String thirdGroup = "(";
     for (int i = 0; i < frs.length-1; i++) {
-      regexPart += frs[i].getRegex() + "|";
+      thirdGroup += frs[i].getRegex() + "|";
     }
-    regexPart += frs[frs.length-1].getRegex();
+    thirdGroup += frs[frs.length-1].getRegex();
+    thirdGroup += ")";
+    String twoGroups = "\\[([A-Z]+)\\](.+)";
     
     // The first part can be matched because it has brackets.
     // The last part however must be defined by it's name,
     // these names are defined in the FormatRegex array.
-    Pattern pattern = Pattern.compile("\\[([A-Z]+)\\](.*)(" + regexPart + ")");
+    Pattern pattern = Pattern.compile(twoGroups + thirdGroup);
     Matcher matcher = pattern.matcher(header);
     MetricLayout ml = new MetricLayout();
+    boolean matched = false;
     while (matcher.find()) {
       if (matcher.groupCount() == 3) {
+        matched = true;
         //Example:  [CPU]User%
         //group 1 type "CPU"
         ml.setSource(findType(matcher.group(1)));
@@ -80,6 +86,19 @@ public class CollectlStringParser {
         break;
       }
     }
+    if (!matched) {
+      pattern = Pattern.compile(twoGroups);
+      matcher = pattern.matcher(header);
+      while (matcher.find()) {
+        if (matcher.groupCount() == 2) {
+          ml.setSource(findType(matcher.group(1)));
+          ml.setName(matcher.group(2));
+          ml.setFormat(MetricFormat.UNITS);
+          break;
+        }
+      }
+    }
+    
     return ml;
   }
   

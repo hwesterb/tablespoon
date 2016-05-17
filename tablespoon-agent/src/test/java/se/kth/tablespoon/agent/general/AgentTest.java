@@ -10,6 +10,7 @@ import com.aphyr.riemann.client.RiemannClient;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.After;
@@ -18,6 +19,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import se.kth.tablespoon.agent.events.Topics;
 import se.kth.tablespoon.agent.listeners.MetricListener;
 import se.kth.tablespoon.agent.metrics.Metric;
 import se.kth.tablespoon.agent.metrics.MetricFormat;
@@ -41,7 +43,7 @@ public class AgentTest {
   public static void setUpClass() {
     ListeningServer ls = new ListeningServer();
     ls.run();
-    agent = new Agent(ml);
+    agent = new Agent(ml, new Topics());
 
     Thread mlThread = new Thread(ml);
     mlThread.start();
@@ -61,18 +63,6 @@ public class AgentTest {
 
   @After
   public void tearDown() {
-  }
-
-  /**
-   * Test of getRiemannClient method, of class Agent.
-   */
-  @Test
-  public void testGetRiemannClient() {
-    System.out.println("getRiemannClient");
-    RiemannClient result = agent.getRiemannClient();
-    assertEquals(true, result.isConnected());
-    // TODO review the generated test code and remove the default call to fail.
-    fail("The test case is a prototype.");
   }
 
   private static class ListeningServer implements Runnable {
@@ -105,6 +95,11 @@ public class AgentTest {
         metricQueue.add(new Metric(1, MetricSource.DSK, MetricFormat.TOTAL, System.currentTimeMillis() / 1000L, "agenttester", 27));
         Sleep.now(100);
       }
+    }
+
+    @Override
+    protected void createCustomMetrics(ArrayList<Metric> metrics) {
+      throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
   }

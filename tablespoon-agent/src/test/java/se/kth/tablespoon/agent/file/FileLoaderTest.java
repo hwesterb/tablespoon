@@ -7,7 +7,6 @@ package se.kth.tablespoon.agent.file;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -18,6 +17,7 @@ import static org.junit.Assert.assertNotEquals;
 import org.junit.Test;
 import se.kth.tablespoon.agent.events.Configuration;
 import se.kth.tablespoon.agent.events.Topic;
+import se.kth.tablespoon.agent.events.Topics;
 
 /**
  *
@@ -43,34 +43,34 @@ public class FileLoaderTest {
   }
   
   @Test
-  public void test1() throws IOException {
+  public void test1() throws IOException, JsonException {
     
     (new ConfigurationLoader()).readConfigFile();
     Configuration config = Configuration.getInstance();
-    
+    Topics topics = new Topics();
    
     String fileA = "uniqueIdA";
     int versionA = 1;
     generateJsonAndWrite(fileA, versionA, 0.3);
-    TopicLoader tl = new TopicLoader();
+    TopicLoader tl = new TopicLoader(topics);
     tl.readTopicFiles();
-    assertEquals(fileA, config.findTopic(fileA).getUniqueId());
+    assertEquals(fileA, topics.findTopic(fileA).getUniqueId());
     
     generateJsonAndWrite(fileA, versionA, 0.4);
     tl.readTopicFiles();
-    assertNotEquals(0.4, config.findTopic(fileA).getHigh().percentage, 0.01);
+    assertNotEquals(0.4, topics.findTopic(fileA).getHigh().percentage, 0.01);
    
     versionA = 2;
     generateJsonAndWrite(fileA, versionA, 0.4);
     tl.readTopicFiles();
-    assertEquals(0.4, config.findTopic(fileA).getHigh().percentage, 0.01);
+    assertEquals(0.4, topics.findTopic(fileA).getHigh().percentage, 0.01);
   }
   
   
   @Test
   public void test2() throws IOException, OldTopicException {
-    TopicLoader fl = new TopicLoader();
-    Map<String, Topic> topics = new TreeMap<>();
+    Topics topics = new Topics();
+    TopicLoader fl = new TopicLoader(topics);
     String directory = "topics";
     String fileName = "pqowiepoqwkepoqkwens120392js_1.json";
     String jsonIn = "{\"index\" : 0,}\"";

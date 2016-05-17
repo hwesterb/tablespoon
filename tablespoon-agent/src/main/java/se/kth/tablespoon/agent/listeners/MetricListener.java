@@ -1,6 +1,7 @@
 package se.kth.tablespoon.agent.listeners;
 
 import java.io.BufferedReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -33,10 +34,14 @@ public abstract class MetricListener implements Runnable {
   
 
   protected void addMetricToQueue(String line) {
-    Metric[] events = MetricFactory.createMetrics(line, mls, config);
-    metricQueue.addAll(Arrays.asList(events));
+    ArrayList<Metric> metrics = MetricFactory.createMetrics(line, mls, config);
+    createCustomMetrics(metrics);
+    metricQueue.addAll(metrics);
   }
-  protected void emptyOldMetrics() {
+  
+  protected abstract void createCustomMetrics(ArrayList<Metric> metrics);
+  
+  protected void expireOldMetrics(int i) {
     Metric metric = metricQueue.peek();
     long ttl = config.getRiemannEventTtl();
     long now = System.currentTimeMillis() / 1000L;
@@ -44,10 +49,9 @@ public abstract class MetricListener implements Runnable {
       synchronized (metricQueue) {
         metricQueue.remove();
       }
-      slf4jLogger.info("Metric was too old and discarded.");
-      emptyOldMetrics();
+      expireOldMetrics(i++);
     }
-    
+      slf4jLogger.info("Expired " + i + " metrics.");
   }
   
   public void requestInterrupt() {

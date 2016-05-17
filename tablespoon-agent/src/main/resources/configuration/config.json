@@ -6,6 +6,5 @@
   "riemannSendRate": 1000,
   "riemannEventTtl": 60,
   "riemannDereferenceTime": 5000,
-  "collectlRestart": false,
-  "collectlCollectionRate": 1
+  "collectlCollectionRate": "NORMAL"
 }

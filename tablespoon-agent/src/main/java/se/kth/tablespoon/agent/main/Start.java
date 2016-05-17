@@ -2,8 +2,10 @@ package se.kth.tablespoon.agent.main;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.kth.tablespoon.agent.events.Topics;
 import se.kth.tablespoon.agent.general.Agent;
 import se.kth.tablespoon.agent.file.ConfigurationLoader;
+import se.kth.tablespoon.agent.file.JsonException;
 
 import se.kth.tablespoon.agent.listeners.CollectlListener;
 import se.kth.tablespoon.agent.listeners.MetricListener;
@@ -18,13 +20,15 @@ public class Start {
   private static Thread collectlThread;
   private final static Logger slf4jLogger = LoggerFactory.getLogger(Start.class);
   
-  public static void main(String[] args) {
+  public static void main(String[] args) throws JsonException {
     slf4jLogger.info("Starting tablespoon agent.");
-    setUpHook();
     (new ConfigurationLoader()).readConfigFile();
     metricListener = new CollectlListener();
+    Topics topics = new Topics();
     startCollectlThread();
-    agent = new Agent(metricListener);
+    agent = new Agent(metricListener, topics);
+    setUpHook();
+    agent.start();
     System.exit(0); //will trigger the exit handler which kills the thread
   }
   

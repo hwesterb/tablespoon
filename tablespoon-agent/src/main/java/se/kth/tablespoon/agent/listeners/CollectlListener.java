@@ -3,10 +3,12 @@ package se.kth.tablespoon.agent.listeners;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import se.kth.tablespoon.agent.general.CollectlStringParser;
-import se.kth.tablespoon.agent.events.Configuration;
-import se.kth.tablespoon.agent.events.Rate;
 import se.kth.tablespoon.agent.events.RaterInterpreter;
+import se.kth.tablespoon.agent.metrics.Metric;
+import se.kth.tablespoon.agent.metrics.MetricFormat;
+import se.kth.tablespoon.agent.metrics.MetricSource;
 
 public class CollectlListener extends MetricListener {
   
@@ -15,9 +17,12 @@ public class CollectlListener extends MetricListener {
     return new String[]{
       "/bin/sh",
       "-c",
-      "collectl -P -o U -i " + RaterInterpreter.getNumber(config.getCollectlCollectionRate())
+      "collectl -P -o U -s +m -i " +
+        RaterInterpreter.getCorrespondingNumber(config.getCollectlCollectionRate())
     };
   }
+  
+  
   
   @Override
   public void collectCycle() {
@@ -33,7 +38,7 @@ public class CollectlListener extends MetricListener {
           continue;
         }
         addMetricToQueue(line);
-        emptyOldMetrics();
+        expireOldMetrics(0);
         if (interruptRequest || restartRequest) break;
       }
       stopCollecting();
@@ -59,6 +64,20 @@ public class CollectlListener extends MetricListener {
       mls = CollectlStringParser.handleHeaders(line);
       headersDefined = true;
     }
+  }
+  
+  @Override
+  protected void createCustomMetrics(ArrayList<Metric> metrics) {
+    double total = metrics.get(19).getValue();
+    double used = metrics.get(20).getValue();
+    long timeStamp = metrics.get(0).getTimeStamp();
+    Metric metric = new Metric(metrics.size(),
+        MetricSource.MEM,
+        MetricFormat.PERCENTAGE,
+        timeStamp,
+        "MemoryUsed",
+        used/total);
+    metrics.add(metric);
   }
   
 }

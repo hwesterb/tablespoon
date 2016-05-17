@@ -16,7 +16,7 @@ public class MetricFactory {
   
   private final static Logger slf4jLogger = LoggerFactory.getLogger(MetricFactory.class);
   
-  public static Metric[] createMetrics(String line, MetricLayout[] mls, Configuration config) {
+  public static ArrayList<Metric> createMetrics(String line, MetricLayout[] mls, Configuration config) {
     String[] rowArray = CollectlStringParser.split(line);
     long timeStamp = Math.round(Double.parseDouble(rowArray[0]));
     double[] numericRowArray =  new double[mls.length];
@@ -29,13 +29,13 @@ public class MetricFactory {
   }
   
   
-  private static Metric[] match(double[] row, long timeStamp, MetricLayout[] mls, Configuration config) {
+  private static ArrayList<Metric> match(double[] row, long timeStamp, MetricLayout[] mls, Configuration config) {
     ArrayList<Metric> metrics = new ArrayList<>();
     for (int i = 0; i < mls.length; i++) {
       Metric metric = new Metric(i, mls[i].getSource(), mls[i].getFormat(), timeStamp, mls[i].getName(), row[i]);
       metrics.add(metric);
     }
-    return metrics.toArray(new Metric[metrics.size()]);
+    return metrics;
   }
   
 }

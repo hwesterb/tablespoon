@@ -11,11 +11,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import se.kth.tablespoon.agent.events.Configuration;
 import se.kth.tablespoon.agent.events.Topic;
+import se.kth.tablespoon.agent.events.Topics;
 
 public class TopicLoader extends FileLoader {
   
   private final String TOPICS_DIRECTORY = "topics";
   private final Configuration config = Configuration.getInstance();
+  private final Topics topics;
+  
+  public TopicLoader(Topics topics) {
+    this.topics = topics;
+  }
   
   public void readTopicFiles() {
     List<String> list;
@@ -29,14 +35,14 @@ public class TopicLoader extends FileLoader {
     for (String fileName : list) {
       try {
         handleTopic(TOPICS_DIRECTORY, fileName);
-      } catch (OldTopicException | WrongFileNameFormatException | TopicJsonException | IOException ex) {
+      } catch (OldTopicException | WrongFileNameFormatException | JsonException | IOException ex) {
         slf4jLogger.debug(ex.getMessage());
       }
       deleteFile(TOPICS_DIRECTORY, fileName);
     }
   }
   
-  private String handleTopic(String directory, String fileName) throws OldTopicException, WrongFileNameFormatException, IOException, TopicJsonException {
+  private String handleTopic(String directory, String fileName) throws OldTopicException, WrongFileNameFormatException, IOException, JsonException {
     Pattern pattern = Pattern.compile("(.+)_([0-9]+).json");
     Matcher matcher = pattern.matcher(fileName);
     while (matcher.find()) {
@@ -52,8 +58,8 @@ public class TopicLoader extends FileLoader {
   
   
   private void updateOrCreate(String uniqueId, int version, String directory, String fileName)
-      throws OldTopicException, IOException, TopicJsonException {
-    Topic topic = config.findTopic(uniqueId);
+      throws OldTopicException, IOException, JsonException {
+    Topic topic = topics.findTopic(uniqueId);
     if (topic==null) {
       createTopic(directory, fileName);
     }
@@ -63,14 +69,14 @@ public class TopicLoader extends FileLoader {
     }
   }
   
-  private void createTopic(String directory, String fileName) throws IOException, TopicJsonException {
+  private void createTopic(String directory, String fileName) throws IOException, JsonException {
     Topic topic = new Topic();
     String json = loadJsonFromFile(directory, fileName);
     topic.interpretJson(json);
-    config.addTopic(topic);
+    topics.addTopic(topic);
   }
   
-  private void updateTopic(Topic topic, String directory, String fileName) throws IOException, TopicJsonException {
+  private void updateTopic(Topic topic, String directory, String fileName) throws IOException, JsonException {
     String json = loadJsonFromFile(directory, fileName);
     topic.interpretJson(json);
   }

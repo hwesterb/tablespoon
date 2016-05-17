@@ -11,8 +11,9 @@ import com.aphyr.riemann.client.RiemannClient;
 import java.util.ArrayList;
 
 import se.kth.tablespoon.agent.events.Configuration;
-import se.kth.tablespoon.agent.events.RelatedTopics;
+import se.kth.tablespoon.agent.events.Topics;
 import se.kth.tablespoon.agent.events.RiemannEvent;
+import se.kth.tablespoon.agent.events.Topic;
 
 public class EventSender {
   
@@ -21,24 +22,29 @@ public class EventSender {
   private final RiemannClient rClient;
   private final Configuration config = Configuration.getInstance();
   private final Logger slf4jLogger = LoggerFactory.getLogger(EventSender.class);
+  private final Topics topics; 
   
-  public EventSender(Queue<Metric> metricQueue, RiemannClient rClient) {
+  public EventSender(Queue<Metric> metricQueue, RiemannClient rClient, Topics topics) {
     this.metricQueue = metricQueue;
     this.rClient = rClient;
+    this.topics = topics;
   }
   
   public void sendMetrics() throws IOException {
     
     Metric metric = metricQueue.poll();
-    RelatedTopics related = config.getRelatedTopicsBeloningToIndex(metric.getCollectIndex());
-    if (related == null) return;    
-    ArrayList<RiemannEvent> riemannEvents = related.extractRiemannEvents(metric);
-      
-     for (RiemannEvent riemannEvent : riemannEvents) {
-       riemannEvent.sendMe(rClient, config.getRiemannDereferenceTime());
-     }
+    ArrayList<Topic> relevant = topics.getRelevantTopicsBeloningToIndex(metric.getCollectIndex());
+    if (relevant == null) return;
+    ArrayList<RiemannEvent> riemannEvents = topics.extractRiemannEvents(metric, relevant);
+    
+    //TODO: Aggregate riemannEvents with the same value and timeStamp.
+    
+    for (RiemannEvent riemannEvent : riemannEvents) {
+      System.out.println("Sending a riemann event!");
+      riemannEvent.sendMe(rClient, config.getRiemannDereferenceTime());
+    }
   }
   
   
-
+  
 }
