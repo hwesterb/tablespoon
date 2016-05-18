@@ -12,7 +12,6 @@ import se.kth.tablespoon.agent.metrics.MetricSource;
 
 public class CollectlListener extends MetricListener {
   
-  
   private String[] generateCollectlCommand() {
     return new String[]{
       "/bin/sh",
@@ -31,8 +30,8 @@ public class CollectlListener extends MetricListener {
       process = Runtime.getRuntime().exec(cmd);
       br = new BufferedReader(new InputStreamReader(process.getInputStream()));
       String line;
+      slf4jLogger.info("Starting to read from collectl.");
       while ((line = br.readLine()) != null) {
-        slf4jLogger.info("Reading from collectl.");
         if (!headersDefined) {
           defineTheHeaders(line);
           continue;
@@ -76,7 +75,7 @@ public class CollectlListener extends MetricListener {
         MetricFormat.PERCENTAGE,
         timeStamp,
         "MemoryUsed",
-        used/total);
+        (used/total) * 100);
     metrics.add(metric);
   }
   

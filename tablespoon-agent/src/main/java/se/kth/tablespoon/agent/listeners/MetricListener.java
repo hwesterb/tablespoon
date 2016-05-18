@@ -2,7 +2,6 @@ package se.kth.tablespoon.agent.listeners;
 
 import java.io.BufferedReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 import org.slf4j.Logger;
@@ -51,7 +50,7 @@ public abstract class MetricListener implements Runnable {
       }
       expireOldMetrics(++i);
     }
-    slf4jLogger.info("Expired " + i + " metrics.");
+    if (i > 0) slf4jLogger.info("Expired " + i + " metrics.");
   }
   
   public void requestInterrupt() {

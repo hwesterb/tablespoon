@@ -38,7 +38,7 @@ public class EventSender {
     ArrayList<RiemannEvent> riemannEvents = topics.extractRiemannEvents(metric, relevant);
     
     //TODO: Aggregate riemannEvents with the same value and timeStamp.
-    
+   
     for (RiemannEvent riemannEvent : riemannEvents) {
       riemannEvent.sendMe(rClient, config.getRiemannDereferenceTime());
     }

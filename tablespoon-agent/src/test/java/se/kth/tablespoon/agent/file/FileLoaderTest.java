@@ -8,15 +8,12 @@ package se.kth.tablespoon.agent.file;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import org.junit.Test;
 import se.kth.tablespoon.agent.events.Configuration;
-import se.kth.tablespoon.agent.events.Topic;
 import se.kth.tablespoon.agent.events.Topics;
 
 /**
@@ -46,7 +43,6 @@ public class FileLoaderTest {
   public void test1() throws IOException, JsonException {
     
     (new ConfigurationLoader()).readConfigFile();
-    Configuration config = Configuration.getInstance();
     Topics topics = new Topics();
    
     String fileA = "uniqueIdA";

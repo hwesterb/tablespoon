@@ -1,17 +1,9 @@
 {
-  "index" : 0,
+  "index" : 65,
   "version" : 1,
   "startTime" : 1463503857,
   "uniqueId" : "a0986132-a503-4cee-ae85-83ac17ddcec1",
   "groupId" : "A",
   "type" : "REGULAR",
-  "sendRate" : "NORMAL",
-  "high" : {
-    "percentage" : 0.6,
-    "comparator" : "GREATER_THAN"
-  },
-  "low" : {
-    "percentage" : 0.3,
-    "comparator" : "LESS_THAN"
-  }
+  "sendRate" : "VERY_SLOW"
 }

@@ -69,6 +69,32 @@ public class Topic {
     return metrics/counter;
   }
   
+  public boolean isValid(double value) {
+    if (high != null && low != null) {
+      return twoThresholds(value);
+    } else if (high != null) {
+      return high.isValid(value);
+    }
+    return true;
+  }
+  
+  private boolean twoThresholds(double value) {
+    if (getNormalizedComparatorType(high.comparator) ==
+        Comparator.GREATER_THAN_OR_EQUAL) {
+      return high.isValid(value) || low.isValid(value);
+    } else {
+      return high.isValid(value) && low.isValid(value);
+    }
+  }
+  
+  private Comparator getNormalizedComparatorType(Comparator comparator) {
+    if (comparator.equals(Comparator.GREATER_THAN) || comparator.equals(Comparator.GREATER_THAN_OR_EQUAL)) {
+      return Comparator.GREATER_THAN_OR_EQUAL;
+    } else {
+      return Comparator.LESS_THAN_OR_EQUAL;
+    }
+  }
+  
   public boolean metricQueueIsEmpty() {
     return metricQueue.isEmpty();
   }
@@ -171,7 +197,7 @@ public class Topic {
     
   }
   
- 
+  
   
   
   

@@ -68,7 +68,7 @@ public class Agent {
     while (true) {
       topicLoader.readTopicFiles();
       // it apparently needs some headroom.
-      Sleep.now(READ_QUEUE_TIME);
+//      Sleep.now(READ_QUEUE_TIME);
       synchronized (metricListener.getMetricQueue()) {
         if (!metricListener.queueIsEmpty()) {
           es.sendMetrics();
@@ -80,7 +80,6 @@ public class Agent {
   
   private void agentCycle(int tries) {
     try {
-      topicLoader.readTopicFiles();
       connect();
       //resetting number of tries if connection was established
       tries = 0;

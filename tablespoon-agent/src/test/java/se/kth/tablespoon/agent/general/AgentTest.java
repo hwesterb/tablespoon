@@ -6,7 +6,6 @@
 package se.kth.tablespoon.agent.general;
 
 import se.kth.tablespoon.agent.events.Configuration;
-import com.aphyr.riemann.client.RiemannClient;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -17,8 +16,6 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
 import se.kth.tablespoon.agent.events.Topics;
 import se.kth.tablespoon.agent.listeners.MetricListener;
 import se.kth.tablespoon.agent.metrics.Metric;

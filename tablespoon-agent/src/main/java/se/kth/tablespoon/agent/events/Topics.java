@@ -37,14 +37,6 @@ public class Topics {
     return riemannEvents;
   }
   
-  public ArrayList<Topic> getRelevantTopicsBeloningToIndex(int index) {
-    ArrayList<Topic> relevantTopics = new ArrayList<>();
-    for (Topic topic : topics.values()) {
-      if (topic.getIndex() == index) relevantTopics.add(topic);
-    }
-    return relevantTopics;
-  }
-  
   private void addRiemannEventIfReady(ArrayList<RiemannEvent> riemannEvents, Metric metric, Topic topic) {
     int sendWhenCounterIs = RaterInterpreter.sendWhenCounterIs(topic.getSendRate(),
         config.getCollectlCollectionRate());
@@ -61,7 +53,9 @@ public class Topics {
   
   private void addRiemannEvent(ArrayList<RiemannEvent> riemannEvents, Metric metric, Topic topic) {
     double value = topic.getAverageOfMeasurements();
-    riemannEvents.add(createRiemannEvent(metric, value, topic.getUniqueId()));
+    if (topic.isValid(value)) {
+      riemannEvents.add(createRiemannEvent(metric, value, topic.getUniqueId()));
+    }
   }
   
   private RiemannEvent createRiemannEvent(Metric metric, double value, String uniqueId) {
@@ -79,7 +73,7 @@ public class Topics {
     Iterator<Topic> iterator = topics.values().iterator();
     while (iterator.hasNext()) {
       Topic topic = iterator.next();
-      if (durationHasEnded(metric, topic)) {
+      if (durationHasEnded(metric, topic) || topic.isScheduledForRemoval()) {
         topics.put(topic.getUniqueId(), null);
       }
     }
@@ -97,6 +91,14 @@ public class Topics {
       }
     }
     return false;
+  }
+  
+  public ArrayList<Topic> getRelevantTopicsBeloningToIndex(int index) {
+    ArrayList<Topic> relevantTopics = new ArrayList<>();
+    for (Topic topic : topics.values()) {
+      if (topic.getIndex() == index) relevantTopics.add(topic);
+    }
+    return relevantTopics;
   }
   
   
