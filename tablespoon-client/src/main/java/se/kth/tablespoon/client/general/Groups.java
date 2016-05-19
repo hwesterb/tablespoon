@@ -63,8 +63,7 @@ public class Groups implements Iterable<String> {
     
     private boolean hasNextGroup() {
       machineIterator = groupIterator.next().getMachines().iterator();
-      if (machineIterator.hasNext()) return true;
-      else return false;
+      return machineIterator.hasNext();
     }
     
     @Override

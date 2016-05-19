@@ -5,14 +5,15 @@
 */
 package se.kth.tablespoon.client.api;
 
+import se.kth.tablespoon.client.broadcasting.SubscriberBroadcaster;
 import se.kth.tablespoon.client.general.Group;
-import se.kth.tablespoon.client.topics.ResourceType;
-import se.kth.tablespoon.client.topics.Threshold;
+import se.kth.tablespoon.client.events.ResourceType;
+import se.kth.tablespoon.client.events.Threshold;
 import se.kth.tablespoon.client.topics.ThresholdException;
 import se.kth.tablespoon.client.topics.Topic;
 import se.kth.tablespoon.client.topics.TopicFactory;
 import se.kth.tablespoon.client.topics.TopicStorage;
-import se.kth.tablespoon.client.topics.EventType;
+import se.kth.tablespoon.client.events.EventType;
 import se.kth.tablespoon.client.general.Groups;
 import se.kth.tablespoon.client.topics.MissingTopicException;
 import se.kth.tablespoon.client.topics.TopicRemovalException;
@@ -27,6 +28,7 @@ public class TablespoonAPI {
   
   private final TopicStorage storage;
   private final Groups groups;
+  private SubscriberBroadcaster sb;
   
   // TODO: make into Singleton.
   public static TablespoonAPI getInstance() {
@@ -35,7 +37,13 @@ public class TablespoonAPI {
     return new TablespoonAPI(storage, groups);
   }
   
-  public TablespoonAPI(TopicStorage storage, Groups groups) {
+  public TablespoonAPI(TopicStorage storage, Groups groups, SubscriberBroadcaster sb) {
+    this.storage = storage;
+    this.groups = groups;
+    this.sb = sb;
+  }
+  
+   public TablespoonAPI(TopicStorage storage, Groups groups) {
     this.storage = storage;
     this.groups = groups;
   }
@@ -56,6 +64,7 @@ public class TablespoonAPI {
       ResourceType resourceType, int duration) {
     Topic topic = registerNewTopic(groupId, eventType, resourceType, duration);
     topic.unlock();
+    sb.registerSubscriber(subscriber, topic);
     storage.notifyBroadcaster();
     
     // EventGenerator only for temporary testing purposes
@@ -85,6 +94,7 @@ public class TablespoonAPI {
     Topic topic = registerNewTopic(groupId, eventType, resourceType, duration);
     topic.setHigh(threshold);
     topic.unlock();
+    sb.registerSubscriber(subscriber, topic);
     storage.notifyBroadcaster();
     
     // EventGenerator only for temporary testing purposes
@@ -119,6 +129,7 @@ public class TablespoonAPI {
     topic.setHigh(high);
     topic.setLow(low);
     topic.unlock();
+    sb.registerSubscriber(subscriber, topic);
     storage.notifyBroadcaster();
     
     // EventGenerator only for temporary testing purposes

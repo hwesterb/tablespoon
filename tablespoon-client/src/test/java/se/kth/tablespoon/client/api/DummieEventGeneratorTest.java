@@ -13,12 +13,12 @@ import org.junit.Test;
 import se.kth.tablespoon.client.broadcasting.AgentBroadcasterAssistant;
 import se.kth.tablespoon.client.general.Group;
 import se.kth.tablespoon.client.general.Groups;
-import se.kth.tablespoon.client.topics.Comparator;
-import se.kth.tablespoon.client.topics.EventType;
-import se.kth.tablespoon.client.topics.ResourceType;
-import se.kth.tablespoon.client.topics.Threshold;
+import se.kth.tablespoon.client.events.Comparator;
+import se.kth.tablespoon.client.events.EventType;
+import se.kth.tablespoon.client.events.ResourceType;
+import se.kth.tablespoon.client.events.Threshold;
 import se.kth.tablespoon.client.topics.TopicStorage;
-import se.kth.tablespoon.client.util.Sleep;
+import se.kth.tablespoon.client.util.Time;
 
 /**
  *
@@ -68,7 +68,7 @@ public class DummieEventGeneratorTest {
     abt = new AgentBroadcasterTester();
     subscriberB = new SubscriberTester();
     subscriberA = new SubscriberTester();
-    Sleep.now(1000); //wait for threads to start
+    Time.sleep(1000); //wait for threads to start
   }
 
   @After
@@ -86,7 +86,7 @@ public class DummieEventGeneratorTest {
         eventType, resourceType, duration, null, null);
     Thread degThread = new Thread(deg);
     degThread.start();
-    Sleep.now(1000);
+    Time.sleep(1000);
   }
 
   @Test
@@ -101,7 +101,7 @@ public class DummieEventGeneratorTest {
         eventType, resourceType, duration, th, null);
     Thread degThread = new Thread(deg);
     degThread.start();
-    Sleep.now(1000);
+    Time.sleep(1000);
   }
 
   @Test
@@ -117,7 +117,7 @@ public class DummieEventGeneratorTest {
         eventType, resourceType, duration, th, tl);
     Thread degThread = new Thread(deg);
     degThread.start();
-    Sleep.now(1000);
+    Time.sleep(1000);
   }
   
 }

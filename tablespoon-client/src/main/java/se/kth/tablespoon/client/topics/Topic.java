@@ -5,6 +5,9 @@
 */
 package se.kth.tablespoon.client.topics;
 
+import se.kth.tablespoon.client.events.Threshold;
+import se.kth.tablespoon.client.events.Comparator;
+import se.kth.tablespoon.client.events.EventType;
 import com.fasterxml.jackson.jr.ob.JSON;
 import com.fasterxml.jackson.jr.ob.JSONComposer;
 import com.fasterxml.jackson.jr.ob.comp.ObjectComposer;
@@ -26,8 +29,7 @@ public abstract class Topic {
   private final int index;
   private int version;
   private final long startTime;
-  private Rate collectionRate;
-  private Rate sendRate;
+  private int sendRate;
   private int duration = 0;
   private final EventType type;
   private Threshold high;
@@ -96,12 +98,8 @@ public abstract class Topic {
     machinesNotified.add(machine);
   }
   
-  public void setSendRate(Rate sendRate) {
+  public void setSendRate(int sendRate) {
     this.sendRate = sendRate;
-  }
-  
-  public void setCollectionRate(Rate collectionRate) {
-    this.collectionRate = collectionRate;
   }
   
   public void setDuration(int duration) {
@@ -147,11 +145,7 @@ public abstract class Topic {
     return type;
   }
   
-  public Rate getCollectionRate() {
-    return collectionRate;
-  }
-  
-  public Rate getSendRate() {
+  public int getSendRate() {
     return sendRate;
   }
   
@@ -161,6 +155,10 @@ public abstract class Topic {
   
   public boolean isScheduledForRemoval() {
     return scheduledForRemoval;
+  }
+
+  public String getGroupId() {
+    return groupId;
   }
   
   private Comparator getNormalizedComparatorType(Comparator comparator) {
@@ -181,7 +179,8 @@ public abstract class Topic {
         .put("startTime", startTime)
         .put("uniqueId", uniqueId)
         .put("groupId", groupId)
-        .put("type", type.toString());
+        .put("type", type.toString())
+        .put("sendRate", sendRate);
     if (scheduledForRemoval) {
       obj.put("scheduledForRemoval", true);
     } else {
@@ -194,8 +193,6 @@ public abstract class Topic {
           .put("percentage", low.percentage)
           .put("comparator", low.comparator.toString())
           .end();
-      if (collectionRate != null) obj.put("collectionRate", collectionRate.toString());
-      if (sendRate != null) obj.put("sendRate", sendRate.toString());
     }
     obj.end();
     json = composer.finish();

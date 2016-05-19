@@ -5,13 +5,9 @@
 */
 package se.kth.tablespoon.client.events;
 
-import se.kth.tablespoon.client.topics.ResourceType;
-import se.kth.tablespoon.client.topics.Threshold;
 import se.kth.tablespoon.client.topics.ThresholdException;
-import se.kth.tablespoon.client.topics.EventType;
 import se.kth.tablespoon.client.topics.Topic;
 import se.kth.tablespoon.client.topics.TopicFactory;
-import se.kth.tablespoon.client.topics.Comparator;
 import se.kth.tablespoon.client.topics.TopicStorage;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -19,7 +15,6 @@ import java.util.logging.Logger;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import se.kth.tablespoon.client.general.Groups;
-import se.kth.tablespoon.client.topics.Rate;
 
 /**
  *
@@ -31,7 +26,6 @@ public class TopicTest {
   public void test() throws ThresholdException {
     TopicStorage storage = new TopicStorage(new Groups());
     Topic topic = TopicFactory.create(storage, EventType.REGULAR, ResourceType.CPU);
-    topic.setCollectionRate(Rate.NORMAL);
     topic.setDuration(12);
     topic.setHigh(new Threshold(0.4, Comparator.GREATER_THAN));
     boolean shouldfail = false;

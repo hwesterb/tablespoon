@@ -5,8 +5,11 @@
 */
 package se.kth.tablespoon.client.topics;
 
+import se.kth.tablespoon.client.events.ResourceType;
+import se.kth.tablespoon.client.events.EventType;
 import se.kth.tablespoon.client.general.Group;
 import java.util.UUID;
+import se.kth.tablespoon.client.util.Time;
 
 /**
  *
@@ -34,23 +37,25 @@ public class TopicFactory {
   }
   
   private static Topic makeMachineTopic(TopicStorage storage, int index, EventType type) {
-    long now = System.currentTimeMillis() / 1000L;
-    Topic topic = new MachineTopic(index, now, createUniqueId(storage), type);
+    Topic topic = new MachineTopic(index, Time.now(), createUniqueId(storage), type);
     storage.add(topic);
     return topic;
   }
   
   private static Topic makeGroupTopic(TopicStorage storage, int index, EventType type, Group group) {
-    long now = System.currentTimeMillis() / 1000L;
-    Topic topic = new GroupTopic(index, now, createUniqueId(storage), type, group);
+    Topic topic = new GroupTopic(index, Time.now(), createUniqueId(storage), type, group);
     storage.add(topic);
     return topic;
   }
   
+  public static ResourceType collectlMapping(int index) {
+    if (index == 0) return ResourceType.CPU;
+    else return ResourceType.RAM; 
+  }
   
-  private static int collectlMapping(ResourceType rt) {
+  public static int collectlMapping(ResourceType rt) {
     if (rt == ResourceType.CPU) return 0;
-    else return 10;
+    else return 65;
   }
   
   @SuppressWarnings("empty-statement")

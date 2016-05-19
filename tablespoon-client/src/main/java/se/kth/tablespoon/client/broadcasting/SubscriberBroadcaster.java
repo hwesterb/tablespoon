@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.kth.tablespoon.client.api.Subscriber;
 import se.kth.tablespoon.client.topics.Topic;
-import se.kth.tablespoon.client.util.Sleep;
+import se.kth.tablespoon.client.util.Time;
 
 /**
  *
@@ -43,10 +43,6 @@ public class SubscriberBroadcaster implements Runnable {
   
   public void registerSubscriber(Subscriber subscriber, Topic topic) {
     fetchers.add(new EventFetcher(subscriber, topic));
-  }
-  
-  public void registerSubscriber(Subscriber subscriber) {
-    fetchers.add(new EventFetcher(subscriber, null));
   }
   
   @Override
@@ -82,7 +78,7 @@ public class SubscriberBroadcaster implements Runnable {
       slf4jLogger.info("Waiting for "
           + Math.round(RECONNECTION_TIME / 1000)
           + " seconds and attempting to connect again...");
-      Sleep.now(RECONNECTION_TRIES);
+      Time.sleep(RECONNECTION_TRIES);
       return true;
     }
     return false;

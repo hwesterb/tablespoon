@@ -5,9 +5,9 @@
  */
 package se.kth.tablespoon.client.api;
 
-import se.kth.tablespoon.client.topics.EventType;
-import se.kth.tablespoon.client.topics.ResourceType;
-import se.kth.tablespoon.client.topics.Threshold;
+import se.kth.tablespoon.client.events.EventType;
+import se.kth.tablespoon.client.events.ResourceType;
+import se.kth.tablespoon.client.events.Threshold;
 
 public class TablespoonEvent {
   

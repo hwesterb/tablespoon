@@ -5,12 +5,10 @@
  */
 package se.kth.tablespoon.client.general;
 
-import se.kth.tablespoon.client.api.Subscriber;
 import se.kth.tablespoon.client.api.TablespoonAPI;
-import se.kth.tablespoon.client.api.TablespoonEvent;
 import se.kth.tablespoon.client.broadcasting.AgentBroadcasterAssistant;
+import se.kth.tablespoon.client.broadcasting.Broadcaster;
 import se.kth.tablespoon.client.broadcasting.SubscriberBroadcaster;
-import se.kth.tablespoon.client.topics.TopicFactory;
 import se.kth.tablespoon.client.topics.TopicStorage;
 
 /**
@@ -20,24 +18,22 @@ import se.kth.tablespoon.client.topics.TopicStorage;
 public class Start {
   
   
-  
   public static void main(String args[]) {
-//    Groups groups = new Groups();
-//    TopicStorage storage = new TopicStorage(groups);
-//    AgentBroadcasterAssistant aba = new AgentBroadcasterAssistant(storage);
-//    TablespoonAPI api = new TablespoonAPI(storage, groups);
-//    Thread abaThread = new Thread(aba);
-//    abaThread.start();
-//    aba.registerBroadcaster(null);
-//    SubscriberBroadcaster sb = new SubscriberBroadcaster("localhost", 5555);
-//    Thread sbThread = new Thread(sb);
-//    sbThread.start();
-//    sb.registerSubscriber(new Subscriber() {
-//      @Override
-//      public void onEventArrival(TablespoonEvent event) {
-//        System.out.println("new event baby!");
-//      }
-//    });
+   
+  }
+  
+  private AgentBroadcasterAssistant aba;
+  
+  public static void setUp(Groups groups, Broadcaster broadcaster, String riemannHost, int riemannPort) {
+    TopicStorage storage = new TopicStorage(groups);
+    AgentBroadcasterAssistant aba = new AgentBroadcasterAssistant(storage);
+    SubscriberBroadcaster sb = new SubscriberBroadcaster(riemannHost, riemannPort);
+    TablespoonAPI api = new TablespoonAPI(storage, groups, sb);
+    Thread abaThread = new Thread(aba);
+    abaThread.start();
+    aba.registerBroadcaster(broadcaster);
+    Thread sbThread = new Thread(sb);
+    sbThread.start();
   }
   
   

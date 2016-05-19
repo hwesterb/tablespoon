@@ -5,7 +5,6 @@
 */
 package se.kth.tablespoon.client.events;
 
-import se.kth.tablespoon.client.topics.EventType;
 import se.kth.tablespoon.client.topics.Topic;
 import se.kth.tablespoon.client.topics.TopicFactory;
 import se.kth.tablespoon.client.topics.TopicStorage;
@@ -13,7 +12,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import se.kth.tablespoon.client.general.Group;
 import se.kth.tablespoon.client.general.Groups;
-import se.kth.tablespoon.client.util.Sleep;
+import se.kth.tablespoon.client.util.Time;
 
 
 /**
@@ -72,7 +71,7 @@ public class TopicStorageTest {
    
     int ms = 1100;
     System.out.println("Sleeping for " + ms + ".");
-    Sleep.now(ms);
+    Time.sleep(ms);
     storage.clean();
     assertTrue(storage.isEmpty());
   }

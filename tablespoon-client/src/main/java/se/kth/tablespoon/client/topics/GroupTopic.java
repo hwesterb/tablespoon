@@ -5,6 +5,7 @@
  */
 package se.kth.tablespoon.client.topics;
 
+import se.kth.tablespoon.client.events.EventType;
 import java.util.ArrayList;
 import se.kth.tablespoon.client.general.Group;
 import se.kth.tablespoon.client.general.Groups;

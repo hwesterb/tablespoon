@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.TreeMap;
+import se.kth.tablespoon.client.util.Time;
 
 
 /**
@@ -62,7 +63,7 @@ public class TopicStorage {
   
   public void clean() {
     Iterator<Entry<String, Topic>> entries = storage.entrySet().iterator();
-    long now = System.currentTimeMillis() / 1000L;
+    long now = Time.now();
     groups.takeSnapshop();
     while (entries.hasNext()) {
       Entry<String, Topic> entry = entries.next();

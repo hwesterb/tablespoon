@@ -6,11 +6,11 @@
 package se.kth.tablespoon.client.api;
 
 import java.util.Random;
-import se.kth.tablespoon.client.topics.Comparator;
-import se.kth.tablespoon.client.topics.EventType;
-import se.kth.tablespoon.client.topics.ResourceType;
-import se.kth.tablespoon.client.topics.Threshold;
-import se.kth.tablespoon.client.util.Sleep;
+import se.kth.tablespoon.client.events.Comparator;
+import se.kth.tablespoon.client.events.EventType;
+import se.kth.tablespoon.client.events.ResourceType;
+import se.kth.tablespoon.client.events.Threshold;
+import se.kth.tablespoon.client.util.Time;
 
 /**
  *
@@ -88,11 +88,11 @@ public class DummieEventGenerator implements Runnable {
   @Override
   public void run() {
     TablespoonEvent te;
-    long start = System.currentTimeMillis() / 1000L;
-    while (System.currentTimeMillis() / 1000L - start < duration) {
+    long start = Time.now();
+    while (Time.now() - start < duration) {
       te = createEvent();
       subscriber.onEventArrival(te);
-      Sleep.now(500);
+      Time.sleep(500);
     }
   }
 
