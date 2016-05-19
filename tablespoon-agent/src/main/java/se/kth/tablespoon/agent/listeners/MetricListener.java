@@ -10,6 +10,7 @@ import se.kth.tablespoon.agent.events.Configuration;
 import se.kth.tablespoon.agent.metrics.Metric;
 import se.kth.tablespoon.agent.metrics.MetricFactory;
 import se.kth.tablespoon.agent.metrics.MetricLayout;
+import se.kth.tablespoon.agent.util.Time;
 
 public abstract class MetricListener implements Runnable {
   
@@ -43,8 +44,7 @@ public abstract class MetricListener implements Runnable {
   protected void expireOldMetrics(int i) {
     Metric metric = globalQueue.peek();
     long ttl = config.getRiemannEventTtl();
-    long now = System.currentTimeMillis() / 1000L;
-    if (now - metric.getTimeStamp() > ttl) {
+    if (Time.now() - metric.getTimeStamp() > ttl) {
       synchronized (globalQueue) {
         globalQueue.remove();
       }

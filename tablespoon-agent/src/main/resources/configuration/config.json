@@ -1,7 +1,7 @@
 {
   "riemannHost": "localhost",
   "riemannPort": 5555,
-  "riemannReconnectionTries": 10,
+  "riemannReconnectionTries": 100,
   "riemannReconnectionTime": 5000,
   "riemannSendRate": 1000,
   "riemannEventTtl": 60,

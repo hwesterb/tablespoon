@@ -27,7 +27,9 @@ public class Topics {
     ArrayList<RiemannEvent> riemannEvents = new ArrayList<>();
     for (Topic topic : relevantTopics) {
       topic.addToLocal(metric);
-      if (topic.shouldSend()) addRiemannEvent(metric, riemannEvents, topic);
+      if (topic.shouldSend(metric.getTimeStamp())) {
+        addRiemannEvent(metric, riemannEvents, topic);
+      }
     }
     return riemannEvents;
   }
@@ -40,13 +42,13 @@ public class Topics {
   }
   
   private RiemannEvent createRiemannEvent(Metric metric, double value, String uniqueId) {
-    RiemannEvent riemannEvent = new RiemannEvent(metric.getSource().toString(),
-        null,
-        metric.getName(),
+    RiemannEvent riemannEvent = new RiemannEvent(uniqueId,
+        "tablespoon",
+        metric.getName() + " in " + metric.getFormat().toString().toLowerCase()  + ".",
         value,
         metric.getTimeStamp(),
         config.getRiemannEventTtl());
-    riemannEvent.addTag(uniqueId);
+    riemannEvent.addTag(metric.getSource().toString());
     return riemannEvent;
   }
   

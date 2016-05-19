@@ -12,7 +12,7 @@ import se.kth.tablespoon.agent.file.JsonException;
 
 import se.kth.tablespoon.agent.metrics.MetricLayout;
 import se.kth.tablespoon.agent.metrics.MetricFormat;
-import se.kth.tablespoon.agent.util.Sleep;
+import se.kth.tablespoon.agent.util.Time;
 
 public class CollectlListenerTest {
   
@@ -36,7 +36,7 @@ public class CollectlListenerTest {
     assertTrue(t.isAlive());
     while(cl.globalIsEmpty()) {
       System.out.println("waiting for queue to fill...");
-      Sleep.now(300);
+      Time.sleep(300);
     }
     assertEquals("User", cl.getEventLayouts()[0].getName());
     assertEquals(MetricFormat.PERSEC, cl.getEventLayouts()[9].getFormat());
@@ -55,7 +55,7 @@ public class CollectlListenerTest {
     
     while(t.isAlive()) {
       System.out.println("waiting for thread to die...");
-      Sleep.now(300);
+      Time.sleep(300);
     }
   }
   
@@ -67,7 +67,7 @@ public class CollectlListenerTest {
     
     while(cl.globalIsEmpty()) {
       System.out.println("waiting for queue to fill...");
-      Sleep.now(300);
+      Time.sleep(300);
     }
     
     cl.requestRestart();
@@ -75,14 +75,14 @@ public class CollectlListenerTest {
     
     while(cl.isRestarting()) {
       System.out.println("waiting for restart to finish...");
-      Sleep.now(300);
+      Time.sleep(300);
     }
     
     cl.requestInterrupt();
     
     while(t.isAlive()) {
       System.out.println("waiting for thread to die...");
-      Sleep.now(300);
+      Time.sleep(300);
     }
   }
   

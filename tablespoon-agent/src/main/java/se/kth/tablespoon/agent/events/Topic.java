@@ -8,7 +8,6 @@ package se.kth.tablespoon.agent.events;
 import se.kth.tablespoon.agent.file.JsonException;
 import com.fasterxml.jackson.jr.ob.JSON;
 import com.fasterxml.jackson.jr.ob.impl.DeferredMap;
-import com.oracle.jrockit.jfr.ContentType;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Map;
@@ -16,6 +15,7 @@ import java.util.Queue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.kth.tablespoon.agent.metrics.Metric;
+import se.kth.tablespoon.agent.util.Time;
 
 
 public class Topic {
@@ -37,7 +37,7 @@ public class Topic {
   private final static Logger slf4jLogger = LoggerFactory.getLogger(Topic.class);
   
   public Topic() {
-    localStartTime = System.currentTimeMillis() / 1000L;
+    localStartTime = Time.now();
   }
   
   public boolean hasDuration() {
@@ -125,9 +125,9 @@ public class Topic {
     return scheduledForRemoval;
   }
   
-  public boolean shouldSend() {
+  public boolean shouldSend(long timeStamp) {
     if (localMetricQueue.size() >= sendRate) {
-      long oldestPossibleTime = localMetricQueue.element().getTimeStamp() - sendRate;
+      long oldestPossibleTime = timeStamp - sendRate;
       while (localMetricQueue.peek().getTimeStamp() < oldestPossibleTime) {
         localMetricQueue.remove();
       }
@@ -180,6 +180,5 @@ public class Topic {
   
   
   
-  
-  
+ 
 }

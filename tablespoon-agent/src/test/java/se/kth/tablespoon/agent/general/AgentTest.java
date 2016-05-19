@@ -21,7 +21,7 @@ import se.kth.tablespoon.agent.listeners.MetricListener;
 import se.kth.tablespoon.agent.metrics.Metric;
 import se.kth.tablespoon.agent.metrics.MetricFormat;
 import se.kth.tablespoon.agent.metrics.MetricSource;
-import se.kth.tablespoon.agent.util.Sleep;
+import se.kth.tablespoon.agent.util.Time;
 
 /**
  *
@@ -46,7 +46,7 @@ public class AgentTest {
     mlThread.start();
     while (ml.globalIsEmpty()) {
       System.out.println("waiting...");
-      Sleep.now(500);
+      Time.sleep(500);
     }
   }
 
@@ -89,8 +89,8 @@ public class AgentTest {
     @Override
     public void collectCycle() {
       while (true) {
-        globalQueue.add(new Metric(1, MetricSource.DSK, MetricFormat.TOTAL, System.currentTimeMillis() / 1000L, "agenttester", 27));
-        Sleep.now(100);
+        globalQueue.add(new Metric(1, MetricSource.DSK, MetricFormat.TOTAL, Time.now(), "agenttester", 27));
+        Time.sleep(100);
       }
     }
 

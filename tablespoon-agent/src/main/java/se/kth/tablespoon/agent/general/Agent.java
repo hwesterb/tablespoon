@@ -14,7 +14,7 @@ import se.kth.tablespoon.agent.events.Topics;
 import se.kth.tablespoon.agent.file.TopicLoader;
 import se.kth.tablespoon.agent.listeners.MetricListener;
 import se.kth.tablespoon.agent.main.Start;
-import se.kth.tablespoon.agent.util.Sleep;
+import se.kth.tablespoon.agent.util.Time;
 
 public class Agent {
   
@@ -56,7 +56,7 @@ public class Agent {
       slf4jLogger.info("Waiting for "
           + Math.round(config.getRiemannReconnectionTime() / 1000)
           + " seconds and attempting to connect again...");
-      Sleep.now(config.getRiemannReconnectionTime());
+      Time.sleep(config.getRiemannReconnectionTime());
       return true;
     }
     return false;
@@ -65,7 +65,7 @@ public class Agent {
   private void sendCycle() throws IOException {
     while (true) {
       topicLoader.readTopicFiles();
-      Sleep.now(500);
+      Time.sleep(500);
       synchronized (metricListener.getGlobalQueue()) {
         while (metricListener.globalIsEmpty() == false) {
           es.sendMetric();

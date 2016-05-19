@@ -9,7 +9,7 @@ import se.kth.tablespoon.agent.file.JsonException;
 
 import se.kth.tablespoon.agent.listeners.CollectlListener;
 import se.kth.tablespoon.agent.listeners.MetricListener;
-import se.kth.tablespoon.agent.util.Sleep;
+import se.kth.tablespoon.agent.util.Time;
 
 public class Start {
   
@@ -37,7 +37,7 @@ public class Start {
     collectlThread.start();
     while (metricListener.globalIsEmpty()) {
       slf4jLogger.info("waiting...");
-      Sleep.now(WAIT_FOR_QUEUE_TO_FILL_TIME);
+      Time.sleep(WAIT_FOR_QUEUE_TO_FILL_TIME);
     }
   }
   
@@ -51,7 +51,7 @@ public class Start {
           metricListener.requestInterrupt();
           while (collectlThread.isAlive()) {
             slf4jLogger.info("waiting for thread to die...");
-            Sleep.now(WAIT_FOR_THREAD_TO_DIE_TIME);
+            Time.sleep(WAIT_FOR_THREAD_TO_DIE_TIME);
           }
         }
         agent.closeRiemannClient();
