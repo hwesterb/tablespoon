@@ -50,6 +50,12 @@ public class TablespoonAPI {
     Topic topic = registerNewTopic(groupId, eventType, resourceType, duration);
     topic.unlock();
     storage.notifyBroadcaster();
+    
+    // EventGenerator only for temporary testing purposes
+    DummieEventGenerator deg = new DummieEventGenerator(subscriber, groupId, eventType, resourceType, duration, null, null);
+    Thread degThread = new Thread(deg);
+    degThread.start();
+    
     return topic.getUniqueId();
   }
   
@@ -73,6 +79,12 @@ public class TablespoonAPI {
     topic.setHigh(threshold);
     topic.unlock();
     storage.notifyBroadcaster();
+    
+    // EventGenerator only for temporary testing purposes
+    DummieEventGenerator deg = new DummieEventGenerator(subscriber, groupId, eventType, resourceType, duration, threshold, null);
+    Thread degThread = new Thread(deg);
+    degThread.start();
+    
     return topic.getUniqueId();
   }
   
@@ -101,6 +113,12 @@ public class TablespoonAPI {
     topic.setLow(low);
     topic.unlock();
     storage.notifyBroadcaster();
+    
+    // EventGenerator only for temporary testing purposes
+    DummieEventGenerator deg = new DummieEventGenerator(subscriber, groupId, eventType, resourceType, duration, high, low);
+    Thread degThread = new Thread(deg);
+    degThread.start();
+    
     return topic.getUniqueId();
   }
   
