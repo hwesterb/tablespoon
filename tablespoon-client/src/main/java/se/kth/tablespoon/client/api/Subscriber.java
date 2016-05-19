@@ -7,6 +7,6 @@ package se.kth.tablespoon.client.api;
 
 public interface Subscriber {
 
-  public void onEventArrival(Event event);
+  public void onEventArrival(TablespoonEvent event);
   
 }

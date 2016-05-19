@@ -35,6 +35,11 @@
             <artifactId>logback-core</artifactId>
             <version>1.1.7</version>
         </dependency>
+        <dependency>
+            <groupId>com.aphyr</groupId>
+            <artifactId>riemann-java-client</artifactId>
+            <version>0.4.1</version>
+        </dependency>
     </dependencies>
     <properties>
         <maven.compiler.source>1.7</maven.compiler.source>

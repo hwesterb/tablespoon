@@ -23,7 +23,7 @@ public class SubscriberTester implements Subscriber {
   }
   
   @Override
-  public void onEventArrival(Event event) {
+  public void onEventArrival(TablespoonEvent event) {
     System.out.println(event);
   }
   
