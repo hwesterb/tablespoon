@@ -18,10 +18,10 @@ import se.kth.tablespoon.agent.util.Sleep;
 
 public class Agent {
   
+  private final Configuration config = Configuration.getInstance();
   private final MetricListener metricListener;
   private final TopicLoader topicLoader;
   private final Topics topics;
-  private final Configuration config = Configuration.getInstance();
   private RiemannClient riemannClient;
   private EventSender es;
   
@@ -64,24 +64,14 @@ public class Agent {
   
   private void sendCycle() throws IOException {
     while (true) {
-      topicLoader.readTopicFiles(); 
+      topicLoader.readTopicFiles();
       Sleep.now(500);
       synchronized (metricListener.getGlobalQueue()) {
-        boolean hasCleaned = false;
         while (metricListener.globalIsEmpty() == false) {
-          if (hasCleaned == false)  {
-            cleanTopics();
-            hasCleaned = true;
-          }
           es.sendMetric();
         }
       }
     }
-  }
-  
-  private void cleanTopics() {
-     long recent = metricListener.getGlobalQueue().element().getTimeStamp();
-     topics.clean(recent);
   }
   
   

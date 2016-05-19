@@ -26,7 +26,7 @@ public class Topics {
   public ArrayList<RiemannEvent> extractRiemannEvents(Metric metric, ArrayList<Topic> relevantTopics) {
     ArrayList<RiemannEvent> riemannEvents = new ArrayList<>();
     for (Topic topic : relevantTopics) {
-      topic.addMetric(metric);
+      topic.addToLocal(metric);
       if (topic.shouldSend()) addRiemannEvent(metric, riemannEvents, topic);
     }
     return riemannEvents;
@@ -50,11 +50,11 @@ public class Topics {
     return riemannEvent;
   }
   
-  public void clean(long timeStamp) {
+  public void clean(Metric metric, ArrayList<Topic> relevant) {
     Iterator<Topic> iterator = topics.values().iterator();
     while (iterator.hasNext()) {
       Topic topic = iterator.next();
-      if (durationHasEnded(timeStamp, topic) || topic.isScheduledForRemoval()) {
+      if (durationHasEnded(metric.getTimeStamp(), topic) || topic.isScheduledForRemoval()) {
         topics.put(topic.getUniqueId(), null);
       }
     }
@@ -62,14 +62,9 @@ public class Topics {
   
   private boolean durationHasEnded(long timeStamp, Topic topic) {
     if (topic.hasDuration()) {
-      if (topic.hasStarted()) {
-        long now = System.currentTimeMillis() / 1000L;
-        if ((now - timeStamp) > topic.getDuration()) {
+        if ((timeStamp - topic.getLocalStartTime()) > topic.getDuration()) {
           return true;
         }
-      } else {
-        topic.setStarted(timeStamp);
-      }
     }
     return false;
   }
@@ -81,6 +76,5 @@ public class Topics {
     }
     return relevantTopics;
   }
-  
   
 }

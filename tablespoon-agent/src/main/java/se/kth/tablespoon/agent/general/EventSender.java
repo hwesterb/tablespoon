@@ -34,6 +34,7 @@ public class EventSender {
     Metric metric = metricQueue.poll();
     ArrayList<Topic> relevant = topics.getRelevantTopicsBeloningToIndex(metric.getCollectIndex());
     if (relevant.isEmpty()) return;
+    topics.clean(metric, relevant);
     ArrayList<RiemannEvent> riemannEvents = topics.extractRiemannEvents(metric, relevant);
     
     //TODO: Aggregate riemannEvents with the same value and timeStamp.

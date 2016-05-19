@@ -14,7 +14,6 @@ public class Configuration {
   private int riemannReconnectionTime;
   private int riemannEventTtl;
   private int riemannDereferenceTime;
-  private int counterTimeMs;
   private static Configuration instance = null;
   
   protected Configuration() {
@@ -46,10 +45,6 @@ public class Configuration {
   
   public int getRiemannReconnectionTime() {
     return riemannReconnectionTime;
-  }
-
-  public int getCounterTimeMs() {
-    return counterTimeMs;
   }
 
   public int getRiemannEventTtl() {

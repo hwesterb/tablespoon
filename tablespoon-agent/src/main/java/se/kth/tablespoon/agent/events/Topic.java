@@ -8,6 +8,7 @@ package se.kth.tablespoon.agent.events;
 import se.kth.tablespoon.agent.file.JsonException;
 import com.fasterxml.jackson.jr.ob.JSON;
 import com.fasterxml.jackson.jr.ob.impl.DeferredMap;
+import com.oracle.jrockit.jfr.ContentType;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Map;
@@ -22,6 +23,7 @@ public class Topic {
   private int index;
   private int version;
   private long startTime;
+  private final long localStartTime;
   private String uniqueId;
   private String groupId;
   private EventType type;
@@ -30,18 +32,19 @@ public class Topic {
   private int duration;
   private Threshold high;
   private Threshold low;
-  private long startedOnAgentTime;
-  private boolean hasStarted;
   private final Queue<Metric> localMetricQueue = new LinkedList<>();
   private final Configuration config = Configuration.getInstance();
   private final static Logger slf4jLogger = LoggerFactory.getLogger(Topic.class);
   
+  public Topic() {
+    localStartTime = System.currentTimeMillis() / 1000L;
+  }
   
   public boolean hasDuration() {
     return duration > 0;
   }
   
-  public void addMetric(Metric metric) {
+  public void addToLocal(Metric metric) {
     localMetricQueue.add(metric);
   }
   
@@ -81,18 +84,17 @@ public class Topic {
       return Comparator.LESS_THAN_OR_EQUAL;
     }
   }
-  
-  public boolean hasStarted() {
-    return hasStarted;
+
+  public long getStartTime() {
+    return startTime;
+  }
+
+  public long getLocalStartTime() {
+    return localStartTime;
   }
   
   public int getDuration() {
     return duration;
-  }
-  
-  public void setStarted(long startedOnAgentTime) {
-    this.startedOnAgentTime = startedOnAgentTime;
-    this.hasStarted = true;
   }
   
   public int getSendRate() {
@@ -159,7 +161,7 @@ public class Topic {
     if (map.get("sendRate") == null) throw new JsonException("sendRate");
     else sendRate = (int) map.get("sendRate");
     
-    if (map.get("duration") != null)  duration = (int) map.get("duration");
+    if (map.get("duration") != null) duration = (int) map.get("duration");
     
     if (map.get("scheduledForRemoval") != null) scheduledForRemoval = (boolean) map.get("scheduledForRemoval");
     
