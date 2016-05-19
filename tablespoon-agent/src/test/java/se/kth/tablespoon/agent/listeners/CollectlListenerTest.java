@@ -34,7 +34,7 @@ public class CollectlListenerTest {
     Thread t = new Thread(cl);
     t.start();
     assertTrue(t.isAlive());
-    while(cl.queueIsEmpty()) {
+    while(cl.globalIsEmpty()) {
       System.out.println("waiting for queue to fill...");
       Sleep.now(300);
     }
@@ -44,7 +44,7 @@ public class CollectlListenerTest {
     assertEquals("Used", cl.getEventLayouts()[20].getName());
     assertEquals(65, cl.getEventLayouts().length);
     // 65 in every collection + 1 custom = 66
-    assertEquals(0, cl.getMetricQueue().size() % 66);
+    assertEquals(0, cl.getGlobalQueue().size() % 66);
     int i = 0;
     for (MetricLayout el : cl.getEventLayouts()) {
       assertNotNull("Iteration " + i + " failed.", el.getSource());
@@ -65,7 +65,7 @@ public class CollectlListenerTest {
     Thread t = new Thread(cl);
     t.start();
     
-    while(cl.queueIsEmpty()) {
+    while(cl.globalIsEmpty()) {
       System.out.println("waiting for queue to fill...");
       Sleep.now(300);
     }

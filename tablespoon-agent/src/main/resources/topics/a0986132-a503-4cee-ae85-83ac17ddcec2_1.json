@@ -5,7 +5,7 @@
   "uniqueId" : "a0986132-a503-4cee-ae85-83ac17ddcec2",
   "groupId" : "A",
   "type" : "REGULAR",
-  "sendRate" : "NORMAL",
+  "sendRate" : 3,
   "high" : {
     "percentage" : 15.0,
     "comparator" : "GREATER_THAN"

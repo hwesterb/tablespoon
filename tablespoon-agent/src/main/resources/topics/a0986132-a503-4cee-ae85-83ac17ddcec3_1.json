@@ -1,9 +1,9 @@
 {
-  "index" : 65,
+  "index" : 0,
   "version" : 1,
   "startTime" : 1463503857,
-  "uniqueId" : "a0986132-a503-4cee-ae85-83ac17ddcec1",
+  "uniqueId" : "a0986132-a503-4cee-ae85-83ac17ddcec3",
   "groupId" : "A",
   "type" : "REGULAR",
-  "sendRate" : 20
+  "sendRate" : 1
 }

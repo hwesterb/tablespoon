@@ -14,7 +14,7 @@ public class Configuration {
   private int riemannReconnectionTime;
   private int riemannEventTtl;
   private int riemannDereferenceTime;
-  private Rate collectlCollectionRate;
+  private int counterTimeMs;
   private static Configuration instance = null;
   
   protected Configuration() {
@@ -47,17 +47,17 @@ public class Configuration {
   public int getRiemannReconnectionTime() {
     return riemannReconnectionTime;
   }
-  
+
+  public int getCounterTimeMs() {
+    return counterTimeMs;
+  }
+
   public int getRiemannEventTtl() {
     return riemannEventTtl;
   }
   
   public int getRiemannDereferenceTime() {
     return riemannDereferenceTime;
-  }
-  
-  public Rate getCollectlCollectionRate() {
-    return collectlCollectionRate;
   }
   
   public int currentCounterValue() {
@@ -87,9 +87,6 @@ public class Configuration {
     
     if (map.get("riemannDereferenceTime") == null) throw new JsonException("riemannDereferenceTime");
     else riemannDereferenceTime = (int) map.get("riemannDereferenceTime");
-    
-    if (map.get("collectlCollectionRate") == null) throw new JsonException("collectlCollectionRate");
-    else collectlCollectionRate = Rate.valueOf((String) map.get("collectlCollectionRate"));
     
   }
   

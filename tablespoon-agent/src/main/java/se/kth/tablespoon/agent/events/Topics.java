@@ -10,10 +10,6 @@ import java.util.Iterator;
 import java.util.TreeMap;
 import se.kth.tablespoon.agent.metrics.Metric;
 
-/**
- *
- * @author henke
- */
 public class Topics {
   
   private final Configuration config = Configuration.getInstance();
@@ -28,30 +24,15 @@ public class Topics {
   }
   
   public ArrayList<RiemannEvent> extractRiemannEvents(Metric metric, ArrayList<Topic> relevantTopics) {
-    expireOldTopics(metric);
     ArrayList<RiemannEvent> riemannEvents = new ArrayList<>();
     for (Topic topic : relevantTopics) {
-      if (topic.metricQueueIsEmpty() == false) topic.expireOldMetrics();
-      addRiemannEventIfReady(riemannEvents, metric, topic);
+      topic.addMetric(metric);
+      if (topic.shouldSend()) addRiemannEvent(metric, riemannEvents, topic);
     }
     return riemannEvents;
   }
   
-  private void addRiemannEventIfReady(ArrayList<RiemannEvent> riemannEvents, Metric metric, Topic topic) {
-    int sendWhenCounterIs = RaterInterpreter.sendWhenCounterIs(topic.getSendRate(),
-        config.getCollectlCollectionRate());
-    if (topic.currentCounterValue() == sendWhenCounterIs) {
-      addRiemannEvent(riemannEvents, metric, topic);
-    } else if (topic.currentCounterValue() > sendWhenCounterIs) {
-      // The cause for this may be a change in the sending or collection rates.
-      // The principle here is to send what you have rather than discarding information.
-      addRiemannEvent(riemannEvents, metric, topic);
-    } else {
-      topic.addMetric(metric);
-    }
-  }
-  
-  private void addRiemannEvent(ArrayList<RiemannEvent> riemannEvents, Metric metric, Topic topic) {
+  private void addRiemannEvent(Metric metric, ArrayList<RiemannEvent> riemannEvents, Topic topic) {
     double value = topic.getAverageOfMeasurements();
     if (topic.isValid(value)) {
       riemannEvents.add(createRiemannEvent(metric, value, topic.getUniqueId()));
@@ -69,25 +50,25 @@ public class Topics {
     return riemannEvent;
   }
   
-  private void expireOldTopics(Metric metric) {
+  public void clean(long timeStamp) {
     Iterator<Topic> iterator = topics.values().iterator();
     while (iterator.hasNext()) {
       Topic topic = iterator.next();
-      if (durationHasEnded(metric, topic) || topic.isScheduledForRemoval()) {
+      if (durationHasEnded(timeStamp, topic) || topic.isScheduledForRemoval()) {
         topics.put(topic.getUniqueId(), null);
       }
     }
   }
   
-  private boolean durationHasEnded(Metric metric, Topic topic) {
+  private boolean durationHasEnded(long timeStamp, Topic topic) {
     if (topic.hasDuration()) {
       if (topic.hasStarted()) {
         long now = System.currentTimeMillis() / 1000L;
-        if ((now - metric.getTimeStamp()) > topic.getDuration()) {
+        if ((now - timeStamp) > topic.getDuration()) {
           return true;
         }
       } else {
-        topic.setStarted(metric.getTimeStamp());
+        topic.setStarted(timeStamp);
       }
     }
     return false;

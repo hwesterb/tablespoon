@@ -25,44 +25,31 @@ public class Topic {
   private String uniqueId;
   private String groupId;
   private EventType type;
-  private Rate minimumRequiredCollectionRate;
-  private Rate sendRate;
+  private int sendRate;
   private boolean scheduledForRemoval;
   private int duration;
   private Threshold high;
   private Threshold low;
   private long startedOnAgentTime;
   private boolean hasStarted;
-  private final Queue<Metric> metricQueue = new LinkedList<>();
+  private final Queue<Metric> localMetricQueue = new LinkedList<>();
   private final Configuration config = Configuration.getInstance();
   private final static Logger slf4jLogger = LoggerFactory.getLogger(Topic.class);
   
-  public Topic() { }
   
   public boolean hasDuration() {
     return duration > 0;
   }
   
   public void addMetric(Metric metric) {
-    metricQueue.add(metric);
-  }
-  
-  protected void expireOldMetrics() {
-    Metric metric = metricQueue.peek();
-    long ttl = config.getRiemannEventTtl();
-    long now = System.currentTimeMillis() / 1000L;
-    if (now - metric.getTimeStamp() > ttl) {
-      metricQueue.remove();
-      slf4jLogger.info("Metric was too old and discarded.");
-      expireOldMetrics();
-    }
+    localMetricQueue.add(metric);
   }
   
   public double getAverageOfMeasurements() {
     int counter = 0;
     double metrics = 0.0;
-    while (!metricQueue.isEmpty()) {
-      Metric metric = metricQueue.poll();
+    while (!localMetricQueue.isEmpty()) {
+      Metric metric = localMetricQueue.poll();
       metrics += metric.getValue();
       counter++;
     }
@@ -95,14 +82,6 @@ public class Topic {
     }
   }
   
-  public boolean metricQueueIsEmpty() {
-    return metricQueue.isEmpty();
-  }
-  
-  public int currentCounterValue() {
-    return metricQueue.size();
-  }
-  
   public boolean hasStarted() {
     return hasStarted;
   }
@@ -111,20 +90,12 @@ public class Topic {
     return duration;
   }
   
-  public long getStartedOnAgentTime() {
-    return startedOnAgentTime;
-  }
-  
   public void setStarted(long startedOnAgentTime) {
     this.startedOnAgentTime = startedOnAgentTime;
     this.hasStarted = true;
   }
   
-  public Rate getMinimumRequiredCollectionRate() {
-    return minimumRequiredCollectionRate;
-  }
-  
-  public Rate getSendRate() {
+  public int getSendRate() {
     return sendRate;
   }
   
@@ -152,6 +123,18 @@ public class Topic {
     return scheduledForRemoval;
   }
   
+  public boolean shouldSend() {
+    if (localMetricQueue.size() >= sendRate) {
+      long oldestPossibleTime = localMetricQueue.element().getTimeStamp() - sendRate;
+      while (localMetricQueue.peek().getTimeStamp() < oldestPossibleTime) {
+        localMetricQueue.remove();
+      }
+      if (localMetricQueue.size() == sendRate) return true;
+    }
+    return false;
+  }
+  
+  
   public void interpretJson(String json) throws IOException, JsonException {
     Map<String,Object> map = JSON.std.mapFrom(json);
     
@@ -174,12 +157,7 @@ public class Topic {
     else type = EventType.valueOf((String) map.get("type"));
     
     if (map.get("sendRate") == null) throw new JsonException("sendRate");
-    else sendRate = Rate.valueOf((String) map.get("sendRate"));
-    
-    if (map.get("minimumRequiredCollectionRate") != null)  {
-      minimumRequiredCollectionRate =  Rate.valueOf((String) map.get("minimumRequiredCollectionRate"));
-    }
-    else minimumRequiredCollectionRate = sendRate;
+    else sendRate = (int) map.get("sendRate");
     
     if (map.get("duration") != null)  duration = (int) map.get("duration");
     

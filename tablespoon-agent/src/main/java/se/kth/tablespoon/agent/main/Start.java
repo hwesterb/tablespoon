@@ -35,7 +35,7 @@ public class Start {
   private static void startCollectlThread() {
     collectlThread = new Thread(metricListener);
     collectlThread.start();
-    while (metricListener.queueIsEmpty()) {
+    while (metricListener.globalIsEmpty()) {
       slf4jLogger.info("waiting...");
       Sleep.now(WAIT_FOR_QUEUE_TO_FILL_TIME);
     }

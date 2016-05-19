@@ -30,20 +30,16 @@ public class EventSender {
     this.topics = topics;
   }
   
-  public void sendMetrics() throws IOException {
-    
+  public void sendMetric() throws IOException {
     Metric metric = metricQueue.poll();
     ArrayList<Topic> relevant = topics.getRelevantTopicsBeloningToIndex(metric.getCollectIndex());
-    if (relevant == null) return;
+    if (relevant.isEmpty()) return;
     ArrayList<RiemannEvent> riemannEvents = topics.extractRiemannEvents(metric, relevant);
     
     //TODO: Aggregate riemannEvents with the same value and timeStamp.
-   
+
     for (RiemannEvent riemannEvent : riemannEvents) {
       riemannEvent.sendMe(rClient, config.getRiemannDereferenceTime());
     }
-  }
-  
-  
-  
+  }  
 }

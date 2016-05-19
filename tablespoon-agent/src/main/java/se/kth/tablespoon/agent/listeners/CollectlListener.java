@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import se.kth.tablespoon.agent.general.CollectlStringParser;
-import se.kth.tablespoon.agent.events.RaterInterpreter;
 import se.kth.tablespoon.agent.metrics.Metric;
 import se.kth.tablespoon.agent.metrics.MetricFormat;
 import se.kth.tablespoon.agent.metrics.MetricSource;
@@ -16,12 +15,9 @@ public class CollectlListener extends MetricListener {
     return new String[]{
       "/bin/sh",
       "-c",
-      "collectl -P -o U -s +m -i " +
-        RaterInterpreter.getCorrespondingNumber(config.getCollectlCollectionRate())
+      "collectl -P -o U -s +m"
     };
   }
-  
-  
   
   @Override
   public void collectCycle() {
@@ -36,7 +32,7 @@ public class CollectlListener extends MetricListener {
           defineTheHeaders(line);
           continue;
         }
-        addMetricToQueue(line);
+        addMetricToGlobal(line);
         expireOldMetrics(0);
         if (interruptRequest || restartRequest) break;
       }

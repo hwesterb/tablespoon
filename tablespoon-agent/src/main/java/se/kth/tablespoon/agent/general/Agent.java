@@ -18,8 +18,6 @@ import se.kth.tablespoon.agent.util.Sleep;
 
 public class Agent {
   
-  private static final int READ_QUEUE_TIME = 10;
-  
   private final MetricListener metricListener;
   private final TopicLoader topicLoader;
   private final Topics topics;
@@ -46,7 +44,7 @@ public class Agent {
     riemannClient = RiemannClient.tcp(config.getRiemannHost(),
         config.getRiemannPort());
     riemannClient.connect();
-    this.es = new EventSender(metricListener.getMetricQueue(), riemannClient, topics);
+    this.es = new EventSender(metricListener.getGlobalQueue(), riemannClient, topics);
     slf4jLogger.info("Established connection with host:"
         + config.getRiemannHost() + " port:" + config.getRiemannPort());
   }
@@ -66,15 +64,24 @@ public class Agent {
   
   private void sendCycle() throws IOException {
     while (true) {
-      topicLoader.readTopicFiles();
-      // it apparently needs some headroom.
-//      Sleep.now(READ_QUEUE_TIME);
-      synchronized (metricListener.getMetricQueue()) {
-        if (!metricListener.queueIsEmpty()) {
-          es.sendMetrics();
+      topicLoader.readTopicFiles(); 
+      Sleep.now(500);
+      synchronized (metricListener.getGlobalQueue()) {
+        boolean hasCleaned = false;
+        while (metricListener.globalIsEmpty() == false) {
+          if (hasCleaned == false)  {
+            cleanTopics();
+            hasCleaned = true;
+          }
+          es.sendMetric();
         }
       }
     }
+  }
+  
+  private void cleanTopics() {
+     long recent = metricListener.getGlobalQueue().element().getTimeStamp();
+     topics.clean(recent);
   }
   
   

@@ -13,7 +13,7 @@ import se.kth.tablespoon.agent.metrics.MetricLayout;
 
 public abstract class MetricListener implements Runnable {
   
-  protected final Queue<Metric> metricQueue = new LinkedList<>();
+  protected final Queue<Metric> globalQueue = new LinkedList<>();
   protected Process process;
   protected BufferedReader br;
   protected MetricLayout[] mls;
@@ -32,21 +32,21 @@ public abstract class MetricListener implements Runnable {
   public abstract void collectCycle();
   
   
-  protected void addMetricToQueue(String line) {
+  protected void addMetricToGlobal(String line) {
     ArrayList<Metric> metrics = MetricFactory.createMetrics(line, mls, config);
     createCustomMetrics(metrics);
-    metricQueue.addAll(metrics);
+    globalQueue.addAll(metrics);
   }
   
   protected abstract void createCustomMetrics(ArrayList<Metric> metrics);
   
   protected void expireOldMetrics(int i) {
-    Metric metric = metricQueue.peek();
+    Metric metric = globalQueue.peek();
     long ttl = config.getRiemannEventTtl();
     long now = System.currentTimeMillis() / 1000L;
     if (now - metric.getTimeStamp() > ttl) {
-      synchronized (metricQueue) {
-        metricQueue.remove();
+      synchronized (globalQueue) {
+        globalQueue.remove();
       }
       expireOldMetrics(++i);
     }
@@ -63,16 +63,16 @@ public abstract class MetricListener implements Runnable {
     slf4jLogger.info("Attempting to restart collectl.");
   }
   
-  public Queue<Metric> getMetricQueue() {
-    return metricQueue;
+  public Queue<Metric> getGlobalQueue() {
+    return globalQueue;
   }
   
   public MetricLayout[] getEventLayouts() {
     return mls;
   }
   
-  public boolean queueIsEmpty() {
-    return metricQueue.isEmpty();
+  public boolean globalIsEmpty() {
+    return globalQueue.isEmpty();
   }
   
   public boolean isRestarting() {
