@@ -11,8 +11,8 @@ import se.kth.tablespoon.client.topics.TopicFactory;
 import se.kth.tablespoon.client.topics.TopicStorage;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import se.kth.tablespoon.client.main.Group;
-import se.kth.tablespoon.client.main.Groups;
+import se.kth.tablespoon.client.general.Group;
+import se.kth.tablespoon.client.general.Groups;
 import se.kth.tablespoon.client.util.Sleep;
 
 

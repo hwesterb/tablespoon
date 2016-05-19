@@ -5,7 +5,7 @@
 */
 package se.kth.tablespoon.client.api;
 
-import se.kth.tablespoon.client.main.Group;
+import se.kth.tablespoon.client.general.Group;
 import se.kth.tablespoon.client.topics.ResourceType;
 import se.kth.tablespoon.client.topics.Threshold;
 import se.kth.tablespoon.client.topics.ThresholdException;
@@ -13,7 +13,7 @@ import se.kth.tablespoon.client.topics.Topic;
 import se.kth.tablespoon.client.topics.TopicFactory;
 import se.kth.tablespoon.client.topics.TopicStorage;
 import se.kth.tablespoon.client.topics.EventType;
-import se.kth.tablespoon.client.main.Groups;
+import se.kth.tablespoon.client.general.Groups;
 import se.kth.tablespoon.client.topics.MissingTopicException;
 import se.kth.tablespoon.client.topics.TopicRemovalException;
 
@@ -27,6 +27,13 @@ public class TablespoonAPI {
   
   private final TopicStorage storage;
   private final Groups groups;
+  
+  // TODO: make into Singleton.
+  public static TablespoonAPI getInstance() {
+    Groups groups = new Groups();
+    TopicStorage storage = new TopicStorage(groups);
+    return new TablespoonAPI(storage, groups);
+  }
   
   public TablespoonAPI(TopicStorage storage, Groups groups) {
     this.storage = storage;

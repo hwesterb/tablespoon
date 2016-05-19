@@ -5,7 +5,7 @@
 */
 package se.kth.tablespoon.client.topics;
 
-import se.kth.tablespoon.client.main.Group;
+import se.kth.tablespoon.client.general.Group;
 import java.util.UUID;
 
 /**

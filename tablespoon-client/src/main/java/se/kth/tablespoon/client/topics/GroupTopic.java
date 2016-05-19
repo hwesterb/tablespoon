@@ -6,8 +6,8 @@
 package se.kth.tablespoon.client.topics;
 
 import java.util.ArrayList;
-import se.kth.tablespoon.client.main.Group;
-import se.kth.tablespoon.client.main.Groups;
+import se.kth.tablespoon.client.general.Group;
+import se.kth.tablespoon.client.general.Groups;
 
 /**
  *

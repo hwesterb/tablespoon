@@ -5,6 +5,8 @@
 */
 package se.kth.tablespoon.client.main;
 
+import se.kth.tablespoon.client.general.Group;
+import se.kth.tablespoon.client.general.Groups;
 import java.util.ArrayList;
 import org.junit.Test;
 import static org.junit.Assert.*;

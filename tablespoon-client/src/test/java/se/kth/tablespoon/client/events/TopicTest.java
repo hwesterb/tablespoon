@@ -18,7 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import se.kth.tablespoon.client.main.Groups;
+import se.kth.tablespoon.client.general.Groups;
 import se.kth.tablespoon.client.topics.Rate;
 
 /**

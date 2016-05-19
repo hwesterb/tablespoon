@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import se.kth.tablespoon.client.main.Groups;
+import se.kth.tablespoon.client.general.Groups;
 
 /**
  *

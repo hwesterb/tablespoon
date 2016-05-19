@@ -18,15 +18,15 @@ import se.kth.tablespoon.client.util.Sleep;
  */
 public class DummieEventGenerator implements Runnable {
 
-  private Subscriber subscriber;
-  private String groupId;
-  private EventType eventType;
-  private ResourceType resourceType;
-  private int duration;
-  private Threshold high;
-  private Threshold low;
+  private final Subscriber subscriber;
+  private final String groupId;
+  private final EventType eventType;
+  private final ResourceType resourceType;
+  private final int duration;
+  private final Threshold high;
+  private final Threshold low;
 
-  private Random rnd = new Random();
+  private final Random rnd = new Random();
 
   public DummieEventGenerator(Subscriber subscriber, String groupId, EventType eventType,
       ResourceType resourceType, int duration, Threshold high, Threshold low) {

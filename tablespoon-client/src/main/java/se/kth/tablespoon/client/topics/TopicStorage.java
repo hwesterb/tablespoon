@@ -5,7 +5,7 @@
 */
 package se.kth.tablespoon.client.topics;
 
-import se.kth.tablespoon.client.main.Groups;
+import se.kth.tablespoon.client.general.Groups;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map.Entry;

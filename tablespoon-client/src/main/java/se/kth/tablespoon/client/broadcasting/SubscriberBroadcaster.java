@@ -37,7 +37,6 @@ public class SubscriberBroadcaster implements Runnable {
     while(true) {
       for (EventFetcher fetcher : fetchers) {
         fetcher.queryRiemann(riemannClient);
-         Sleep.now(10000);
       }
     }
   }
