@@ -1,8 +1,8 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
+*/
 package se.kth.tablespoon.client.api;
 
 import se.kth.tablespoon.client.events.EventType;
@@ -18,8 +18,9 @@ public class TablespoonEvent {
   private final ResourceType resourceType;
   private final Threshold high;
   private final Threshold low;
-
-  public TablespoonEvent(String groupId, String machineId, double value, EventType eventType, ResourceType resourceType, Threshold high, Threshold low) {
+  
+  public TablespoonEvent(String groupId, String machineId, double value,
+      EventType eventType, ResourceType resourceType, Threshold high, Threshold low) {
     this.groupId = groupId;
     this.machineId = machineId;
     this.value = value;
@@ -28,11 +29,11 @@ public class TablespoonEvent {
     this.high = high;
     this.low = low;
   }
-
+  
   public String getGroupId() {
     return groupId;
   }
-
+  
   public String getMachineId() {
     return machineId;
   }
@@ -40,19 +41,19 @@ public class TablespoonEvent {
   public double getValue() {
     return value;
   }
-
+  
   public EventType getEventType() {
     return eventType;
   }
-
+  
   public ResourceType getResourceType() {
     return resourceType;
   }
-
+  
   public Threshold getHigh() {
     return high;
   }
-
+  
   public Threshold getLow() {
     return low;
   }

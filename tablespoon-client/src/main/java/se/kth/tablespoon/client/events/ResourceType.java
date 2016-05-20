@@ -10,5 +10,5 @@ package se.kth.tablespoon.client.events;
  * @author henke
  */
 public enum ResourceType {
-  CPU, RAM
+  CPU, MEM, NET, DSK
 }

@@ -17,11 +17,12 @@ import se.kth.tablespoon.client.topics.TopicFactory;
 public class EventConverter {
   
   public static TablespoonEvent changeFormat(Event event, Topic topic) {
+    ResourceType resourceType = CollectlMapping.getInstance().getResourceType(topic.getIndex());
     TablespoonEvent tablespoonEvent = new TablespoonEvent(topic.getGroupId(),
         event.getHost(),
         event.getMetricD(),
         topic.getType(),
-        TopicFactory.collectlMapping(topic.getIndex()),
+        resourceType,
         topic.getHigh(),
         topic.getLow());
     return tablespoonEvent;

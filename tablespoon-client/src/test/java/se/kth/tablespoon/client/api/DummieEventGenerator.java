@@ -6,6 +6,8 @@
 package se.kth.tablespoon.client.api;
 
 import java.util.Random;
+import se.kth.tablespoon.client.api.Subscriber;
+import se.kth.tablespoon.client.api.TablespoonEvent;
 import se.kth.tablespoon.client.events.Comparator;
 import se.kth.tablespoon.client.events.EventType;
 import se.kth.tablespoon.client.events.ResourceType;

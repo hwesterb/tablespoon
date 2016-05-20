@@ -19,26 +19,20 @@ public class Start {
   
   
   public static void main(String args[]) {
-   
+//    setUp(null, null, "localhost", 5555);
   }
-  
-  private AgentBroadcasterAssistant aba;
   
   public static void setUp(Groups groups, Broadcaster broadcaster, String riemannHost, int riemannPort) {
     TopicStorage storage = new TopicStorage(groups);
     AgentBroadcasterAssistant aba = new AgentBroadcasterAssistant(storage);
     SubscriberBroadcaster sb = new SubscriberBroadcaster(riemannHost, riemannPort);
-    TablespoonAPI api = new TablespoonAPI(storage, groups, sb);
+    TablespoonAPI api = TablespoonAPI.getInstance();
+    api.prepareAPI(storage, groups, sb);
     Thread abaThread = new Thread(aba);
     abaThread.start();
     aba.registerBroadcaster(broadcaster);
     Thread sbThread = new Thread(sb);
     sbThread.start();
-  }
-  
-  
-  public void startClient() {
-    
   }
   
 }

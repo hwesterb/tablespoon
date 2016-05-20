@@ -9,6 +9,8 @@ import se.kth.tablespoon.client.events.ResourceType;
 import se.kth.tablespoon.client.events.EventType;
 import se.kth.tablespoon.client.general.Group;
 import java.util.UUID;
+import se.kth.tablespoon.client.events.CollectlMapping;
+import se.kth.tablespoon.client.events.Resource;
 import se.kth.tablespoon.client.util.Time;
 
 /**
@@ -18,22 +20,12 @@ import se.kth.tablespoon.client.util.Time;
 public class TopicFactory {
   
   
-   public static Topic create(TopicStorage storage, EventType type, int index, Group group) {
-    return makeGroupTopic(storage, index, type, group);
+  public static Topic create(TopicStorage storage, EventType type, Resource resource, Group group) {
+    return makeGroupTopic(storage, getIndex(resource), type, group);
   }
   
-  public static Topic create(TopicStorage storage, EventType type, ResourceType rt, Group group) {
-    int index = collectlMapping(rt);
-    return makeGroupTopic(storage, index, type, group);
-  }
-  
-  public static Topic create(TopicStorage storage, EventType type, int index) {
-    return makeMachineTopic(storage, index, type);
-  }
-  
-   public static Topic create(TopicStorage storage, EventType type, ResourceType rt) {
-    int index = collectlMapping(rt);
-    return makeMachineTopic(storage, index, type);
+   public static Topic create(TopicStorage storage, EventType type, Resource resource) {
+    return makeMachineTopic(storage,  getIndex(resource), type);
   }
   
   private static Topic makeMachineTopic(TopicStorage storage, int index, EventType type) {
@@ -48,14 +40,14 @@ public class TopicFactory {
     return topic;
   }
   
-  public static ResourceType collectlMapping(int index) {
-    if (index == 0) return ResourceType.CPU;
-    else return ResourceType.RAM; 
-  }
-  
-  public static int collectlMapping(ResourceType rt) {
-    if (rt == ResourceType.CPU) return 0;
-    else return 65;
+  private static int getIndex(Resource resource) {
+     int index;
+    if (resource.isCollectIndexPriority()) {
+      index = resource.getCollectIndex();
+    } else  {
+      index = CollectlMapping.getInstance().getPrioritizedIndex(resource.getResourceType());
+    }
+    return index;
   }
   
   @SuppressWarnings("empty-statement")

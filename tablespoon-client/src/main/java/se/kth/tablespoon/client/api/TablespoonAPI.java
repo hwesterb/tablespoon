@@ -7,13 +7,13 @@ package se.kth.tablespoon.client.api;
 
 import se.kth.tablespoon.client.broadcasting.SubscriberBroadcaster;
 import se.kth.tablespoon.client.general.Group;
-import se.kth.tablespoon.client.events.ResourceType;
 import se.kth.tablespoon.client.events.Threshold;
 import se.kth.tablespoon.client.topics.ThresholdException;
 import se.kth.tablespoon.client.topics.Topic;
 import se.kth.tablespoon.client.topics.TopicFactory;
 import se.kth.tablespoon.client.topics.TopicStorage;
 import se.kth.tablespoon.client.events.EventType;
+import se.kth.tablespoon.client.events.Resource;
 import se.kth.tablespoon.client.general.Groups;
 import se.kth.tablespoon.client.topics.MissingTopicException;
 import se.kth.tablespoon.client.topics.TopicRemovalException;
@@ -26,26 +26,25 @@ import se.kth.tablespoon.client.topics.TopicRemovalException;
  */
 public class TablespoonAPI {
   
-  private final TopicStorage storage;
-  private final Groups groups;
+  private TopicStorage storage;
+  private Groups groups;
   private SubscriberBroadcaster sb;
+  private static TablespoonAPI instance = null;
   
   // TODO: make into Singleton.
   public static TablespoonAPI getInstance() {
-    Groups groups = new Groups();
-    TopicStorage storage = new TopicStorage(groups);
-    return new TablespoonAPI(storage, groups);
+    if(instance == null) {
+      instance = new TablespoonAPI();
+    }
+    return instance;
   }
   
-  public TablespoonAPI(TopicStorage storage, Groups groups, SubscriberBroadcaster sb) {
+  protected TablespoonAPI() { }
+  
+  public void prepareAPI(TopicStorage storage, Groups groups, SubscriberBroadcaster sb) {
     this.storage = storage;
     this.groups = groups;
     this.sb = sb;
-  }
-  
-   public TablespoonAPI(TopicStorage storage, Groups groups) {
-    this.storage = storage;
-    this.groups = groups;
   }
   
   /**
@@ -55,23 +54,18 @@ public class TablespoonAPI {
    * @param subscriber A <code>Subscriber</code> which receives <code>Event</code>.
    * @param groupId Id which specifies a group.
    * @param eventType Specifies how to gather and filter information.
-   * @param resourceType Type of resource which should be collected.
+   * @param resource Type of resource which should be collected.
    * @param duration Duration of a topic. Will expire automatically after duration.
    * Set value 0 for topic without time bound.
+   * @param sendRate The rate at which the agent sends messages.
    * @return An unique id which specifies the topic.
    */
   public String createTopic(Subscriber subscriber, String groupId, EventType eventType,
-      ResourceType resourceType, int duration) {
-    Topic topic = registerNewTopic(groupId, eventType, resourceType, duration);
+      Resource resource, int duration, int sendRate) {
+    Topic topic = registerNewTopic(groupId, eventType, resource, duration, sendRate);
     topic.unlock();
     sb.registerSubscriber(subscriber, topic);
     storage.notifyBroadcaster();
-    
-    // EventGenerator only for temporary testing purposes
-    DummieEventGenerator deg = new DummieEventGenerator(subscriber, groupId, eventType, resourceType, duration, null, null);
-    Thread degThread = new Thread(deg);
-    degThread.start();
-    
     return topic.getUniqueId();
   }
   
@@ -82,26 +76,21 @@ public class TablespoonAPI {
    * @param subscriber A <code>Subscriber</code> which receives <code>Event</code>.
    * @param groupId Id which specifies a group.
    * @param eventType Specifies how to gather and filter information.
-   * @param resourceType Type of resource which should be collected.
+   * @param resource Type of resource which should be collected.
    * @param duration Duration of a topic. Will expire automatically after duration.
    * Set value 0 for topic without time bound.
+   * @param sendRate The rate at which the agent sends messages.
    * @param threshold A <code>Threshold</code> that determines the percentage or
    * percentile when filtering events.
    * @return An unique id which specifies the topic.
    */
   public String createTopic(Subscriber subscriber, String groupId, EventType eventType,
-      ResourceType resourceType, int duration, Threshold threshold) {
-    Topic topic = registerNewTopic(groupId, eventType, resourceType, duration);
+      Resource resource, int duration, int sendRate, Threshold threshold) {
+    Topic topic = registerNewTopic(groupId, eventType, resource, duration, sendRate);
     topic.setHigh(threshold);
     topic.unlock();
     sb.registerSubscriber(subscriber, topic);
     storage.notifyBroadcaster();
-    
-    // EventGenerator only for temporary testing purposes
-    DummieEventGenerator deg = new DummieEventGenerator(subscriber, groupId, eventType, resourceType, duration, threshold, null);
-    Thread degThread = new Thread(deg);
-    degThread.start();
-    
     return topic.getUniqueId();
   }
   
@@ -112,9 +101,10 @@ public class TablespoonAPI {
    * @param subscriber A <code>Subscriber</code> which receives <code>Event</code>.
    * @param groupId Id which specifies a group.
    * @param eventType Specifies how to gather and filter information.
-   * @param resourceType Type of resource which should be collected.
+   * @param resource Type of resource which should be collected.
    * @param duration Duration of a topic. Will expire automatically after duration.
    * Set value 0 for topic without time bound.
+   * @param sendRate The rate at which the agent sends messages.
    * @param high A <code>Threshold</code> that determines the percentage or
    * percentile when filtering events.
    * @param low A <code>Threshold</code> that determines the percentage or
@@ -123,27 +113,23 @@ public class TablespoonAPI {
    * @throws ThresholdException Thrown if low >= high, or if <code>Comparator</code>
    * are incompatible.
    */
-  public String createTopic(Subscriber subscriber, String groupId, EventType eventType, ResourceType resourceType, int duration,
-      Threshold high, Threshold low) throws ThresholdException {
-    Topic topic = registerNewTopic(groupId, eventType, resourceType, duration);
+  public String createTopic(Subscriber subscriber, String groupId, EventType eventType, 
+      Resource resource, int duration, int sendRate, Threshold high, Threshold low) throws ThresholdException {
+    Topic topic = registerNewTopic(groupId, eventType, resource, duration, sendRate);
     topic.setHigh(high);
     topic.setLow(low);
     topic.unlock();
     sb.registerSubscriber(subscriber, topic);
     storage.notifyBroadcaster();
-    
-    // EventGenerator only for temporary testing purposes
-    DummieEventGenerator deg = new DummieEventGenerator(subscriber, groupId, eventType, resourceType, duration, high, low);
-    Thread degThread = new Thread(deg);
-    degThread.start();
-    
     return topic.getUniqueId();
   }
   
-  private Topic registerNewTopic(String groupId, EventType eventType, ResourceType resourceType, int duration) {
+  private Topic registerNewTopic(String groupId, EventType eventType, Resource resource,
+      int duration, int sendRate) {
     Group group = groups.get(groupId);
-    Topic topic = TopicFactory.create(storage, eventType, resourceType, group);
+    Topic topic = TopicFactory.create(storage, eventType, resource, group);
     if (duration > 0) topic.setDuration(duration);
+    topic.setSendRate(sendRate);
     return topic;
   }
   
@@ -186,7 +172,7 @@ public class TablespoonAPI {
    * @param uniqueId An unique id which specifies the topic.
    * @throws TopicRemovalException Thrown if attempting to remove topic with
    * existing duration. The topic will expire automatically.
-   * @throws MissingTopicException Thrown if the topic is not present in the storage. 
+   * @throws MissingTopicException Thrown if the topic is not present in the storage.
    */
   public void removeTopic(String uniqueId) throws TopicRemovalException, MissingTopicException {
     storage.remove(uniqueId);
