@@ -24,7 +24,7 @@ public class EventFetcher {
   
   private final Subscriber subscriber;
   private final Topic topic;
-  private long lastQuery = 0;
+  private long lastQueryTimeMs = 0;
   private final LinkedHashSet<MachineTime> sentEvents;
   private final int SENT_EVENTS_QUEUE_SIZE = 2000;
   
@@ -35,16 +35,15 @@ public class EventFetcher {
   }
   
   public boolean shouldQuery() {
-    return Time.now() - lastQuery >= topic.getSendRate();
+    return Time.nowMs() - lastQueryTimeMs >= (topic.getSendRate() * 1000) / 2;
   }
   
   public void queryRiemann(RiemannClient rClient) throws IOException {
-    lastQuery = Time.now();
+    lastQueryTimeMs = Time.nowMs();
     List<Event> events =  rClient.query("service = \"" + topic.getUniqueId() + "\"").deref();
     for (Event event : events) {
       MachineTime mt = new MachineTime(event.getHost(), event.getTime());
-      if (sentEvents.contains(mt)) continue;
-      sentEvents.add(mt);
+      if (sentEvents.add(mt)) continue;
       subscriber.onEventArrival(EventConverter.changeFormat(event, topic));
     }
     cleanSentEvents();

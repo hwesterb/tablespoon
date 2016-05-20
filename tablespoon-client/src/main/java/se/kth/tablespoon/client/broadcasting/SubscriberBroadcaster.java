@@ -36,7 +36,7 @@ public class SubscriberBroadcaster implements Runnable {
   private void broadcastEvents() throws IOException {
     while(true) {
       for (EventFetcher fetcher : fetchers) {
-        fetcher.queryRiemann(riemannClient);
+        if (fetcher.shouldQuery()) fetcher.queryRiemann(riemannClient);
       }
     }
   }

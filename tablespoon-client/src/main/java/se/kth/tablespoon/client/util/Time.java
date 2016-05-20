@@ -18,4 +18,8 @@ public class Time {
   public static long now() {
     return System.currentTimeMillis() / 1000L;
   }
+  
+  public static long nowMs() {
+    return System.currentTimeMillis();
+  }
 }

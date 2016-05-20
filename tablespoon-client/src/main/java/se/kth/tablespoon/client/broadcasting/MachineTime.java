@@ -25,7 +25,7 @@ public class MachineTime {
   public boolean equals(Object other){
     if (other == null) return false;
     if (other == this) return true;
-    if (!(other instanceof MachineTime))return false;
+    if (!(other instanceof MachineTime)) return false;
     MachineTime mt = (MachineTime) other;
     return mt.machineId.equals(machineId) && mt.timeStamp == timeStamp;
   }
