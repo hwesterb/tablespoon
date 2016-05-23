@@ -49,6 +49,7 @@ public class Topics {
         metric.getTimeStamp(),
         config.getRiemannEventTtl());
     riemannEvent.addTag(metric.getSource().toString());
+    riemannEvent.addTag("groupAverage");
     return riemannEvent;
   }
   
