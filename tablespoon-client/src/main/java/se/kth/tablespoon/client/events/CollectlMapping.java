@@ -30,19 +30,19 @@ public class CollectlMapping {
   }
   
   protected CollectlMapping() {
-    for (int i = 0; i <= 18; i++) {
+    for (int i = 0; i <= 20; i++) {
       mapping.put(i, CPU);
     }
-    for (int i = 19; i <= 46; i++) {
+    for (int i = 21; i <= 49; i++) {
       mapping.put(i, MEM);
     }
-    for (int i = 47; i <= 55; i++) {
+    for (int i = 50; i <= 58; i++) {
       mapping.put(i, NET);
     }
-    for (int i = 56; i <= 64; i++) {
+    for (int i = 59; i <= 67; i++) {
       mapping.put(i, DSK);
     }
-    mapping.put(65, MEM);
+    mapping.put(68, MEM);
   }
   
   
@@ -53,13 +53,13 @@ public class CollectlMapping {
   public int getPrioritizedIndex(ResourceType resourceType) {
     switch (resourceType) {
       case CPU:
-        return 0;  // 0 = [CPU]User%
-      case DSK:
-        return 49; // 49 = [NET]RxKBTot
+        return 8;  // 8 - [CPU]Totl%
       case NET:
-        return 56; // 56 = [DSK]ReadTot
+        return 52; // 52 - [NET]RxKBTot
+      case DSK:
+        return 59; // 59 - [DSK]ReadTot
       case MEM:
-        return 65; // 64 = [MEM]MemoryUsed%
+        return 68; // 68 - [MEM]MemoryUsed%
     }
     return 0;
   }

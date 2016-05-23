@@ -31,7 +31,7 @@ public abstract class MetricListener implements Runnable {
   }
   
   public abstract void collectCycle();
-    
+  
   protected void addMetricToGlobal(String line) {
     ArrayList<Metric> metrics = MetricFactory.createMetrics(line, mls, config);
     createCustomMetrics(metrics);
