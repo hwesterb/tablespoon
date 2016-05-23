@@ -4,6 +4,6 @@
   "riemannReconnectionTries": 100,
   "riemannReconnectionTime": 5000,
   "riemannSendRate": 1000,
-  "riemannEventTtl": 60,
+  "riemannEventTtl": 10,
   "riemannDereferenceTime": 5000
 }

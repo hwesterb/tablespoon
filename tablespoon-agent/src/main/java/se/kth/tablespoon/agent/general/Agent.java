@@ -55,7 +55,7 @@ public class Agent {
     if (tries < config.getRiemannReconnectionTries()) {
       slf4jLogger.info("Waiting for "
           + Math.round(config.getRiemannReconnectionTime() / 1000)
-          + " seconds and attempting to connect again...");
+          + " seconds before attempting to connect again...");
       Time.sleep(config.getRiemannReconnectionTime());
       return true;
     }

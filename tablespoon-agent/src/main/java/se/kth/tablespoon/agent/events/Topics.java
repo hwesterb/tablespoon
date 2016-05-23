@@ -8,12 +8,16 @@ package se.kth.tablespoon.agent.events;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.TreeMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import static org.slf4j.MDC.put;
 import se.kth.tablespoon.agent.metrics.Metric;
 
 public class Topics {
   
   private final Configuration config = Configuration.getInstance();
   private final TreeMap<String, Topic> topics = new TreeMap<>();
+    private final static Logger slf4jLogger = LoggerFactory.getLogger(Topics.class);
   
   public void addTopic(Topic topic) {
     topics.put(topic.getUniqueId(), topic);
@@ -58,6 +62,7 @@ public class Topics {
     while (iterator.hasNext()) {
       Topic topic = iterator.next();
       if (durationHasEnded(metric.getTimeStamp(), topic) || topic.isScheduledForRemoval()) {
+        slf4jLogger.info("Removing topic " + topic.getUniqueId() + " from memory.");
         topics.put(topic.getUniqueId(), null);
       }
     }

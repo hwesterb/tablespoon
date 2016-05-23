@@ -33,7 +33,7 @@ public class CollectlListener extends MetricListener {
           continue;
         }
         addMetricToGlobal(line);
-        expireOldMetrics(0);
+        expireOldMetrics();
         if (interruptRequest || restartRequest) break;
       }
       stopCollecting();

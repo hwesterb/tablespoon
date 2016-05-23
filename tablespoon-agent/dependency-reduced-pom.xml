@@ -26,8 +26,8 @@
         <version>2.6</version>
         <configuration>
           <excludes>
-            <exclude>**/log4j.properties</exclude>
-            <exclude>**/config.properties</exclude>
+            <exclude>**/logback.xml</exclude>
+            <exclude>**/config.json</exclude>
           </excludes>
           <archive>
             <manifest>

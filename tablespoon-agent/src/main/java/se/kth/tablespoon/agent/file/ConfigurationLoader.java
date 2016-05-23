@@ -17,17 +17,11 @@ public class ConfigurationLoader extends FileLoader {
   private final String CONFIG_DIRECTORY = "configuration";
   private final String CONFIG_FILE_NAME = "config.json";
   
-  public void readConfigFile() throws JsonException {
+  public void readConfigFile() throws JsonException, IOException {
     Configuration config = Configuration.getInstance();
-    try {
-      String json = loadJsonFromFile(CONFIG_DIRECTORY, CONFIG_FILE_NAME);
-      config.interpretJson(json);
-    } catch (IOException ex) {
-      slf4jLogger.debug("Could not load configuration, message: " + ex.getMessage());
-    }
-    
+    String json = loadJsonFromFile(CONFIG_DIRECTORY, CONFIG_FILE_NAME);
+    config.interpretJson(json);
   }
   
  
-  
 }

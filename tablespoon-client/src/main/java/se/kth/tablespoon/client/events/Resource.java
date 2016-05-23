@@ -74,12 +74,13 @@ public class Resource {
   private ResourceType resourceType;
   private boolean collectIndexPriority;
   
-  public void setCollectIndex(int collectIndex) {
+  
+  public Resource(int collectIndex) {
     this.collectIndex = collectIndex;
     collectIndexPriority = true;
   }
   
-  public void setResourceType(ResourceType resourceType) {
+  public Resource(ResourceType resourceType) {
     this.resourceType = resourceType;
     collectIndexPriority = false;
   }

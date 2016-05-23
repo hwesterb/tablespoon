@@ -31,8 +31,7 @@ public abstract class MetricListener implements Runnable {
   }
   
   public abstract void collectCycle();
-  
-  
+    
   protected void addMetricToGlobal(String line) {
     ArrayList<Metric> metrics = MetricFactory.createMetrics(line, mls, config);
     createCustomMetrics(metrics);
@@ -41,14 +40,19 @@ public abstract class MetricListener implements Runnable {
   
   protected abstract void createCustomMetrics(ArrayList<Metric> metrics);
   
-  protected void expireOldMetrics(int i) {
-    Metric metric = globalQueue.peek();
+  protected void expireOldMetrics() {
+    int i = 0;
     long ttl = config.getRiemannEventTtl();
-    if (Time.now() - metric.getTimeStamp() > ttl) {
-      synchronized (globalQueue) {
-        globalQueue.remove();
+    while (globalIsEmpty() == false) {
+      Metric metric = globalQueue.peek();
+      if (Time.now() - metric.getTimeStamp() > ttl) {
+        synchronized (globalQueue) {
+          globalQueue.remove();
+        }
+        i++;
+      } else {
+        break;
       }
-      expireOldMetrics(++i);
     }
     if (i > 0) slf4jLogger.info("Expired " + i + " metrics.");
   }

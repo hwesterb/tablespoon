@@ -1,5 +1,7 @@
 package se.kth.tablespoon.agent.main;
 
+import java.io.IOException;
+import java.util.logging.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.kth.tablespoon.agent.events.Topics;
@@ -20,9 +22,9 @@ public class Start {
   private static Thread collectlThread;
   private final static Logger slf4jLogger = LoggerFactory.getLogger(Start.class);
   
-  public static void main(String[] args) throws JsonException {
+  public static void main(String[] args) {
     slf4jLogger.info("Starting tablespoon agent.");
-    (new ConfigurationLoader()).readConfigFile();
+    loadConfig();
     metricListener = new CollectlListener();
     Topics topics = new Topics();
     startCollectlThread();
@@ -41,10 +43,19 @@ public class Start {
     }
   }
   
+  private static void loadConfig(){
+    try {
+      (new ConfigurationLoader()).readConfigFile();
+    } catch (JsonException | IOException ex) {
+      slf4jLogger.debug(ex.getMessage());
+      slf4jLogger.debug("Ending the agent prematurely.");
+      System.exit(0);
+    }
+  }
+   
   
   private static void setUpHook() {
     Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-      
       @Override
       public void run() {
         if (metricListener != null) {
