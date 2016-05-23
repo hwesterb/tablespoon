@@ -56,6 +56,7 @@ public class CollectlListener extends MetricListener {
   
   private void defineTheHeaders(String line) {
     if (line.startsWith("#")) {
+//      printCollectlList(line);
       mls = CollectlStringParser.handleHeaders(line);
       headersDefined = true;
     }
@@ -63,8 +64,8 @@ public class CollectlListener extends MetricListener {
   
   @Override
   protected void createCustomMetrics(ArrayList<Metric> metrics) {
-    double total = metrics.get(19).getValue();
-    double used = metrics.get(20).getValue();
+    double total = metrics.get(21).getValue();
+    double used = metrics.get(22).getValue();
     long timeStamp = metrics.get(0).getTimeStamp();
     Metric metric = new Metric(metrics.size(),
         MetricSource.MEM,
@@ -73,6 +74,16 @@ public class CollectlListener extends MetricListener {
         "MemoryUsed",
         (used/total) * 100);
     metrics.add(metric);
+  }
+  
+  private void printCollectlList(String unsplitHeader) {
+    unsplitHeader = unsplitHeader.substring(5, unsplitHeader.length());
+    String[] headers = CollectlStringParser.split(unsplitHeader);
+    int i = 0;
+    for (String header : headers) {
+      System.out.println(i + " - " + header);
+      i++;
+    }
   }
   
 }

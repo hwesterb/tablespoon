@@ -11,6 +11,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import se.kth.tablespoon.client.broadcasting.AgentBroadcasterAssistant;
+import se.kth.tablespoon.client.broadcasting.SubscriberBroadcaster;
 import se.kth.tablespoon.client.general.Group;
 import se.kth.tablespoon.client.general.Groups;
 import se.kth.tablespoon.client.events.Comparator;
@@ -27,9 +28,7 @@ import se.kth.tablespoon.client.util.Time;
  */
 public class TablespoonAPITest {
   
-  public TablespoonAPITest() {
-  }
-  
+  static final int SLEEP_TIME = 500;
   static Groups groups;
   static Group groupA;
   static Group groupB;
@@ -39,6 +38,7 @@ public class TablespoonAPITest {
   static AgentBroadcasterTester abt;
   static SubscriberTester subscriberB;
   static SubscriberTester subscriberA;
+  static SubscriberBroadcasterTester sbt;
   static TablespoonAPI api;
   
   @BeforeClass
@@ -62,7 +62,9 @@ public class TablespoonAPITest {
     subscriberB = new SubscriberTester();
     subscriberA = new SubscriberTester();
     Time.sleep(1000); //wait for threads to start
-    
+    sbt = new SubscriberBroadcasterTester();
+    api = TablespoonAPI.getInstance();
+    api.prepareAPI(storage, groups, sbt);
   }
   
   
@@ -82,13 +84,9 @@ public class TablespoonAPITest {
     Resource resource = new Resource(ResourceType.CPU);
     int duration = 10;
     int sendRate = 2;
-    
-    SubscriberBroadcaster sb = new SubscriberBroadcaster();
-    
-    TablespoonAPI.getInstance().prepareAPI(storage, groups, null);
-    subscriberB.setUniqueId(TablespoonAPI.getInstance().createTopic(subscriberB, groupId, eventType, resource, duration, sendRate));
+    subscriberB.setUniqueId(api.createTopic(subscriberB, groupId, eventType, resource, duration, sendRate));
     aba.registerBroadcaster(abt);
-    Time.sleep(100);
+    Time.sleep(SLEEP_TIME);
     assertEquals(2, abt.getRecievedRequests());
   }
   
@@ -99,7 +97,7 @@ public class TablespoonAPITest {
   public void testChangeTopic() throws Exception {
     System.out.println("\n*** changeTopic ***\n");
     api.changeTopic(subscriberB.getUniqueId(), new Threshold(0.8, Comparator.LESS_THAN));
-    Time.sleep(100);
+    Time.sleep(SLEEP_TIME);
     assertEquals(4, abt.getRecievedRequests());
   }
   
@@ -113,7 +111,7 @@ public class TablespoonAPITest {
     Threshold low = new Threshold(0.3, Comparator.LESS_THAN);
     Resource resource = new Resource(ResourceType.CPU);
     subscriberA.setUniqueId(api.createTopic(subscriberA, "A", EventType.GROUP_AVERAGE, resource, 0, 2, high, low));
-    Time.sleep(100);
+    Time.sleep(SLEEP_TIME);
     assertEquals(8, abt.getRecievedRequests());
   }
   
@@ -124,7 +122,7 @@ public class TablespoonAPITest {
   public void testRemoveTopic() throws Exception {
     System.out.println("\n*** removeTopic ***\n");
     api.removeTopic(subscriberA.getUniqueId());
-    Time.sleep(100);
+    Time.sleep(SLEEP_TIME);
     assertEquals(12, abt.getRecievedRequests());
   }  
   

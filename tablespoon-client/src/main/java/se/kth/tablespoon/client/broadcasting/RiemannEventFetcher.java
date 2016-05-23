@@ -20,7 +20,7 @@ import se.kth.tablespoon.client.util.Time;
  *
  * @author henke
  */
-public class EventFetcher {
+public class RiemannEventFetcher {
   
   private final Subscriber subscriber;
   private final Topic topic;
@@ -28,7 +28,7 @@ public class EventFetcher {
   private final LinkedHashSet<MachineTime> sentEvents;
   private final int SENT_EVENTS_QUEUE_SIZE = 2000;
   
-  public EventFetcher(Subscriber subscriber, Topic topic) {
+  public RiemannEventFetcher(Subscriber subscriber, Topic topic) {
     this.sentEvents = new LinkedHashSet<>();
     this.subscriber = subscriber;
     this.topic = topic;
@@ -38,15 +38,19 @@ public class EventFetcher {
     return Time.nowMs() - lastQueryTimeMs >= (topic.getSendRate() * 1000) / 2;
   }
   
-  public void queryRiemann(RiemannClient rClient) throws IOException {
+  public void queryRiemannAndSend(RiemannClient rClient) throws IOException {
     lastQueryTimeMs = Time.nowMs();
     List<Event> events =  rClient.query("service = \"" + topic.getUniqueId() + "\"").deref();
+    sendEvents(events);
+    cleanSentEvents();
+  }
+  
+  private void sendEvents(List<Event> events) {
     for (Event event : events) {
       MachineTime mt = new MachineTime(event.getHost(), event.getTime());
       if (sentEvents.add(mt)) continue;
       subscriber.onEventArrival(EventConverter.changeFormat(event, topic));
     }
-    cleanSentEvents();
   }
   
   private void cleanSentEvents() {

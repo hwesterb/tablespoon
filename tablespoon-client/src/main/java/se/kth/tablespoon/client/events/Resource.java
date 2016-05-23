@@ -1,73 +1,79 @@
 package se.kth.tablespoon.client.events;
+  
+/* collectl V4.0.4
+    0 - [CPU]User%
+    1 - [CPU]Nice%
+    2 - [CPU]Sys%
+    3 - [CPU]Wait%
+    4 - [CPU]Irq%
+    5 - [CPU]Soft%
+    6 - [CPU]Steal%
+    7 - [CPU]Idle%
+    8 - [CPU]Totl%
+    9 - [CPU]Guest%
+    10 - [CPU]GuestN%
+    11 - [CPU]Intrpt/sec
+    12 - [CPU]Ctx/sec
+    13 - [CPU]Proc/sec
+    14 - [CPU]ProcQue
+    15 - [CPU]ProcRun
+    16 - [CPU]L-Avg1
+    17 - [CPU]L-Avg5
+    18 - [CPU]L-Avg15
+    19 - [CPU]RunTot
+    20 - [CPU]BlkTot
+    21 - [MEM]Tot
+    22 - [MEM]Used
+    23 - [MEM]Free
+    24 - [MEM]Shared
+    25 - [MEM]Buf
+    26 - [MEM]Cached
+    27 - [MEM]Slab
+    28 - [MEM]Map
+    29 - [MEM]Anon
+    30 - [MEM]AnonH
+    31 - [MEM]Commit
+    32 - [MEM]Locked
+    33 - [MEM]SwapTot
+    34 - [MEM]SwapUsed
+    35 - [MEM]SwapFree
+    36 - [MEM]SwapIn
+    37 - [MEM]SwapOut
+    38 - [MEM]Dirty
+    39 - [MEM]Clean
+    40 - [MEM]Laundry
+    41 - [MEM]Inactive
+    42 - [MEM]PageIn
+    43 - [MEM]PageOut
+    44 - [MEM]PageFaults
+    45 - [MEM]PageMajFaults
+    46 - [MEM]HugeTotal
+    47 - [MEM]HugeFree
+    48 - [MEM]HugeRsvd
+    49 - [MEM]SUnreclaim
+    50 - [NET]RxPktTot
+    51 - [NET]TxPktTot
+    52 - [NET]RxKBTot
+    53 - [NET]TxKBTot
+    54 - [NET]RxCmpTot
+    55 - [NET]RxMltTot
+    56 - [NET]TxCmpTot
+    57 - [NET]RxErrsTot
+    58 - [NET]TxErrsTot
+    59 - [DSK]ReadTot
+    60 - [DSK]WriteTot
+    61 - [DSK]OpsTot
+    62 - [DSK]ReadKBTot
+    63 - [DSK]WriteKBTot
+    64 - [DSK]KbTot
+    65 - [DSK]ReadMrgTot
+    66 - [DSK]WriteMrgTot
+    67 - [DSK]MrgTot
+    68 - [MEM]MemoryUsed%
+  */
 
-/*
-0 = [CPU]User%
-1 = [CPU]Nice%
-2 = [CPU]Sys%
-3 = [CPU]Wait%
-4 = [CPU]Irq%
-5 = [CPU]Soft%
-6 = [CPU]Steal%
-7 = [CPU]Idle%
-8 = [CPU]Totl%
-9 = [CPU]Intrpt/sec
-10 = [CPU]Ctx/sec
-11 = [CPU]Proc/sec
-12 = [CPU]ProcQue
-13 = [CPU]ProcRun
-14 = [CPU]L-Avg1
-15 = [CPU]L-Avg5
-16 = [CPU]L-Avg15
-17 = [CPU]RunTot
-18 = [CPU]BlkTot
-19 = [MEM]Tot
-20 = [MEM]Used
-21 = [MEM]Free
-22 = [MEM]Shared
-23 = [MEM]Buf
-24 = [MEM]Cached
-25 = [MEM]Slab
-26 = [MEM]Map
-27 = [MEM]Anon
-28 = [MEM]Commit
-29 = [MEM]Locked
-30 = [MEM]SwapTot
-31 = [MEM]SwapUsed
-32 = [MEM]SwapFree
-33 = [MEM]SwapIn
-34 = [MEM]SwapOut
-35 = [MEM]Dirty
-36 = [MEM]Clean
-37 = [MEM]Laundry
-38 = [MEM]Inactive
-39 = [MEM]PageIn
-40 = [MEM]PageOut
-41 = [MEM]PageFaults
-42 = [MEM]PageMajFaults
-43 = [MEM]HugeTotal
-44 = [MEM]HugeFree
-45 = [MEM]HugeRsvd
-46 = [MEM]SUnreclaim
-47 = [NET]RxPktTot
-48 = [NET]TxPktTot
-49 = [NET]RxKBTot
-50 = [NET]TxKBTot
-51 = [NET]RxCmpTot
-52 = [NET]RxMltTot
-53 = [NET]TxCmpTot
-54 = [NET]RxErrsTot
-55 = [NET]TxErrsTot
-56 = [DSK]ReadTot
-57 = [DSK]WriteTot
-58 = [DSK]OpsTot
-59 = [DSK]ReadKBTot
-60 = [DSK]WriteKBTot
-61 = [DSK]KbTot
-62 = [DSK]ReadMrgTot
-63 = [DSK]WriteMrgTot
-64 = [DSK]MrgTot
-65 = [MEM]MemoryUsed%
-*/
+
+
 public class Resource {
   
   private int collectIndex;
