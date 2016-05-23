@@ -13,7 +13,7 @@ import se.kth.tablespoon.client.topics.TopicStorage;
  */
 public class AgentBroadcasterAssistant implements Runnable {
   
-  private Broadcaster broadcaster;
+  private AgentBroadcaster broadcaster;
   private final TopicStorage storage;
   private final static Logger slf4jLogger = LoggerFactory.getLogger(AgentBroadcasterAssistant.class);
   
@@ -41,7 +41,7 @@ public class AgentBroadcasterAssistant implements Runnable {
     }
   }
   
-  public void registerBroadcaster(Broadcaster broadcaster) {
+  public void registerBroadcaster(AgentBroadcaster broadcaster) {
     this.broadcaster = broadcaster;
   }
   

@@ -5,13 +5,13 @@
  */
 package se.kth.tablespoon.client.api;
 
-import se.kth.tablespoon.client.broadcasting.Broadcaster;
+import se.kth.tablespoon.client.broadcasting.AgentBroadcaster;
 
 /**
  *
  * @author henke
  */
-public class AgentBroadcasterTester implements Broadcaster {
+public class AgentBroadcasterTester implements AgentBroadcaster {
   
   private int recievedRequests;
 

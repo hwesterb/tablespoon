@@ -7,7 +7,8 @@ package se.kth.tablespoon.client.general;
 
 import se.kth.tablespoon.client.api.TablespoonAPI;
 import se.kth.tablespoon.client.broadcasting.AgentBroadcasterAssistant;
-import se.kth.tablespoon.client.broadcasting.Broadcaster;
+import se.kth.tablespoon.client.broadcasting.AgentBroadcaster;
+import se.kth.tablespoon.client.broadcasting.RiemannSubscriberBroadcaster;
 import se.kth.tablespoon.client.broadcasting.SubscriberBroadcaster;
 import se.kth.tablespoon.client.topics.TopicStorage;
 
@@ -22,16 +23,16 @@ public class Start {
 //    setUp(null, null, "localhost", 5555);
   }
   
-  public static void setUp(Groups groups, Broadcaster broadcaster, String riemannHost, int riemannPort) {
+  public static void setUp(Groups groups, AgentBroadcaster broadcaster, String riemannHost, int riemannPort) {
     TopicStorage storage = new TopicStorage(groups);
     AgentBroadcasterAssistant aba = new AgentBroadcasterAssistant(storage);
-    SubscriberBroadcaster sb = new SubscriberBroadcaster(riemannHost, riemannPort);
+    RiemannSubscriberBroadcaster rsb = new RiemannSubscriberBroadcaster(riemannHost, riemannPort);
     TablespoonAPI api = TablespoonAPI.getInstance();
-    api.prepareAPI(storage, groups, sb);
+    api.prepareAPI(storage, groups, rsb);
     Thread abaThread = new Thread(aba);
     abaThread.start();
     aba.registerBroadcaster(broadcaster);
-    Thread sbThread = new Thread(sb);
+    Thread sbThread = new Thread(rsb);
     sbThread.start();
   }
   

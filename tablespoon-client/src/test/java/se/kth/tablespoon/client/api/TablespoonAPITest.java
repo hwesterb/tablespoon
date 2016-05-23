@@ -11,7 +11,6 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import se.kth.tablespoon.client.broadcasting.AgentBroadcasterAssistant;
-import se.kth.tablespoon.client.broadcasting.SubscriberBroadcaster;
 import se.kth.tablespoon.client.general.Group;
 import se.kth.tablespoon.client.general.Groups;
 import se.kth.tablespoon.client.events.Comparator;
@@ -80,7 +79,8 @@ public class TablespoonAPITest {
     EventType eventType = EventType.REGULAR;
     ResourceType resourceType = ResourceType.CPU;
     int duration = 10;
-    api = new TablespoonAPI(storage, groups);
+    api = TablespoonAPI.getInstance();
+    api.prepareAPI(storage, groups, null);
     subscriberB.setUniqueId(api.createTopic(subscriberB, groupId, eventType, resourceType, duration));
     aba.registerBroadcaster(abt);
     Time.sleep(100);
