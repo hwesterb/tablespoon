@@ -31,7 +31,7 @@ public abstract class Topic {
   private final long startTime;
   private int sendRate;
   private int duration = 0;
-  private final EventType type;
+  private final EventType eventType;
   private Threshold high;
   private Threshold low;
   private final String uniqueId;
@@ -40,15 +40,17 @@ public abstract class Topic {
   private boolean scheduledForRemoval = false;
   
   
-  public Topic(int index, long startTime, String uniqueId, EventType type, ArrayList<String> machines, String groupId) {
+  public Topic(int index,long startTime, String uniqueId, EventType type, int sendRate,
+      ArrayList<String> machines, String groupId) {
     this.reentrantLock.lock();
     this.index = index;
     this.startTime = startTime;
     this.uniqueId = uniqueId;
-    this.type = type;
+    this.eventType = type;
+    this.sendRate = sendRate;
     this.machines = machines;
     this.groupId = groupId;
-    version = 0;
+    version = 1;
   }
   
   public void lock() {
@@ -141,8 +143,8 @@ public abstract class Topic {
     return low;
   }
   
-  public EventType getType() {
-    return type;
+  public EventType getEventType() {
+    return eventType;
   }
   
   public int getSendRate() {
@@ -179,7 +181,7 @@ public abstract class Topic {
         .put("startTime", startTime)
         .put("uniqueId", uniqueId)
         .put("groupId", groupId)
-        .put("type", type.toString())
+        .put("eventType", eventType.toString())
         .put("sendRate", sendRate);
     if (scheduledForRemoval) {
       obj.put("scheduledForRemoval", true);

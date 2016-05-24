@@ -20,7 +20,7 @@ import se.kth.tablespoon.agent.events.Topics;
 import se.kth.tablespoon.agent.listeners.MetricListener;
 import se.kth.tablespoon.agent.metrics.Metric;
 import se.kth.tablespoon.agent.metrics.MetricFormat;
-import se.kth.tablespoon.agent.metrics.MetricSource;
+import se.kth.tablespoon.agent.events.ResourceType;
 import se.kth.tablespoon.agent.util.Time;
 
 /**
@@ -89,7 +89,7 @@ public class AgentTest {
     @Override
     public void collectCycle() {
       while (true) {
-        globalQueue.add(new Metric(1, MetricSource.DSK, MetricFormat.TOTAL, Time.now(), "agenttester", 27));
+        globalQueue.add(new Metric(1, ResourceType.DSK, MetricFormat.TOTAL, Time.now(), "agenttester", 27));
         Time.sleep(100);
       }
     }

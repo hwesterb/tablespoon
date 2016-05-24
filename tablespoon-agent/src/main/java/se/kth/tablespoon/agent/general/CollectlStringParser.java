@@ -4,7 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import se.kth.tablespoon.agent.metrics.MetricLayout;
-import se.kth.tablespoon.agent.metrics.MetricSource;
+import se.kth.tablespoon.agent.events.ResourceType;
 import se.kth.tablespoon.agent.metrics.MetricFormat;
 
 //Parses input from collectl.
@@ -33,8 +33,8 @@ public class CollectlStringParser {
   
   // Collectl output has the same name as enumerators,
   // therefore the conversion can happen automatically.
-  public static MetricSource findType(String str) {
-    for (MetricSource source : MetricSource.values()) {
+  public static ResourceType findType(String str) {
+    for (ResourceType source : ResourceType.values()) {
       if (str.equalsIgnoreCase(source.name())) return source;
     }
     return null;

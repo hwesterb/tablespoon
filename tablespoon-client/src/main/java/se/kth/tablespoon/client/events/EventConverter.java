@@ -8,7 +8,6 @@ package se.kth.tablespoon.client.events;
 import com.aphyr.riemann.Proto.Event;
 import se.kth.tablespoon.client.api.TablespoonEvent;
 import se.kth.tablespoon.client.topics.Topic;
-import se.kth.tablespoon.client.topics.TopicFactory;
 
 /**
  *
@@ -21,7 +20,7 @@ public class EventConverter {
     TablespoonEvent tablespoonEvent = new TablespoonEvent(topic.getGroupId(),
         event.getHost(),
         event.getMetricD(),
-        topic.getType(),
+        topic.getEventType(),
         resourceType,
         topic.getHigh(),
         topic.getLow());

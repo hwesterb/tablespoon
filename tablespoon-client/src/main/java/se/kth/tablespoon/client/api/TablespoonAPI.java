@@ -51,7 +51,7 @@ public class TablespoonAPI {
    * This call creates a new topic which applies to one group. No thresholds are
    * active upon creation. This can be changed with the <code>changeTopic</code>
    * call.
-   * @param subscriber A <code>Subscriber</code> which receives <code>Event</code>.
+   * @param subscriber A <code>Subscriber</code> which receives <code>TablespoonEvent</code>.
    * @param groupId Id which specifies a group.
    * @param eventType Specifies how to gather and filter information.
    * @param resource Type of resource which should be collected.
@@ -73,7 +73,7 @@ public class TablespoonAPI {
    * This call creates a new topic which applies to one group. One thresholds are
    * active upon creation. This can be changed with the <code>changeTopic</code>
    * call.
-   * @param subscriber A <code>Subscriber</code> which receives <code>Event</code>.
+   * @param subscriber A <code>Subscriber</code> which receives <code>TablespoonEvent</code>.
    * @param groupId Id which specifies a group.
    * @param eventType Specifies how to gather and filter information.
    * @param resource Type of resource which should be collected.
@@ -98,7 +98,7 @@ public class TablespoonAPI {
    * This call creates a new topic which applies to one group. Two thresholds are
    * active upon creation. This can be changed with the <code>changeTopic</code>
    * call.
-   * @param subscriber A <code>Subscriber</code> which receives <code>Event</code>.
+   * @param subscriber A <code>Subscriber</code> which receives <code>TablespoonEvent</code>.
    * @param groupId Id which specifies a group.
    * @param eventType Specifies how to gather and filter information.
    * @param resource Type of resource which should be collected.
@@ -113,7 +113,7 @@ public class TablespoonAPI {
    * @throws ThresholdException Thrown if low >= high, or if <code>Comparator</code>
    * are incompatible.
    */
-  public String createTopic(Subscriber subscriber, String groupId, EventType eventType, 
+  public String createTopic(Subscriber subscriber, String groupId, EventType eventType,
       Resource resource, int duration, int sendRate, Threshold high, Threshold low) throws ThresholdException {
     Topic topic = registerNewTopic(groupId, eventType, resource, duration, sendRate);
     topic.setHigh(high);
@@ -127,7 +127,7 @@ public class TablespoonAPI {
   private Topic registerNewTopic(String groupId, EventType eventType, Resource resource,
       int duration, int sendRate) {
     Group group = groups.get(groupId);
-    Topic topic = TopicFactory.create(storage, eventType, resource, group);
+    Topic topic = TopicFactory.create(storage, resource, eventType, sendRate, group);
     if (duration > 0) topic.setDuration(duration);
     topic.setSendRate(sendRate);
     return topic;
@@ -159,7 +159,8 @@ public class TablespoonAPI {
    * are incompatible.
    * @throws MissingTopicException Thrown if the topic is not present in the storage.
    */
-  public void changeTopic(String uniqueId, Threshold high, Threshold low) throws ThresholdException, MissingTopicException {
+  public void changeTopic(String uniqueId, Threshold high, Threshold low)
+      throws ThresholdException, MissingTopicException {
     Topic topic = storage.getAndChange(uniqueId);
     topic.setHigh(high);
     topic.setLow(low);

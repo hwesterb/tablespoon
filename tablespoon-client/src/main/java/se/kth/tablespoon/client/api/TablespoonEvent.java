@@ -57,6 +57,15 @@ public class TablespoonEvent {
   public Threshold getLow() {
     return low;
   }
+
+  @Override
+  public String toString() {
+    return "TablespoonEvent{" + "groupId=" + groupId + ", machineId=" 
+        + machineId + ", value=" + value + ", eventType=" + eventType 
+        + ", resourceType=" + resourceType + ", high=" + high + ", low=" + low + '}';
+  }
+  
+  
   
   
   

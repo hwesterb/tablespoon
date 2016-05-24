@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import se.kth.tablespoon.agent.general.CollectlStringParser;
 import se.kth.tablespoon.agent.metrics.Metric;
 import se.kth.tablespoon.agent.metrics.MetricFormat;
-import se.kth.tablespoon.agent.metrics.MetricSource;
+import se.kth.tablespoon.agent.events.ResourceType;
 
 public class CollectlListener extends MetricListener {
   
@@ -68,7 +68,7 @@ public class CollectlListener extends MetricListener {
     double used = metrics.get(22).getValue();
     long timeStamp = metrics.get(0).getTimeStamp();
     Metric metric = new Metric(metrics.size(),
-        MetricSource.MEM,
+        ResourceType.MEM,
         MetricFormat.PERCENTAGE,
         timeStamp,
         "MemoryUsed",

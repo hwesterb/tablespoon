@@ -10,7 +10,6 @@ import java.util.Iterator;
 import java.util.TreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import static org.slf4j.MDC.put;
 import se.kth.tablespoon.agent.metrics.Metric;
 
 public class Topics {
@@ -41,19 +40,19 @@ public class Topics {
   private void addRiemannEvent(Metric metric, ArrayList<RiemannEvent> riemannEvents, Topic topic) {
     double value = topic.getAverageOfMeasurements();
     if (topic.isValid(value)) {
-      riemannEvents.add(createRiemannEvent(metric, value, topic.getUniqueId()));
+      riemannEvents.add(createRiemannEvent(metric, topic, value, topic.getUniqueId()));
     }
   }
   
-  private RiemannEvent createRiemannEvent(Metric metric, double value, String uniqueId) {
+  private RiemannEvent createRiemannEvent(Metric metric, Topic topic, double value, String uniqueId) {
     RiemannEvent riemannEvent = new RiemannEvent(uniqueId,
         "tablespoon",
         metric.getName() + " in " + metric.getFormat().toString().toLowerCase()  + ".",
         value,
         metric.getTimeStamp(),
         config.getRiemannEventTtl());
-    riemannEvent.addTag(metric.getSource().toString());
-    riemannEvent.addTag("groupAverage");
+    riemannEvent.addTag(metric.getResourceType().toString());
+    riemannEvent.addTag(topic.getEventType().toString());
     return riemannEvent;
   }
   

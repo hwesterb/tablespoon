@@ -1,17 +1,20 @@
 package se.kth.tablespoon.agent.metrics;
 
+import se.kth.tablespoon.agent.events.ResourceType;
+
 public class Metric {
   
   private final int collectIndex;
-  private final MetricSource source;
+  private final ResourceType resourceType;
   private final MetricFormat format;
   private final long timeStamp;
   private final String name;
   private final double value;
 
-  public Metric(int collectIndex, MetricSource source, MetricFormat format, long timeStamp, String name, double value) {
+  public Metric(int collectIndex, ResourceType resourceType, MetricFormat format,
+      long timeStamp, String name, double value) {
     this.collectIndex = collectIndex;
-    this.source = source;
+    this.resourceType = resourceType;
     this.format = format;
     this.timeStamp = timeStamp;
     this.name = name;
@@ -22,8 +25,8 @@ public class Metric {
     return collectIndex;
   }
 
-  public MetricSource getSource() {
-    return source;
+  public ResourceType getResourceType() {
+    return resourceType;
   }
 
   public MetricFormat getFormat() {

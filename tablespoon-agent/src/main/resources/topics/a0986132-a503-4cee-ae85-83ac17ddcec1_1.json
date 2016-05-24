@@ -1,9 +1,13 @@
 {
-  "index" : 65,
+  "index" : 8,
   "version" : 1,
-  "startTime" : 1463503857,
+  "startTime" : 1464079663,
   "uniqueId" : "a0986132-a503-4cee-ae85-83ac17ddcec1",
   "groupId" : "A",
-  "type" : "REGULAR",
-  "sendRate" : 4
+  "eventType" : "REGULAR",
+  "sendRate" : 2,
+  "high" : {
+    "percentage" : 10.3,
+    "comparator" : "LESS_THAN"
+  }
 }

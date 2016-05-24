@@ -20,28 +20,22 @@ import se.kth.tablespoon.client.util.Time;
 public class TopicFactory {
   
   
-  public static Topic create(TopicStorage storage, EventType type, Resource resource, Group group) {
-    return makeGroupTopic(storage, getIndex(resource), type, group);
-  }
-  
-   public static Topic create(TopicStorage storage, EventType type, Resource resource) {
-    return makeMachineTopic(storage,  getIndex(resource), type);
-  }
-  
-  private static Topic makeMachineTopic(TopicStorage storage, int index, EventType type) {
-    Topic topic = new MachineTopic(index, Time.now(), createUniqueId(storage), type);
-    storage.add(topic);
-    return topic;
-  }
-  
-  private static Topic makeGroupTopic(TopicStorage storage, int index, EventType type, Group group) {
-    Topic topic = new GroupTopic(index, Time.now(), createUniqueId(storage), type, group);
+  public static Topic create(TopicStorage storage, Resource resource,
+      EventType type, int sendRate, Group group) {
+    Topic topic;
+    if (group == null) {
+      topic = new MachineTopic(getIndex(resource), Time.now(),
+          createUniqueId(storage), type, sendRate);
+    } else {
+      topic = new GroupTopic(getIndex(resource), Time.now(),
+          createUniqueId(storage), type, sendRate, group);
+    }
     storage.add(topic);
     return topic;
   }
   
   private static int getIndex(Resource resource) {
-     int index;
+    int index;
     if (resource.isCollectIndexPriority()) {
       index = resource.getCollectIndex();
     } else  {

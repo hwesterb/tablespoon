@@ -26,7 +26,7 @@ public class Topic {
   private final long localStartTime;
   private String uniqueId;
   private String groupId;
-  private EventType type;
+  private EventType eventType;
   private int sendRate;
   private boolean scheduledForRemoval;
   private int duration;
@@ -84,11 +84,11 @@ public class Topic {
       return Comparator.LESS_THAN_OR_EQUAL;
     }
   }
-
+  
   public long getStartTime() {
     return startTime;
   }
-
+  
   public long getLocalStartTime() {
     return localStartTime;
   }
@@ -109,6 +109,10 @@ public class Topic {
     return uniqueId;
   }
   
+  public String getGroupId() {
+    return groupId;
+  }
+  
   public int getVersion() {
     return version;
   }
@@ -119,6 +123,10 @@ public class Topic {
   
   public Threshold getLow() {
     return low;
+  }
+  
+  public EventType getEventType() {
+    return eventType;
   }
   
   public boolean isScheduledForRemoval() {
@@ -155,8 +163,8 @@ public class Topic {
     if (map.get("groupId") == null) throw new JsonException("groupId");
     else groupId = (String) map.get("groupId");
     
-    if (map.get("type") == null) throw new JsonException("type");
-    else type = EventType.valueOf((String) map.get("type"));
+    if (map.get("eventType") == null) throw new JsonException("eventType");
+    else eventType = EventType.valueOf((String) map.get("eventType"));
     
     if (map.get("sendRate") == null) throw new JsonException("sendRate");
     else sendRate = (int) map.get("sendRate");
@@ -180,5 +188,5 @@ public class Topic {
   
   
   
- 
+  
 }

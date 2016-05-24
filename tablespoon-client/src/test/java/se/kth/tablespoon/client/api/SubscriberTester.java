@@ -12,6 +12,8 @@ package se.kth.tablespoon.client.api;
 public class SubscriberTester implements Subscriber {
 
   private String uniqueId;
+  private int counter = 0;
+  private TablespoonEvent event;
   
   
   public void setUniqueId(String uniqueId) {
@@ -24,7 +26,19 @@ public class SubscriberTester implements Subscriber {
   
   @Override
   public void onEventArrival(TablespoonEvent event) {
+    this.event = event;
     System.out.println(event);
+    counter++;
   }
+
+  public int getCounter() {
+    return counter;
+  }
+
+  public TablespoonEvent getEvent() {
+    return event;
+  }
+
+  
   
 }

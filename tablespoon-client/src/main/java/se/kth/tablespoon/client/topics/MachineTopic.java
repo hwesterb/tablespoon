@@ -15,8 +15,8 @@ import se.kth.tablespoon.client.general.Groups;
  */
 public class MachineTopic extends Topic {
 
-  public MachineTopic(int index, long startTime, String uniqueId, EventType type) {
-    super(index, startTime, uniqueId, type, new ArrayList<String>(), "not specified");
+  public MachineTopic(int index, long startTime, String uniqueId, EventType type, int sendRate) {
+    super(index, startTime, uniqueId, type, sendRate, new ArrayList<String>(), "not specified");
   }
 
   @Override

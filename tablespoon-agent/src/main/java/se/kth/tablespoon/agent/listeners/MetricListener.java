@@ -43,15 +43,15 @@ public abstract class MetricListener implements Runnable {
   protected void expireOldMetrics() {
     int i = 0;
     long ttl = config.getRiemannEventTtl();
-    while (globalIsEmpty() == false) {
-      Metric metric = globalQueue.peek();
-      if (Time.now() - metric.getTimeStamp() > ttl) {
-        synchronized (globalQueue) {
+    synchronized (globalQueue) {
+      while (globalIsEmpty() == false) {
+        Metric metric = globalQueue.peek();
+        if (Time.now() - metric.getTimeStamp() > ttl) {
           globalQueue.remove();
+          i++;
+        } else {
+          break;
         }
-        i++;
-      } else {
-        break;
       }
     }
     if (i > 0) slf4jLogger.info("Expired " + i + " metrics.");

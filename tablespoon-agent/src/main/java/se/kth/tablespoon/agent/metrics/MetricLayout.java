@@ -1,19 +1,22 @@
 package se.kth.tablespoon.agent.metrics;
 
 // This class is placed in an array which describes its collectlIndex. The 
+
+import se.kth.tablespoon.agent.events.ResourceType;
+
 // collectlIndex is referenced in the configfile when defining a new EventDefinition
 public class MetricLayout {
 
   // [CPU]User% describe source (CPU), name (User) and format (%)
-  private MetricSource source;
+  private ResourceType source;
   private String name;
   private MetricFormat format;
 
-  public MetricSource getSource() {
+  public ResourceType getSource() {
     return source;
   }
 
-  public void setSource(MetricSource source) {
+  public void setSource(ResourceType source) {
     this.source = source;
   }
 

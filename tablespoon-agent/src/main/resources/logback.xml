@@ -1,5 +1,5 @@
 <configuration>
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+<!--    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>/usr/local/tablespoon-agent/log/tablespoon-agent.log</file>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
@@ -14,7 +14,7 @@
         <encoder>
             <pattern>%d [%thread] %-5level  %logger{35} - %msg%n</pattern>
         </encoder>
-    </appender>
+    </appender>-->
   
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>

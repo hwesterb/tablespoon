@@ -1,7 +1,6 @@
 package se.kth.tablespoon.agent.main;
 
 import java.io.IOException;
-import java.util.logging.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.kth.tablespoon.agent.events.Topics;
