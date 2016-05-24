@@ -96,9 +96,10 @@ public abstract class Topic {
     machines.add(machine);
   }
   
-  public void addToNotifiedMachines(String machine) {
-    machinesNotified.add(machine);
+  public void addToNotifiedMachines(ArrayList<String> machines) {
+    machinesNotified.addAll(machines);
   }
+  
   
   public void setSendRate(int sendRate) {
     this.sendRate = sendRate;

@@ -95,7 +95,7 @@ public class TablespoonAPITest {
   @Test
   public void testChangeTopic() throws Exception {
     System.out.println("\n*** changeTopic ***\n");
-    api.changeTopic(subscriberB.getUniqueId(), new Threshold(0.8, Comparator.LESS_THAN));
+    api.changeTopic(subscriberB.getUniqueId(), new Threshold(80.0, Comparator.LESS_THAN));
     Time.sleep(SLEEP_TIME);
     assertEquals(4, abt.getRecievedRequests());
   }
@@ -106,8 +106,8 @@ public class TablespoonAPITest {
   @Test
   public void testCreateSecondTopic() throws Exception {
     System.out.println("\n*** secondTopic ***\n");
-    Threshold high = new Threshold(0.6, Comparator.GREATER_THAN);
-    Threshold low = new Threshold(0.3, Comparator.LESS_THAN);
+    Threshold high = new Threshold(60.0, Comparator.GREATER_THAN);
+    Threshold low = new Threshold(30.0, Comparator.LESS_THAN);
     Resource resource = new Resource(ResourceType.CPU);
     subscriberA.setUniqueId(api.createTopic(subscriberA, "A", EventType.GROUP_AVERAGE, resource, 0, 2, high, low));
     Time.sleep(SLEEP_TIME);
