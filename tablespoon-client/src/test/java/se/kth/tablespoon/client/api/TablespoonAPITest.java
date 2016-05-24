@@ -27,7 +27,7 @@ import se.kth.tablespoon.client.util.Time;
  */
 public class TablespoonAPITest {
   
-  static final int SLEEP_TIME = 500;
+  static final int SLEEP_TIME = 1500;
   static Groups groups;
   static Group groupA;
   static Group groupB;
@@ -60,7 +60,7 @@ public class TablespoonAPITest {
     abt = new AgentBroadcasterTester();
     subscriberB = new SubscriberTester();
     subscriberA = new SubscriberTester();
-    Time.sleep(1500); //wait for threads to start
+    Time.sleep(3000); //wait for threads to start
     sbt = new SubscriberBroadcasterTester();
     api = TablespoonAPI.getInstance();
     api.prepareAPI(storage, groups, sbt);

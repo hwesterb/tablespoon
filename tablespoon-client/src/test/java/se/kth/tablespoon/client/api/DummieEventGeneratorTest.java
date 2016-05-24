@@ -36,7 +36,7 @@ public class DummieEventGeneratorTest {
   static SubscriberTester subscriberB;
   static SubscriberTester subscriberA;
   static TablespoonAPI api;
-  static int SLEEP_TIME = 300;
+  static int SLEEP_TIME = 1500;
 
   public DummieEventGeneratorTest() {
   }

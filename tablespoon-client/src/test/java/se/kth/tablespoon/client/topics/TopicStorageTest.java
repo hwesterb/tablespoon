@@ -19,6 +19,9 @@ import se.kth.tablespoon.client.util.Time;
  */
 public class TopicStorageTest {
   
+  
+  static int SLEEP_TIME = 1500;
+  
   /**
    * Test of add method, of class TopicStorage.
    */
@@ -69,9 +72,7 @@ public class TopicStorageTest {
     storage.add(topic3);
     assertFalse(storage.isEmpty());
    
-    int ms = 1100;
-    System.out.println("Sleeping for " + ms + ".");
-    Time.sleep(ms);
+    Time.sleep(SLEEP_TIME);
     storage.clean();
     assertTrue(storage.isEmpty());
   }
