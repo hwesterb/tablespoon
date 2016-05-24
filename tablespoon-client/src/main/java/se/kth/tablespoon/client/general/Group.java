@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */
 public class Group {
   
-  private final ArrayList<String> machines = new ArrayList<String>();
+  private final ArrayList<String> machines = new ArrayList<>();
   private final String groupId;
 
   public Group(String groupId) {

@@ -27,7 +27,7 @@ import se.kth.tablespoon.client.util.Time;
  */
 public class TablespoonAPITest {
   
-  static final int SLEEP_TIME = 400;
+  static final int SLEEP_TIME = 500;
   static Groups groups;
   static Group groupA;
   static Group groupB;
@@ -60,10 +60,12 @@ public class TablespoonAPITest {
     abt = new AgentBroadcasterTester();
     subscriberB = new SubscriberTester();
     subscriberA = new SubscriberTester();
-    Time.sleep(1000); //wait for threads to start
+    Time.sleep(1500); //wait for threads to start
     sbt = new SubscriberBroadcasterTester();
     api = TablespoonAPI.getInstance();
     api.prepareAPI(storage, groups, sbt);
+    aba.registerBroadcaster(abt);
+    Time.sleep(SLEEP_TIME);
   }
   
   
@@ -84,7 +86,6 @@ public class TablespoonAPITest {
     int duration = 10;
     int sendRate = 2;
     subscriberB.setUniqueId(api.createTopic(subscriberB, groupId, eventType, resource, duration, sendRate));
-    aba.registerBroadcaster(abt);
     Time.sleep(SLEEP_TIME);
     assertEquals(2, abt.getRecievedRequests());
   }

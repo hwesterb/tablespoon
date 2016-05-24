@@ -13,7 +13,7 @@ import java.util.TreeMap;
  *
  * @author henke
  */
-public class Groups implements Iterable<String> {
+public class Groups {
   
   private final TreeMap<String, Group> groups = new TreeMap<>();
   private final ArrayList<String> machineSnapshot = new ArrayList<>();
@@ -37,58 +37,13 @@ public class Groups implements Iterable<String> {
   
   public void takeSnapshop() {
     machineSnapshot.clear();
-    for (String machine : this) {
-      machineSnapshot.add(machine);
+    for (Group group : groups.values()) {
+      machineSnapshot.addAll(group.getMachines());
     }
   }
   
   public void retainWithSnapshot(ArrayList<String> machines) {
     machines.retainAll(machineSnapshot);
   }
-  
-  @Override
-  public Iterator<String> iterator() {
-    return new MachineIterator(groups);
-  }
-  
-  private class MachineIterator implements Iterator<String> {
-    
-    private final Iterator<Group> groupIterator;
-    private Iterator<String> machineIterator;
-    
-    public MachineIterator(TreeMap<String, Group> groups) {
-      groupIterator = groups.values().iterator();
-      
-    }
-    
-    private boolean hasNextGroup() {
-      machineIterator = groupIterator.next().getMachines().iterator();
-      return machineIterator.hasNext();
-    }
-    
-    @Override
-    public boolean hasNext() {
-      if (machineIterator!=null && machineIterator.hasNext()) {
-        return true;
-      }
-      if (groupIterator.hasNext() && machineIterator==null) {
-        return hasNextGroup();
-      } else if (groupIterator.hasNext() && !machineIterator.hasNext()) {
-        return hasNextGroup();
-      }
-      return false;
-    }
-    
-    @Override
-    public String next() {
-      return machineIterator.next();
-    }
-    
-    @Override
-    public void remove() {
-      throw new UnsupportedOperationException("Not supported yet.");
-    }
-  }
-  
   
 }

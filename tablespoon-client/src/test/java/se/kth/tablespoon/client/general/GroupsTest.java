@@ -44,19 +44,6 @@ public class GroupsTest {
     groups.add(group2);
   }
   
-  
-  /**
-   * Test of iterator method, of class Groups.
-   */
-  @Test
-  public void testIterator() {
-    int i = 0;
-    for (String g : groups) {
-      i++;
-    }
-    assertEquals(6, i);
-  }
-  
   /**
    * Test of retainWithSnapshot method, of class Groups.
    */
@@ -69,7 +56,6 @@ public class GroupsTest {
     machines.add("4");
     machines.add("19");
     groups.retainWithSnapshot(machines);
-    Time.sleep(100);
     assertEquals(2, machines.size());
   }
   
