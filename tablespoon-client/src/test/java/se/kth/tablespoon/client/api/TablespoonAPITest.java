@@ -27,7 +27,7 @@ import se.kth.tablespoon.client.util.Time;
  */
 public class TablespoonAPITest {
   
-  static final int SLEEP_TIME = 500;
+  static final int SLEEP_TIME = 400;
   static Groups groups;
   static Group groupA;
   static Group groupB;

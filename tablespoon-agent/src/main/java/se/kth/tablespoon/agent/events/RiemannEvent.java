@@ -1,7 +1,7 @@
 package se.kth.tablespoon.agent.events;
 
-import com.aphyr.riemann.client.EventDSL;
-import com.aphyr.riemann.client.RiemannClient;
+import io.riemann.riemann.client.EventDSL;
+import io.riemann.riemann.client.RiemannClient;
 import java.io.IOException;
 import java.util.ArrayList;
 

@@ -44,7 +44,6 @@ public class TopicTest {
     } catch (IOException ex) {
       Logger.getLogger(TopicTest.class.getName()).log(Level.SEVERE, null, ex);
     }
-    System.out.println(topic.getJson());
-
+//    System.out.println(topic.getJson());
   }
 }

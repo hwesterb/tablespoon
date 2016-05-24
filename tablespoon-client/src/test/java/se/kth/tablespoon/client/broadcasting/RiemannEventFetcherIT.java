@@ -5,7 +5,7 @@
 */
 package se.kth.tablespoon.client.broadcasting;
 
-import com.aphyr.riemann.client.RiemannClient;
+import io.riemann.riemann.client.RiemannClient;
 import java.io.IOException;
 import static org.junit.Assert.assertTrue;
 import org.junit.BeforeClass;
@@ -20,7 +20,7 @@ import se.kth.tablespoon.client.topics.Topic;
 import se.kth.tablespoon.client.util.Time;
 
 
-public class RiemannEventFetcherTest {
+public class RiemannEventFetcherIT {
   
   static RiemannEventFetcher ref;
   static RiemannClient rClient;
