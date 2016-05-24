@@ -5,8 +5,8 @@
 */
 package se.kth.tablespoon.client.broadcasting;
 
-import com.aphyr.riemann.Proto.Event;
-import com.aphyr.riemann.client.RiemannClient;
+import io.riemann.riemann.Proto.Event;
+import io.riemann.riemann.client.RiemannClient;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedHashSet;

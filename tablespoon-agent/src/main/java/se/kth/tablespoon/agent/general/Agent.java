@@ -5,8 +5,8 @@
 */
 package se.kth.tablespoon.agent.general;
 
+import io.riemann.riemann.client.RiemannClient;
 import se.kth.tablespoon.agent.events.Configuration;
-import com.aphyr.riemann.client.RiemannClient;
 import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

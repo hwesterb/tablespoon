@@ -36,6 +36,7 @@ public class DummieEventGeneratorTest {
   static SubscriberTester subscriberB;
   static SubscriberTester subscriberA;
   static TablespoonAPI api;
+  static int SLEEP_TIME = 300;
 
   public DummieEventGeneratorTest() {
   }
@@ -68,7 +69,7 @@ public class DummieEventGeneratorTest {
     abt = new AgentBroadcasterTester();
     subscriberB = new SubscriberTester();
     subscriberA = new SubscriberTester();
-    Time.sleep(1000); //wait for threads to start
+    Time.sleep(SLEEP_TIME); //wait for threads to start
   }
 
   @After
@@ -86,7 +87,7 @@ public class DummieEventGeneratorTest {
         eventType, resourceType, duration, null, null);
     Thread degThread = new Thread(deg);
     degThread.start();
-    Time.sleep(1000);
+    Time.sleep(SLEEP_TIME);
   }
 
   @Test
@@ -101,7 +102,7 @@ public class DummieEventGeneratorTest {
         eventType, resourceType, duration, th, null);
     Thread degThread = new Thread(deg);
     degThread.start();
-    Time.sleep(1000);
+    Time.sleep(SLEEP_TIME);
   }
 
   @Test
@@ -117,7 +118,7 @@ public class DummieEventGeneratorTest {
         eventType, resourceType, duration, th, tl);
     Thread degThread = new Thread(deg);
     degThread.start();
-    Time.sleep(1000);
+    Time.sleep(SLEEP_TIME);
   }
   
 }

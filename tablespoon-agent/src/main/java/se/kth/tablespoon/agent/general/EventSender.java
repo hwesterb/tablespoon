@@ -1,13 +1,12 @@
 package se.kth.tablespoon.agent.general;
 
+import io.riemann.riemann.client.RiemannClient;
 import se.kth.tablespoon.agent.metrics.Metric;
 import java.io.IOException;
 import java.util.Queue;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.aphyr.riemann.client.RiemannClient;
 import java.util.ArrayList;
 
 import se.kth.tablespoon.agent.events.Configuration;

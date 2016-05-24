@@ -24,7 +24,7 @@ public class TopicStorageTest {
    */
   @Test
   public void testAdd() {
-    System.out.println("add");
+    System.out.println("\n*** add ***\n");
     TopicStorage storage = new TopicStorage(new Groups());
     Resource resource = new Resource(2);
     Topic event = TopicFactory.create(storage,  resource, EventType.REGULAR, 1, null);
@@ -37,7 +37,7 @@ public class TopicStorageTest {
    */
   @Test
   public void testClean() {
-    System.out.println("clean");
+    System.out.println("\n*** clean ***\n");
     Group group = new Group("1");
     Groups groups = new Groups();
     groups.add(group);

@@ -5,7 +5,8 @@
 */
 package se.kth.tablespoon.client.broadcasting;
 
-import com.aphyr.riemann.client.RiemannClient;
+
+import io.riemann.riemann.client.RiemannClient;
 import java.io.IOException;
 import java.util.ArrayList;
 import org.slf4j.Logger;

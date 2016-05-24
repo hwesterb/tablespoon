@@ -5,12 +5,11 @@
 */
 package se.kth.tablespoon.client.general;
 
-import se.kth.tablespoon.client.general.Group;
-import se.kth.tablespoon.client.general.Groups;
 import java.util.ArrayList;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
+import se.kth.tablespoon.client.util.Time;
 
 /**
  *
@@ -34,7 +33,7 @@ public class GroupsTest {
    */
   @Test
   public void testAdd() {
-    System.out.println("add");
+    System.out.println("\n*** add ***\n");
     group.addMachine("0");
     group.addMachine("1");
     group.addMachine("2");
@@ -51,14 +50,11 @@ public class GroupsTest {
    */
   @Test
   public void testIterator() {
-    System.out.println("iterator");
     int i = 0;
     for (String g : groups) {
       i++;
-      System.out.println(g);
     }
     assertEquals(6, i);
-    
   }
   
   /**
@@ -66,13 +62,14 @@ public class GroupsTest {
    */
   @Test
   public void testRetainWithSnapshot() {
-    System.out.println("retainWithSnapshot");
+    System.out.println("\n*** retainWithSnapshot ***\n");
     groups.takeSnapshop();
     ArrayList<String> machines = new ArrayList<>();
     machines.add("1");
     machines.add("4");
     machines.add("19");
     groups.retainWithSnapshot(machines);
+    Time.sleep(100);
     assertEquals(2, machines.size());
   }
   

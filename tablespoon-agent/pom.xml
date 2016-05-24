@@ -12,7 +12,6 @@
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
     </properties>
-    
     <build>
         <resources>
             <resource>
@@ -89,9 +88,9 @@
             <version>4.12</version>
         </dependency>
         <dependency>
-            <groupId>com.aphyr</groupId>
+            <groupId>io.riemann</groupId>
             <artifactId>riemann-java-client</artifactId>
-            <version>0.4.1</version>
+            <version>0.4.2</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.jr</groupId>
