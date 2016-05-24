@@ -29,7 +29,7 @@ public class CollectlListenerIT {
     System.out.println(config);
   }
   
-  @Test
+//  @Test
   public void test() {
     CollectlListener cl = new CollectlListener();
     Thread t = new Thread(cl);
@@ -60,7 +60,7 @@ public class CollectlListenerIT {
     }
   }
   
-  @Test
+//  @Test
   public void restartTest() {
     CollectlListener cl = new CollectlListener();
     Thread t = new Thread(cl);
