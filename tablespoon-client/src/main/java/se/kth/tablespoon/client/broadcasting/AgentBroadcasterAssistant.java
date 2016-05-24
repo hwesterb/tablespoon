@@ -24,7 +24,6 @@ public class AgentBroadcasterAssistant implements Runnable {
   private void broadcastTopics() {
     for (Topic topic : storage.getTopics()) {
       topic.lock();
-      //
       ArrayList<String> machinesToNotify = topic.getMachinesToNotify();
       if (machinesToNotify.size() > 0) {
         try {
@@ -32,9 +31,11 @@ public class AgentBroadcasterAssistant implements Runnable {
         } catch (IOException ex) {
           slf4jLogger.debug(ex.getMessage());
         }
-        for (String machine : machinesToNotify) {
-          broadcaster.sendToMachine(machine, topic.getJson());
-          topic.addToNotifiedMachines(machine);
+        try {
+          broadcaster.sendToMachines(machinesToNotify, topic.getJson());
+        } catch (BroadcastException ex) {
+          //TODO: handle this
+          slf4jLogger.debug(ex.getMessage());
         }
       }
       topic.unlock();

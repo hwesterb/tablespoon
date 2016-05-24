@@ -13,7 +13,6 @@ import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import org.junit.Test;
-import se.kth.tablespoon.agent.events.Configuration;
 import se.kth.tablespoon.agent.events.Topics;
 
 /**
@@ -30,8 +29,8 @@ public class FileLoaderTest {
   
   private String someJson(String uniqueId, int version, int duration, double threshold) {    
     String json = "{\"index\":0,\"version\":" + version 
-        + ",\"startTime\":1463246537,\"uniqueId\": \"" + uniqueId + "\",\"groupId\":\"not specified\",\"type\":\"REGULAR\",\"duration\":" + duration 
-        + ",\"sendRate\":\"NORMAL\",\"high\":{\"percentage\":" + threshold + ",\"comparator\":\"GREATER_THAN\"},\"low\":{\"percentage\":0.1,\"comparator\":\"LESS_THAN\"}}";
+        + ",\"startTime\":1463246537,\"uniqueId\": \"" + uniqueId + "\",\"groupId\":\"not specified\",\"eventType\":\"REGULAR\",\"duration\":" + duration 
+        + ",\"sendRate\":3,\"high\":{\"percentage\":" + threshold + ",\"comparator\":\"GREATER_THAN\"},\"low\":{\"percentage\":10.0,\"comparator\":\"LESS_THAN\"}}";
     return json;
   }
   
@@ -47,19 +46,19 @@ public class FileLoaderTest {
    
     String fileA = "uniqueIdA";
     int versionA = 1;
-    generateJsonAndWrite(fileA, versionA, 0.3);
+    generateJsonAndWrite(fileA, versionA, 30.0);
     TopicLoader tl = new TopicLoader(topics);
     tl.readTopicFiles();
     assertEquals(fileA, topics.findTopic(fileA).getUniqueId());
     
-    generateJsonAndWrite(fileA, versionA, 0.4);
+    generateJsonAndWrite(fileA, versionA, 40.0);
     tl.readTopicFiles();
-    assertNotEquals(0.4, topics.findTopic(fileA).getHigh().percentage, 0.01);
+    assertNotEquals(40.0, topics.findTopic(fileA).getHigh().percentage, 0.01);
    
     versionA = 2;
-    generateJsonAndWrite(fileA, versionA, 0.4);
+    generateJsonAndWrite(fileA, versionA, 40.0);
     tl.readTopicFiles();
-    assertEquals(0.4, topics.findTopic(fileA).getHigh().percentage, 0.01);
+    assertEquals(40.0, topics.findTopic(fileA).getHigh().percentage, 0.01);
   }
   
   

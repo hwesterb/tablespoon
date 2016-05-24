@@ -5,7 +5,9 @@
  */
 package se.kth.tablespoon.client.api;
 
+import java.util.ArrayList;
 import se.kth.tablespoon.client.broadcasting.AgentBroadcaster;
+import se.kth.tablespoon.client.broadcasting.BroadcastException;
 
 /**
  *
@@ -15,15 +17,17 @@ public class AgentBroadcasterTester implements AgentBroadcaster {
   
   private int recievedRequests;
 
-  @Override
-  public void sendToMachine(String machine, String json) {
-    System.out.println("Sending to machine: " + machine);
-    System.out.println("Information (json): " + json);
-    recievedRequests++;
-  }
+
 
   public int getRecievedRequests() {
     return recievedRequests;
+  }
+
+  @Override
+  public void sendToMachines(ArrayList<String> machines, String json) throws BroadcastException {
+    System.out.println("Sending to machines: " + machines);
+    System.out.println("Information (json): " + json);
+    recievedRequests++;
   }
  
   

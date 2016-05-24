@@ -27,7 +27,7 @@ public class TopicStorageTest {
     System.out.println("add");
     TopicStorage storage = new TopicStorage(new Groups());
     Resource resource = new Resource(2);
-    Topic event = TopicFactory.create(storage, EventType.GROUP_AVERAGE, resource);
+    Topic event = TopicFactory.create(storage,  resource, EventType.REGULAR, 1, null);
     storage.add(event);
     assertFalse(storage.isEmpty());
   }
@@ -45,7 +45,7 @@ public class TopicStorageTest {
     group.getMachines().add("3");
     TopicStorage storage = new TopicStorage(groups);
     Resource resource = new Resource(0);
-    Topic topic = TopicFactory.create(storage,EventType.REGULAR, resource);
+    Topic topic = TopicFactory.create(storage,  resource, EventType.REGULAR, 1, null);
     topic.addMachine("1");
     storage.add(topic);
     assertFalse(storage.isEmpty());
@@ -53,7 +53,7 @@ public class TopicStorageTest {
     storage.clean();
     assertTrue(storage.isEmpty());
     resource = new Resource(2);
-    Topic topic2 = TopicFactory.create(storage,EventType.GROUP_AVERAGE, resource);
+    Topic topic2 = TopicFactory.create(storage,  resource, EventType.REGULAR, 1, null);
     topic2.addMachine("2");
     storage.add(topic2);
     storage.clean();
@@ -63,7 +63,7 @@ public class TopicStorageTest {
     storage.clean();
     assertTrue(storage.isEmpty());
     resource = new Resource(3);
-    Topic topic3 = TopicFactory.create(storage, EventType.REGULAR, resource);
+    Topic topic3 = TopicFactory.create(storage,  resource, EventType.REGULAR, 1, null);
     topic.addMachine("3");
     topic3.setDuration(1);
     storage.add(topic3);

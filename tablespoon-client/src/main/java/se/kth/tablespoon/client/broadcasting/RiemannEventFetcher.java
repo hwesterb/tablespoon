@@ -12,7 +12,6 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import se.kth.tablespoon.client.api.Subscriber;
-import se.kth.tablespoon.client.events.EventConverter;
 import se.kth.tablespoon.client.topics.Topic;
 import se.kth.tablespoon.client.util.Time;
 
@@ -20,7 +19,7 @@ import se.kth.tablespoon.client.util.Time;
  *
  * @author henke
  */
-public class RiemannEventFetcher {
+class RiemannEventFetcher {
   
   private final Subscriber subscriber;
   private final Topic topic;
@@ -28,17 +27,17 @@ public class RiemannEventFetcher {
   private final LinkedHashSet<MachineTime> sentEvents;
   private final int SENT_EVENTS_QUEUE_SIZE = 2000;
   
-  public RiemannEventFetcher(Subscriber subscriber, Topic topic) {
+  RiemannEventFetcher(Subscriber subscriber, Topic topic) {
     this.sentEvents = new LinkedHashSet<>();
     this.subscriber = subscriber;
     this.topic = topic;
   }
   
-  public boolean shouldQuery() {
+  boolean shouldQuery() {
     return Time.nowMs() - lastQueryTimeMs >= (topic.getSendRate() * 1000) / 2;
   }
   
-  public void queryRiemannAndSend(RiemannClient rClient) throws IOException {
+  void queryRiemannAndSend(RiemannClient rClient) throws IOException {
     lastQueryTimeMs = Time.nowMs();
     List<Event> events =  rClient.query("service = \"" + topic.getUniqueId() + "\"").deref();
     sendEvents(events);

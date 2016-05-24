@@ -20,7 +20,7 @@ public class Start {
   
   
   public static void main(String args[]) {
-//    setUp(null, null, "localhost", 5555);
+     
   }
   
   public static void setUp(Groups groups, AgentBroadcaster broadcaster, String riemannHost, int riemannPort) {

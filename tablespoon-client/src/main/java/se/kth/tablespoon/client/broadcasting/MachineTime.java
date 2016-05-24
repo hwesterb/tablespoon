@@ -11,12 +11,12 @@ import java.util.Objects;
  *
  * @author henke
  */
-public class MachineTime {
+class MachineTime {
   
   public final String machineId;
   public final long timeStamp;
   
-  public MachineTime(String machineId, long timeStamp) {
+  MachineTime(String machineId, long timeStamp) {
     this.machineId = machineId;
     this.timeStamp = timeStamp;
   }

@@ -3,7 +3,7 @@
 * To change this template file, choose Tools | Templates
 * and open the template in the editor.
 */
-package se.kth.tablespoon.client.main;
+package se.kth.tablespoon.client.general;
 
 import se.kth.tablespoon.client.general.Group;
 import se.kth.tablespoon.client.general.Groups;

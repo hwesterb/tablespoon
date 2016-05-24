@@ -27,12 +27,12 @@ public class TopicTest {
   public void test() throws ThresholdException {
     TopicStorage storage = new TopicStorage(new Groups());
     Resource resource = new Resource(ResourceType.CPU);
-    Topic topic = TopicFactory.create(storage, EventType.REGULAR, resource);
+    Topic topic = TopicFactory.create(storage, resource, EventType.REGULAR, 1, null);
     topic.setDuration(12);
-    topic.setHigh(new Threshold(0.4, Comparator.GREATER_THAN));
+    topic.setHigh(new Threshold(40.0, Comparator.GREATER_THAN));
     boolean shouldfail = false;
     try {
-      topic.setLow(new Threshold(0.5, Comparator.LESS_THAN));
+      topic.setLow(new Threshold(50.0, Comparator.LESS_THAN));
     } catch (ThresholdException ex) {
       shouldfail = true;
     }

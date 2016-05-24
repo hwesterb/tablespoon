@@ -11,7 +11,6 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import se.kth.tablespoon.client.broadcasting.AgentBroadcasterAssistant;
-import se.kth.tablespoon.client.broadcasting.SubscriberBroadcaster;
 import se.kth.tablespoon.client.general.Group;
 import se.kth.tablespoon.client.general.Groups;
 import se.kth.tablespoon.client.events.Comparator;

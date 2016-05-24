@@ -1,11 +1,13 @@
 package se.kth.tablespoon.client.broadcasting;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author henke
  */
 public interface AgentBroadcaster {
  
-  public void sendToMachine(String machine, String json);
+  public void sendToMachines(ArrayList<String> machines, String json) throws BroadcastException;
   
 }
