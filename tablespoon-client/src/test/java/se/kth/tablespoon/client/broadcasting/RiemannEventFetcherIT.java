@@ -56,7 +56,7 @@ public class RiemannEventFetcherIT {
   }
   
   
-//  @Test
+  @Test
   public void test() throws IOException {
     while(st.getCounter() < 2) {
       if (ref.shouldQuery()) ref.queryRiemannAndSend(rClient);

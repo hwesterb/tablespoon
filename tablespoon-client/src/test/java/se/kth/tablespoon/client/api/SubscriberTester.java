@@ -38,6 +38,4 @@ public class SubscriberTester implements Subscriber {
     return event;
   }
 
-  
-  
 }

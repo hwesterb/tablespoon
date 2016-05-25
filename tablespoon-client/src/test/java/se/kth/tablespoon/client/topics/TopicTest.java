@@ -17,10 +17,7 @@ import se.kth.tablespoon.client.events.Threshold;
 import static org.junit.Assert.*;
 import se.kth.tablespoon.client.general.Groups;
 
-/**
- *
- * @author henke
- */
+
 public class TopicTest {
 
   @Test
@@ -44,6 +41,5 @@ public class TopicTest {
     } catch (IOException ex) {
       Logger.getLogger(TopicTest.class.getName()).log(Level.SEVERE, null, ex);
     }
-//    System.out.println(topic.getJson());
   }
 }

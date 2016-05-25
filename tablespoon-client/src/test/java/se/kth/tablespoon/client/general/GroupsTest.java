@@ -9,12 +9,7 @@ import java.util.ArrayList;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
-import se.kth.tablespoon.client.util.Time;
 
-/**
- *
- * @author henke
- */
 public class GroupsTest {
   
   static Groups groups;
@@ -26,14 +21,6 @@ public class GroupsTest {
     groups = new Groups();
     group = new Group("B");
     group2 = new Group("A");
-  }
-  
-  /**
-   * Test of add method, of class Groups.
-   */
-  @Test
-  public void testAdd() {
-    System.out.println("\n*** add ***\n");
     group.addMachine("0");
     group.addMachine("1");
     group.addMachine("2");
@@ -49,7 +36,6 @@ public class GroupsTest {
    */
   @Test
   public void testRetainWithSnapshot() {
-    System.out.println("\n*** retainWithSnapshot ***\n");
     groups.takeSnapshop();
     ArrayList<String> machines = new ArrayList<>();
     machines.add("1");
@@ -58,7 +44,5 @@ public class GroupsTest {
     groups.retainWithSnapshot(machines);
     assertEquals(2, machines.size());
   }
-  
-  
   
 }

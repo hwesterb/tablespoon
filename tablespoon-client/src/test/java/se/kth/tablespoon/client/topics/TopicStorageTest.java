@@ -27,7 +27,6 @@ public class TopicStorageTest {
    */
   @Test
   public void testAdd() {
-    System.out.println("\n*** add ***\n");
     TopicStorage storage = new TopicStorage(new Groups());
     Resource resource = new Resource(2);
     Topic event = TopicFactory.create(storage,  resource, EventType.REGULAR, 1, null);
@@ -40,7 +39,6 @@ public class TopicStorageTest {
    */
   @Test
   public void testClean() {
-    System.out.println("\n*** clean ***\n");
     Group group = new Group("1");
     Groups groups = new Groups();
     groups.add(group);
@@ -71,7 +69,7 @@ public class TopicStorageTest {
     topic3.setDuration(1);
     storage.add(topic3);
     assertFalse(storage.isEmpty());
-   
+    
     Time.sleep(SLEEP_TIME);
     storage.clean();
     assertTrue(storage.isEmpty());

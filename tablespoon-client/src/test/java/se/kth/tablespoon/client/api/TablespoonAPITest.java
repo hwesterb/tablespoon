@@ -42,6 +42,7 @@ public class TablespoonAPITest {
   
   @BeforeClass
   public static void setUp() {
+    System.out.println("This test involves waiting for threads...");
     groups = new Groups();
     storage = new TopicStorage(groups);
     aba = new AgentBroadcasterAssistant(storage);
@@ -60,7 +61,7 @@ public class TablespoonAPITest {
     abt = new AgentBroadcasterTester();
     subscriberB = new SubscriberTester();
     subscriberA = new SubscriberTester();
-    Time.sleep(3000); //wait for threads to start
+    Time.sleep(SLEEP_TIME*2); 
     sbt = new SubscriberBroadcasterTester();
     api = TablespoonAPI.getInstance();
     api.prepareAPI(storage, groups, sbt);
@@ -74,12 +75,11 @@ public class TablespoonAPITest {
     Time.sleep(100); //get thread into wait position
   }
   
-    /**
+  /**
    * Test of createTopic method, of class TablespoonAPI.
    */
   @Test
   public void testCreateTopic() {
-    System.out.println("\n*** createTopic ***\n");
     String groupId = "B";
     EventType eventType = EventType.REGULAR;
     Resource resource = new Resource(ResourceType.CPU);
@@ -92,10 +92,10 @@ public class TablespoonAPITest {
   
   /**
    * Test of changeTopic method, of class TablespoonAPI.
+   * @throws java.lang.Exception
    */
   @Test
   public void testChangeTopic() throws Exception {
-    System.out.println("\n*** changeTopic ***\n");
     api.changeTopic(subscriberB.getUniqueId(), new Threshold(80.0, Comparator.LESS_THAN));
     Time.sleep(SLEEP_TIME);
     assertEquals(4, abt.getRecievedRequests());
@@ -103,10 +103,10 @@ public class TablespoonAPITest {
   
   /**
    * Test of createTopic method, of class TablespoonAPI.
+   * @throws java.lang.Exception
    */
   @Test
   public void testCreateSecondTopic() throws Exception {
-    System.out.println("\n*** secondTopic ***\n");
     Threshold high = new Threshold(60.0, Comparator.GREATER_THAN);
     Threshold low = new Threshold(30.0, Comparator.LESS_THAN);
     Resource resource = new Resource(ResourceType.CPU);
@@ -117,13 +117,13 @@ public class TablespoonAPITest {
   
   /**
    * Test of removeTopic method, of class TablespoonAPI.
+   * @throws java.lang.Exception
    */
   @Test
   public void testRemoveTopic() throws Exception {
-    System.out.println("\n*** removeTopic ***\n");
     api.removeTopic(subscriberA.getUniqueId());
     Time.sleep(SLEEP_TIME);
     assertEquals(12, abt.getRecievedRequests());
-  }  
+  }
   
 }
