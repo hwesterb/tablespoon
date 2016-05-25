@@ -163,7 +163,11 @@ public abstract class Topic {
   public String getGroupId() {
     return groupId;
   }
-  
+   
+  public int getVersion() {
+    return version;
+  }
+ 
   private Comparator getNormalizedComparatorType(Comparator comparator) {
     if (comparator.equals(Comparator.GREATER_THAN) || comparator.equals(Comparator.GREATER_THAN_OR_EQUAL)) {
       return Comparator.GREATER_THAN_OR_EQUAL;

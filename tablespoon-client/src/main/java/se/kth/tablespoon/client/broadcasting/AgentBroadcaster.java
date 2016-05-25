@@ -8,6 +8,6 @@ import java.util.ArrayList;
  */
 public interface AgentBroadcaster {
  
-  public void sendToMachines(ArrayList<String> machines, String json) throws BroadcastException;
+  public void sendToMachines(ArrayList<String> machines, String json, String topicId, int version) throws BroadcastException;
   
 }

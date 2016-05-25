@@ -24,7 +24,7 @@ public class AgentBroadcasterTester implements AgentBroadcaster {
   }
 
   @Override
-  public void sendToMachines(ArrayList<String> machines, String json) throws BroadcastException {
+  public void sendToMachines(ArrayList<String> machines, String json, String topicId, int version) throws BroadcastException {
     recievedRequests += machines.size();
   }
  
