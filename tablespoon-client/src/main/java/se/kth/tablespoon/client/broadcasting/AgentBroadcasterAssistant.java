@@ -32,7 +32,7 @@ public class AgentBroadcasterAssistant implements Runnable {
           slf4jLogger.debug(ex.getMessage());
         }
         try {
-          broadcaster.sendToMachines(machinesToNotify, topic.getJson());
+          broadcaster.sendToMachines(machinesToNotify, topic.getJson(), topic.getUniqueId(), topic.getVersion());
           topic.addToNotifiedMachines(machinesToNotify);
         } catch (BroadcastException ex) {
           //TODO: handle this
