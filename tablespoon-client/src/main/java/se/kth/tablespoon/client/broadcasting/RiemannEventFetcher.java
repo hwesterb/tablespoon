@@ -24,11 +24,11 @@ class RiemannEventFetcher {
   private final Subscriber subscriber;
   private final Topic topic;
   private long lastQueryTimeMs = 0;
-  private final LinkedHashSet<MachineTime> sentEvents;
+  private final LinkedHashSet<MachineTime> seen;
   private final int SENT_EVENTS_QUEUE_SIZE = 2000;
   
   RiemannEventFetcher(Subscriber subscriber, Topic topic) {
-    this.sentEvents = new LinkedHashSet<>();
+    this.seen = new LinkedHashSet<>();
     this.subscriber = subscriber;
     this.topic = topic;
   }
@@ -41,20 +41,20 @@ class RiemannEventFetcher {
     lastQueryTimeMs = Time.nowMs();
     List<Event> events =  rClient.query("service = \"" + topic.getUniqueId() + "\"").deref();
     sendEvents(events);
-    cleanSentEvents();
+    cleanSeen();
   }
   
   private void sendEvents(List<Event> events) {
     for (Event event : events) {
       MachineTime mt = new MachineTime(event.getHost(), event.getTime());
-      if (sentEvents.add(mt)) continue;
+      if (seen.add(mt)) continue;
       subscriber.onEventArrival(EventConverter.changeFormat(event, topic));
     }
   }
   
-  private void cleanSentEvents() {
-    Iterator<MachineTime> iterator = sentEvents.iterator();
-    while (iterator.hasNext() && sentEvents.size() >= SENT_EVENTS_QUEUE_SIZE) {
+  private void cleanSeen() {
+    Iterator<MachineTime> iterator = seen.iterator();
+    while (iterator.hasNext() && seen.size() >= SENT_EVENTS_QUEUE_SIZE) {
       iterator.remove();
     }
   }
