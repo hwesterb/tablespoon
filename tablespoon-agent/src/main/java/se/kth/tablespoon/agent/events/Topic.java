@@ -20,8 +20,7 @@ import se.kth.tablespoon.agent.util.Time;
 
 public class Topic {
   
-  private int index;
-  private int version;
+  private int collectIndex;
   private long startTime;
   private final long localStartTime;
   private String uniqueId;
@@ -35,6 +34,7 @@ public class Topic {
   private final Queue<Metric> localMetricQueue = new LinkedList<>();
   private final Configuration config = Configuration.getInstance();
   private final static Logger slf4jLogger = LoggerFactory.getLogger(Topic.class);
+  private String replacesTopicId;
   
   public Topic() {
     localStartTime = Time.now();
@@ -102,7 +102,7 @@ public class Topic {
   }
   
   public int getIndex() {
-    return index;
+    return collectIndex;
   }
   
   public String getUniqueId() {
@@ -111,10 +111,6 @@ public class Topic {
   
   public String getGroupId() {
     return groupId;
-  }
-  
-  public int getVersion() {
-    return version;
   }
   
   public Threshold getHigh() {
@@ -127,6 +123,10 @@ public class Topic {
   
   public EventType getEventType() {
     return eventType;
+  }
+
+  public String getReplacesTopicId() {
+    return replacesTopicId;
   }
   
   public boolean isScheduledForRemoval() {
@@ -148,12 +148,9 @@ public class Topic {
   public void interpretJson(String json) throws IOException, JsonException {
     Map<String,Object> map = JSON.std.mapFrom(json);
     
-    if (map.get("index") == null) throw new JsonException("index");
-    else index = (int) map.get("index");
-    
-    if (map.get("version") == null) throw new JsonException("version");
-    else version = (int) map.get("version");
-    
+    if (map.get("collectIndex") == null) throw new JsonException("collectIndex");
+    else collectIndex = (int) map.get("collectIndex");
+     
     if (map.get("startTime") == null) throw new JsonException("startTime");
     else startTime = (int) map.get("startTime");
     
@@ -166,8 +163,13 @@ public class Topic {
     if (map.get("eventType") == null) throw new JsonException("eventType");
     else eventType = EventType.valueOf((String) map.get("eventType"));
     
+    if (map.get("eventType") == null) throw new JsonException("eventType");
+    else eventType = EventType.valueOf((String) map.get("eventType"));
+    
     if (map.get("sendRate") == null) throw new JsonException("sendRate");
     else sendRate = (int) map.get("sendRate");
+    
+    if (map.get("replacesTopicId") != null) replacesTopicId = (String) map.get("replacesTopicId");
     
     if (map.get("duration") != null) duration = (int) map.get("duration");
     

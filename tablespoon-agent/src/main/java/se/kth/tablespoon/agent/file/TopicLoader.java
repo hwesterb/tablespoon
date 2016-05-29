@@ -34,51 +34,49 @@ public class TopicLoader extends FileLoader {
     }
     for (String fileName : list) {
       try {
-        handleTopic(TOPICS_DIRECTORY, fileName);
-      } catch (OldTopicException | WrongFileNameFormatException | JsonException | IOException ex) {
+        String uniqueId = findUniqueId(fileName);
+        updateOrCreate(uniqueId, TOPICS_DIRECTORY, fileName);
+      } catch (TopicAlreadyExistsException | WrongFileNameFormatException | JsonException | IOException ex) {
         slf4jLogger.debug(ex.getMessage());
       }
       deleteFile(TOPICS_DIRECTORY, fileName);
     }
   }
   
-  private String handleTopic(String directory, String fileName) throws OldTopicException, WrongFileNameFormatException, IOException, JsonException {
-    Pattern pattern = Pattern.compile("(.+)_([0-9]+).json");
-    Matcher matcher = pattern.matcher(fileName);
-    while (matcher.find()) {
-      if (matcher.groupCount() == 2) {
-        String uniqueId = matcher.group(1);
-        int version = Integer.parseInt(matcher.group(2));
-        updateOrCreate(uniqueId, version, directory, fileName);
-        return uniqueId;
-      }
-    }
-    throw new WrongFileNameFormatException(fileName);
-  }
-  
-  
-  private void updateOrCreate(String uniqueId, int version, String directory, String fileName)
-      throws OldTopicException, IOException, JsonException {
+  private void updateOrCreate(String uniqueId, String directory, String fileName)
+      throws TopicAlreadyExistsException, IOException, JsonException {
     Topic topic = topics.findTopic(uniqueId);
     if (topic==null) {
       createTopic(directory, fileName);
     }
-    else {
-      if (version > topic.getVersion()) updateTopic(topic, directory, fileName);
-      else throw new OldTopicException();
-    }
+    else throw new TopicAlreadyExistsException();
   }
   
   private void createTopic(String directory, String fileName) throws IOException, JsonException {
     Topic topic = new Topic();
     String json = loadJsonFromFile(directory, fileName);
     topic.interpretJson(json);
+    if (topic.getReplacesTopicId() != null) {
+      try {
+        topics.replace(topic.getUniqueId(), topic.getReplacesTopicId());
+      } catch (ReplacingTopicException ex) {
+       slf4jLogger.debug(ex.getMessage());
+      }
+    }
     topics.addTopic(topic);
   }
   
-  private void updateTopic(Topic topic, String directory, String fileName) throws IOException, JsonException {
-    String json = loadJsonFromFile(directory, fileName);
-    topic.interpretJson(json);
+  private String findUniqueId(String fileName) throws WrongFileNameFormatException {
+    Pattern pattern = Pattern.compile("(.+).json");
+    Matcher matcher = pattern.matcher(fileName);
+    while (matcher.find()) {
+      if (matcher.groupCount() == 1) {
+        String uniqueId = matcher.group(1);
+        return uniqueId;
+      }
+    }
+    throw new WrongFileNameFormatException(fileName);
   }
+  
   
 }

@@ -54,8 +54,8 @@ public class Agent {
     while (true) {
       topicLoader.readTopicFiles();
       ArrayList<RiemannEvent> events = new ArrayList<>();
-      synchronized (metricListener.getGlobalQueue()) {
-        while (metricListener.globalIsEmpty() == false) {
+      synchronized (metricListener.getMetricQueue()) {
+        while (metricListener.metricQueueIsEmpty() == false) {
           events.addAll(extract());
         }
       }
@@ -69,7 +69,7 @@ public class Agent {
   }
   
   private ArrayList<RiemannEvent> extract() throws IOException {
-    Metric metric = metricListener.getGlobalQueue().poll();
+    Metric metric = metricListener.getMetricQueue().poll();
     ArrayList<Topic> relevant = topics.getRelevantTopicsBeloningToIndex(metric.getCollectIndex());
     if (relevant.isEmpty()) return new ArrayList<>();
     topics.clean(metric, relevant);

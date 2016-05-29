@@ -27,48 +27,41 @@ public class FileLoaderTest {
     IOUtils.closeQuietly(fw);
   }
   
-  private String someJson(String uniqueId, int version, int duration, double threshold) {    
-    String json = "{\"index\":0,\"version\":" + version 
-        + ",\"startTime\":1463246537,\"uniqueId\": \"" + uniqueId + "\",\"groupId\":\"not specified\",\"eventType\":\"REGULAR\",\"duration\":" + duration 
+  private String someJson(String uniqueId, int duration, double threshold) {    
+    String json = "{\"collectIndex\":0,\"startTime\":1463246537,\"uniqueId\": \"" + uniqueId + "\",\"groupId\":\"not specified\",\"eventType\":\"REGULAR\",\"duration\":" + duration 
         + ",\"sendRate\":3,\"high\":{\"percentage\":" + threshold + ",\"comparator\":\"GREATER_THAN\"},\"low\":{\"percentage\":10.0,\"comparator\":\"LESS_THAN\"}}";
     return json;
   }
   
-  private void generateJsonAndWrite(String file, int version, double threshold) throws IOException {
-    writeNewFile(someJson(file, version, 12, threshold), "topics", file + "_" + version + ".json" );
+  private void generateJsonAndWrite(String file, double threshold) throws IOException {
+    writeNewFile(someJson(file, 12, threshold), "topics", file + ".json" );
   }
   
   @Test
   public void test1() throws IOException, JsonException {
-    
     (new ConfigurationLoader()).readConfigFile();
     Topics topics = new Topics();
-   
     String fileA = "uniqueIdA";
-    int versionA = 1;
-    generateJsonAndWrite(fileA, versionA, 30.0);
+
+    generateJsonAndWrite(fileA, 30.0);
     TopicLoader tl = new TopicLoader(topics);
     tl.readTopicFiles();
     assertEquals(fileA, topics.findTopic(fileA).getUniqueId());
     
-    generateJsonAndWrite(fileA, versionA, 40.0);
+    generateJsonAndWrite(fileA, 40.0);
     tl.readTopicFiles();
-    assertNotEquals(40.0, topics.findTopic(fileA).getHigh().percentage, 0.01);
+    assertEquals(30.0, topics.findTopic(fileA).getHigh().percentage, 0.01);
    
-    versionA = 2;
-    generateJsonAndWrite(fileA, versionA, 40.0);
-    tl.readTopicFiles();
-    assertEquals(40.0, topics.findTopic(fileA).getHigh().percentage, 0.01);
   }
   
   
   @Test
-  public void test2() throws IOException, OldTopicException {
+  public void test2() throws IOException, TopicAlreadyExistsException {
     Topics topics = new Topics();
     TopicLoader fl = new TopicLoader(topics);
     String directory = "topics";
     String fileName = "pqowiepoqwkepoqkwens120392js_1.json";
-    String jsonIn = "{\"index\" : 0,}\"";
+    String jsonIn = "{\"collectIndex\" : 0,}\"";
     writeNewFile(jsonIn, directory, fileName);
     List<String> list = fl.listFilesInDirectory(directory);
     System.out.println("Number of files found: " + list.size());

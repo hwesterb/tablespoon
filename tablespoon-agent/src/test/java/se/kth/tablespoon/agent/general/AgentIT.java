@@ -44,7 +44,7 @@ public class AgentIT {
 
     Thread mlThread = new Thread(ml);
     mlThread.start();
-    while (ml.globalIsEmpty()) {
+    while (ml.metricQueueIsEmpty()) {
       System.out.println("waiting...");
       Time.sleep(500);
     }
@@ -89,7 +89,7 @@ public class AgentIT {
     @Override
     public void collectCycle() {
       while (true) {
-        globalQueue.add(new Metric(1, ResourceType.DSK, MetricFormat.TOTAL, Time.now(), "agenttester", 27));
+        metricQueue.add(new Metric(1, ResourceType.DSK, MetricFormat.TOTAL, Time.now(), "agenttester", 27));
         Time.sleep(100);
       }
     }

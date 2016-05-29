@@ -5,6 +5,7 @@
 */
 package se.kth.tablespoon.agent.events;
 
+import se.kth.tablespoon.agent.file.ReplacingTopicException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.TreeMap;
@@ -67,6 +68,19 @@ public class Topics {
     }
   }
   
+  public void remove(Topic topic) {
+         slf4jLogger.info("Removing topic " + topic.getUniqueId() + " from memory.");
+        topics.put(topic.getUniqueId(), null);
+  }
+  
+  public void replace(String topicId, String replacesTopicId) throws ReplacingTopicException {
+    Topic replacesTopic = topics.get(replacesTopicId);
+    if (replacesTopic == null) throw new ReplacingTopicException(replacesTopicId);
+    slf4jLogger.info(topicId + " replaces " + replacesTopicId + ".");
+    remove(replacesTopic);
+  }
+  
+  
   private boolean durationHasEnded(long timeStamp, Topic topic) {
     if (topic.hasDuration()) {
         if ((timeStamp - topic.getLocalStartTime()) > topic.getDuration()) {
@@ -83,5 +97,8 @@ public class Topics {
     }
     return relevantTopics;
   }
+
+
+  
   
 }
