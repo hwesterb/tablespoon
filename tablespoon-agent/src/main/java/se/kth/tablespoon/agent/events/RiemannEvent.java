@@ -1,7 +1,8 @@
 package se.kth.tablespoon.agent.events;
 
-import com.aphyr.riemann.client.EventDSL;
-import com.aphyr.riemann.client.RiemannClient;
+import io.riemann.riemann.Proto.Event;
+import io.riemann.riemann.client.EventDSL;
+import io.riemann.riemann.client.IRiemannClient;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -27,7 +28,7 @@ public class RiemannEvent {
     tags.add(tag);
   }
   
-  public void sendMe(RiemannClient rClient, int dereferenceTime) throws IOException {
+  public Event prepare(IRiemannClient rClient) throws IOException {
     EventDSL event = rClient.event();
     event.service(service).
         description(description).
@@ -38,7 +39,7 @@ public class RiemannEvent {
     for (String tag : tags) {
       event.tag(tag);
     }
-    event.send().deref(dereferenceTime, java.util.concurrent.TimeUnit.MILLISECONDS);
+    return event.builder.build();
   }
   
   public double getValue() {

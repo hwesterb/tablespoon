@@ -24,15 +24,7 @@ public class AgentBroadcasterTester implements AgentBroadcaster {
   }
 
   @Override
-<<<<<<< Updated upstream
-  public void sendToMachines(ArrayList<String> machines, String json) throws BroadcastException {
-    System.out.println("Sending to machines: " + machines);
-    System.out.println("Information (json): " + json);
-||||||| merged common ancestors
-  public void sendToMachines(ArrayList<String> machines, String json, String topicId, int version) throws BroadcastException {
-=======
   public void sendToMachines(HashSet<String> machines, String json, String topicId) throws BroadcastException {
->>>>>>> Stashed changes
     recievedRequests += machines.size();
   }
  

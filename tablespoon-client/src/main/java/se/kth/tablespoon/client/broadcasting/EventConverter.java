@@ -5,7 +5,8 @@
 */
 package se.kth.tablespoon.client.broadcasting;
 
-import com.aphyr.riemann.Proto.Event;
+
+import io.riemann.riemann.Proto.Event;
 import se.kth.tablespoon.client.api.TablespoonEvent;
 import se.kth.tablespoon.client.events.CollectlMapping;
 import se.kth.tablespoon.client.events.ResourceType;

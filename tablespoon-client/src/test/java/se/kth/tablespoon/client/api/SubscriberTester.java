@@ -27,7 +27,6 @@ public class SubscriberTester implements Subscriber {
   @Override
   public void onEventArrival(TablespoonEvent event) {
     this.event = event;
-    System.out.println(event);
     counter++;
   }
 
@@ -39,6 +38,4 @@ public class SubscriberTester implements Subscriber {
     return event;
   }
 
-  
-  
 }

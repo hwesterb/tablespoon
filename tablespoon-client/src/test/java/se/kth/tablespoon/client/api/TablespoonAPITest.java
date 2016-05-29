@@ -44,7 +44,7 @@ public class TablespoonAPITest {
   
   @BeforeClass
   public static void setUp() {
-    groups = new Groups();
+  groups = new Groups();
     storage = new TopicStorage(groups);
     aba = new AgentBroadcasterAssistant(storage);
     abaThread = new Thread(aba);
@@ -62,16 +62,11 @@ public class TablespoonAPITest {
     abt = new AgentBroadcasterTester();
     subscriberB = new SubscriberTester();
     subscriberA = new SubscriberTester();
-<<<<<<< Updated upstream
-    Time.sleep(1000); //wait for threads to start
-||||||| merged common ancestors
-    Time.sleep(SLEEP_TIME*2); 
-=======
     Time.sleep(SLEEP_TIME*2);
->>>>>>> Stashed changes
     sbt = new SubscriberBroadcasterTester();
     api = TablespoonAPI.getInstance();
     api.prepareAPI(storage, groups, sbt);
+    aba.registerBroadcaster(abt);
   }
   
   
@@ -80,29 +75,13 @@ public class TablespoonAPITest {
     Time.sleep(100); //get thread into wait position
   }
   
-    /**
-   * Test of createTopic method, of class TablespoonAPI.
-   */
   @Test
-<<<<<<< Updated upstream
-  public void testCreateTopic() {
-    System.out.println("\n*** createTopic ***\n");
-||||||| merged common ancestors
-  public void testCreateTopic() {
-=======
   public void testCreateTopic() throws ThresholdException, MissingTopicException, MissingParameterException {
->>>>>>> Stashed changes
     String groupId = "B";
     EventType eventType = EventType.REGULAR;
     Resource resource = new Resource(ResourceType.CPU);
     int duration = 10;
     int sendRate = 2;
-<<<<<<< Updated upstream
-    subscriberB.setUniqueId(api.createTopic(subscriberB, groupId, eventType, resource, duration, sendRate));
-    aba.registerBroadcaster(abt);
-||||||| merged common ancestors
-    subscriberB.setUniqueId(api.createTopic(subscriberB, groupId, eventType, resource, duration, sendRate));
-=======
     String uniqueId = api.submitter().
         subscriber(subscriberB).
         groupId(groupId).
@@ -112,51 +91,24 @@ public class TablespoonAPITest {
         sendRate(sendRate).
         submit();
     subscriberB.setUniqueId(uniqueId);
->>>>>>> Stashed changes
     Time.sleep(SLEEP_TIME);
     assertEquals(2, abt.getRecievedRequests());
   }
   
-  /**
-   * Test of changeTopic method, of class TablespoonAPI.
-   */
   @Test
-<<<<<<< Updated upstream
-  public void testChangeTopic() throws Exception {
-    System.out.println("\n*** changeTopic ***\n");
-    api.changeTopic(subscriberB.getUniqueId(), new Threshold(80.0, Comparator.LESS_THAN));
-||||||| merged common ancestors
-  public void testChangeTopic() throws Exception {
-    api.changeTopic(subscriberB.getUniqueId(), new Threshold(80.0, Comparator.LESS_THAN));
-=======
   public void replicateTopic() throws Exception {
     api.submitter().
         subscriber(subscriberB).
         replaces(subscriberB.getUniqueId(), true).
         high(new Threshold(80.0, Comparator.LESS_THAN)).
         submit();
->>>>>>> Stashed changes
     Time.sleep(SLEEP_TIME);
     assertEquals(4, abt.getRecievedRequests());
   }
-//
-//   @Test
-//  public void createTopic() throws Exception {
-//    api.submitter().
-//        subscriber(subscriberB).
-//        replaces(subscriberB.getUniqueId(), true).
-//        high(new Threshold(80.0, Comparator.LESS_THAN)).
-//        submit();
-//    Time.sleep(SLEEP_TIME);
-//    assertEquals(4, abt.getRecievedRequests());
-//  }
+
   
-  /**
-   * Test of createTopic method, of class TablespoonAPI.
-   */
   @Test
   public void testCreateSecondTopic() throws Exception {
-    System.out.println("\n*** secondTopic ***\n");
     Threshold high = new Threshold(60.0, Comparator.GREATER_THAN);
     Threshold low = new Threshold(30.0, Comparator.LESS_THAN);
     Resource resource = new Resource(ResourceType.CPU);
@@ -174,12 +126,9 @@ public class TablespoonAPITest {
     assertEquals(8, abt.getRecievedRequests());
   }
   
-  /**
-   * Test of removeTopic method, of class TablespoonAPI.
-   */
+
   @Test
   public void testRemoveTopic() throws Exception {
-    System.out.println("\n*** removeTopic ***\n");
     api.removeTopic(subscriberA.getUniqueId());
     Time.sleep(SLEEP_TIME);
     assertEquals(12, abt.getRecievedRequests());

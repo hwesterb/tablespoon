@@ -15,9 +15,9 @@ import se.kth.tablespoon.agent.metrics.MetricLayout;
 import se.kth.tablespoon.agent.metrics.MetricFormat;
 import se.kth.tablespoon.agent.util.Time;
 
-public class CollectlListenerTest {
+public class CollectlListenerIT {
   
-  public CollectlListenerTest() {
+  public CollectlListenerIT() {
   }
   
   static Configuration config;
@@ -29,7 +29,7 @@ public class CollectlListenerTest {
     System.out.println(config);
   }
   
-  @Test
+//  @Test
   public void test() {
     CollectlListener cl = new CollectlListener();
     Thread t = new Thread(cl);
@@ -60,7 +60,7 @@ public class CollectlListenerTest {
     }
   }
   
-  @Test
+//  @Test
   public void restartTest() {
     CollectlListener cl = new CollectlListener();
     Thread t = new Thread(cl);

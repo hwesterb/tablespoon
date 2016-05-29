@@ -32,13 +32,7 @@ public class AgentBroadcasterAssistant implements Runnable {
           slf4jLogger.debug(ex.getMessage());
         }
         try {
-<<<<<<< Updated upstream
-          broadcaster.sendToMachines(machinesToNotify, topic.getJson());
-||||||| merged common ancestors
-          broadcaster.sendToMachines(machinesToNotify, topic.getJson(), topic.getUniqueId(), topic.getVersion());
-=======
           broadcaster.sendToMachines(machinesToNotify, topic.getJson(), topic.getUniqueId());
->>>>>>> Stashed changes
           topic.addToNotifiedMachines(machinesToNotify);
         } catch (BroadcastException ex) {
           //TODO: handle this

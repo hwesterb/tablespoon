@@ -15,14 +15,9 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class Group {
   
-<<<<<<< Updated upstream
-  private final ArrayList<String> machines = new ArrayList<String>();
-||||||| merged common ancestors
-  private final ArrayList<String> machines = new ArrayList<>();
-=======
+
   public final Lock reentrantLock = new ReentrantLock();
   private final HashSet<String> machines = new HashSet<>();
->>>>>>> Stashed changes
   private final String groupId;
 
   public Group(String groupId) {

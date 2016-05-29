@@ -27,13 +27,13 @@ import se.kth.tablespoon.agent.util.Time;
  *
  * @author te27
  */
-public class AgentTest {
+public class AgentIT {
 
   static Configuration config = Configuration.getInstance();
   static MetricListener ml =  new MetricListenerTester();
   static Agent agent;
 
-  public AgentTest() {
+  public AgentIT() {
   }
 
   @BeforeClass
@@ -75,7 +75,7 @@ public class AgentTest {
           System.out.println(accept.getInputStream().available());
         }
       } catch (IOException ex) {
-        Logger.getLogger(AgentTest.class.getName()).log(Level.SEVERE, null, ex);
+        Logger.getLogger(AgentIT.class.getName()).log(Level.SEVERE, null, ex);
       }
     }
   }
