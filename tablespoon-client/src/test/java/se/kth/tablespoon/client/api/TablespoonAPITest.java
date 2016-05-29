@@ -6,7 +6,6 @@
 */
 package se.kth.tablespoon.client.api;
 
-import org.junit.AfterClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
@@ -23,13 +22,9 @@ import se.kth.tablespoon.client.topics.ThresholdException;
 import se.kth.tablespoon.client.topics.TopicStorage;
 import se.kth.tablespoon.client.util.Time;
 
-/**
- *
- * @author henke
- */
 public class TablespoonAPITest {
   
-  static final int SLEEP_TIME = 500;
+  static final int SLEEP_TIME = 1500;
   static Groups groups;
   static Group groupA;
   static Group groupB;
@@ -44,7 +39,8 @@ public class TablespoonAPITest {
   
   @BeforeClass
   public static void setUp() {
-  groups = new Groups();
+    System.out.println("This test involves waiting for threads...");
+    groups = new Groups();
     storage = new TopicStorage(groups);
     aba = new AgentBroadcasterAssistant(storage);
     abaThread = new Thread(aba);
@@ -67,12 +63,7 @@ public class TablespoonAPITest {
     api = TablespoonAPI.getInstance();
     api.prepareAPI(storage, groups, sbt);
     aba.registerBroadcaster(abt);
-  }
-  
-  
-  @AfterClass
-  public static void tearDown() {
-    Time.sleep(100); //get thread into wait position
+    Time.sleep(SLEEP_TIME);
   }
   
   @Test
@@ -105,7 +96,7 @@ public class TablespoonAPITest {
     Time.sleep(SLEEP_TIME);
     assertEquals(4, abt.getRecievedRequests());
   }
-
+  
   
   @Test
   public void testCreateSecondTopic() throws Exception {
@@ -126,12 +117,12 @@ public class TablespoonAPITest {
     assertEquals(8, abt.getRecievedRequests());
   }
   
-
+  
   @Test
   public void testRemoveTopic() throws Exception {
     api.removeTopic(subscriberA.getUniqueId());
     Time.sleep(SLEEP_TIME);
     assertEquals(12, abt.getRecievedRequests());
-  }  
+  }
   
 }
