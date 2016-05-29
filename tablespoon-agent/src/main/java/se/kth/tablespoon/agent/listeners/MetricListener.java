@@ -35,7 +35,9 @@ public abstract class MetricListener implements Runnable {
   protected void addMetricToGlobal(String line) {
     ArrayList<Metric> metrics = MetricFactory.createMetrics(line, mls, config);
     createCustomMetrics(metrics);
-    globalQueue.addAll(metrics);
+    synchronized (globalQueue) {
+      globalQueue.addAll(metrics);
+    }
   }
   
   protected abstract void createCustomMetrics(ArrayList<Metric> metrics);

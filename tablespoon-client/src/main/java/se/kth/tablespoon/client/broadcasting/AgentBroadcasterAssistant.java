@@ -1,7 +1,7 @@
 package se.kth.tablespoon.client.broadcasting;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.kth.tablespoon.client.topics.Topic;
@@ -22,9 +22,9 @@ public class AgentBroadcasterAssistant implements Runnable {
   }
   
   private void broadcastTopics() {
+    // TODO: Make this iteration thread safe.
     for (Topic topic : storage.getTopics()) {
-      topic.lock();
-      ArrayList<String> machinesToNotify = topic.getMachinesToNotify();
+      HashSet<String> machinesToNotify = topic.getMachinesToNotify();
       if (machinesToNotify.size() > 0) {
         try {
           topic.generateJson();
@@ -32,14 +32,19 @@ public class AgentBroadcasterAssistant implements Runnable {
           slf4jLogger.debug(ex.getMessage());
         }
         try {
+<<<<<<< Updated upstream
           broadcaster.sendToMachines(machinesToNotify, topic.getJson());
+||||||| merged common ancestors
+          broadcaster.sendToMachines(machinesToNotify, topic.getJson(), topic.getUniqueId(), topic.getVersion());
+=======
+          broadcaster.sendToMachines(machinesToNotify, topic.getJson(), topic.getUniqueId());
+>>>>>>> Stashed changes
           topic.addToNotifiedMachines(machinesToNotify);
         } catch (BroadcastException ex) {
           //TODO: handle this
           slf4jLogger.debug(ex.getMessage());
         }
       }
-      topic.unlock();
     }
   }
   

@@ -5,10 +5,9 @@
 */
 package se.kth.tablespoon.client.topics;
 
-import se.kth.tablespoon.client.events.ResourceType;
+import java.util.HashSet;
 import se.kth.tablespoon.client.events.EventType;
 import se.kth.tablespoon.client.general.Group;
-import java.util.UUID;
 import se.kth.tablespoon.client.events.CollectlMapping;
 import se.kth.tablespoon.client.events.Resource;
 import se.kth.tablespoon.client.util.Time;
@@ -20,18 +19,16 @@ import se.kth.tablespoon.client.util.Time;
 public class TopicFactory {
   
   
-  public static Topic create(TopicStorage storage, Resource resource,
+  public static Topic createGroupTopic(String uniqueId, Resource resource,
       EventType type, int sendRate, Group group) {
-    Topic topic;
-    if (group == null) {
-      topic = new MachineTopic(getIndex(resource), Time.now(),
-          createUniqueId(storage), type, sendRate);
-    } else {
-      topic = new GroupTopic(getIndex(resource), Time.now(),
-          createUniqueId(storage), type, sendRate, group);
-    }
-    storage.add(topic);
-    return topic;
+    return new GroupTopic(getIndex(resource), Time.now(),
+        uniqueId, type, sendRate, group);
+  }
+  
+  public static Topic createMachineTopic(String uniqueId, Resource resource,
+      EventType type, int sendRate, HashSet<String> machines) {
+    return new MachineTopic(getIndex(resource), Time.now(),
+        uniqueId, type, sendRate, machines);
   }
   
   private static int getIndex(Resource resource) {
@@ -42,13 +39,6 @@ public class TopicFactory {
       index = CollectlMapping.getInstance().getPrioritizedIndex(resource.getResourceType());
     }
     return index;
-  }
-  
-  @SuppressWarnings("empty-statement")
-  private static String createUniqueId(TopicStorage storage) {
-    String uniqueId;
-    while (storage.uniqueIdExists(uniqueId = UUID.randomUUID().toString().replaceAll("_", "-")));
-    return uniqueId;
   }
   
 }

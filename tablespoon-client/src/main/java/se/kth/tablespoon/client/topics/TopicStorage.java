@@ -9,7 +9,8 @@ import se.kth.tablespoon.client.general.Groups;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map.Entry;
-import java.util.TreeMap;
+import java.util.HashMap;
+import java.util.UUID;
 import se.kth.tablespoon.client.util.Time;
 
 
@@ -19,10 +20,10 @@ import se.kth.tablespoon.client.util.Time;
  */
 public class TopicStorage {
   
-  private final TreeMap<String, Topic> storage = new TreeMap<>();
+  private final HashMap<String, Topic> storage = new HashMap<>();
   private final Groups groups;
-  private boolean changed = true;
-
+  private boolean changed = false;
+  
   public TopicStorage(Groups groups) {
     this.groups = groups;
   }
@@ -31,11 +32,9 @@ public class TopicStorage {
     storage.put(topic.getUniqueId(), topic);
   }
   
-  public Topic getAndChange(String uniqueId) throws MissingTopicException {
+  public Topic get(String uniqueId) throws MissingTopicException {
     Topic topic = storage.get(uniqueId);
     if (topic==null) throw new MissingTopicException();
-    topic.lock();
-    topic.topicHasChanged();
     return topic;
   }
   
@@ -43,7 +42,6 @@ public class TopicStorage {
     Topic topic = storage.get(uniqueId);
     if (topic==null) throw new MissingTopicException();
     topic.scheduledForRemoval();
-    topic.topicHasChanged();
   }
   
   public void notifyBroadcaster() {
@@ -52,7 +50,7 @@ public class TopicStorage {
       this.notify();
     }
   }
-
+  
   public void storageHasChanged(boolean changed) {
     this.changed = changed;
   }
@@ -68,15 +66,12 @@ public class TopicStorage {
     while (entries.hasNext()) {
       Entry<String, Topic> entry = entries.next();
       Topic topic = entry.getValue();
-      topic.lock();
-      topic.removeDeadMachines(groups);
-      if (topic.getDuration() > 0 &&
-          (topic.getStartTime() + topic.getDuration()) < now) {
-        entries.remove();
-      } else if (topic.hasNoLiveMachines()) {
+      topic.updateMachineState(groups);
+      if ((topic.getDuration() > 0 &&
+          (topic.getStartTime() + topic.getDuration()) < now) || 
+          topic.hasNoLiveMachines()) {
         entries.remove();
       }
-      topic.unlock();
     }
   }
   
@@ -88,9 +83,16 @@ public class TopicStorage {
   public boolean isEmpty() {
     return storage.isEmpty();
   }
-
+  
   public boolean isStorageChanged() {
     return changed;
+  }
+  
+  @SuppressWarnings("empty-statement")
+  public String generateUniqueId() {
+    String uniqueId;
+    while (uniqueIdExists(uniqueId = UUID.randomUUID().toString()));
+    return uniqueId;
   }
   
   

@@ -12,22 +12,14 @@ import com.fasterxml.jackson.jr.ob.JSON;
 import com.fasterxml.jackson.jr.ob.JSONComposer;
 import com.fasterxml.jackson.jr.ob.comp.ObjectComposer;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.HashSet;
 import se.kth.tablespoon.client.general.Groups;
 
-/**
- *
- * @author henke
- */
+
 public abstract class Topic {
   
-  private final Lock reentrantLock = new ReentrantLock();
-  protected final ArrayList<String> machines;
-  private final ArrayList<String> machinesNotified = new ArrayList<>();
+  protected final HashSet<String> machinesNotified = new HashSet<>();
   private final int index;
-  private int version;
   private final long startTime;
   private int sendRate;
   private int duration = 0;
@@ -35,68 +27,38 @@ public abstract class Topic {
   private Threshold high;
   private Threshold low;
   private final String uniqueId;
-  private final String groupId;
+  private String replacesTopicId;
+  protected final String groupId;
   private String json = "";
   private boolean scheduledForRemoval = false;
   
   
-  public Topic(int index,long startTime, String uniqueId, EventType type, int sendRate,
-      ArrayList<String> machines, String groupId) {
-    this.reentrantLock.lock();
+  public Topic(int index, long startTime, String uniqueId, EventType type, int sendRate, String groupId) {
     this.index = index;
     this.startTime = startTime;
     this.uniqueId = uniqueId;
     this.eventType = type;
     this.sendRate = sendRate;
-    this.machines = machines;
     this.groupId = groupId;
-    version = 1;
   }
   
-  public void lock() {
-    this.reentrantLock.lock();
-  }
-  
-  public void unlock() {
-    this.reentrantLock.unlock();
-  }
   
   public void scheduledForRemoval() throws TopicRemovalException {
     if (duration > 0) throw new TopicRemovalException("The event will expire when duration is over.");
     scheduledForRemoval = true;
-  }
-  
-  // Whenever a topicHasChanged occurs, the machines are no longer notified.
-  // Json is no longer valid.
-  // The version has changed.
-  public void topicHasChanged() {
     machinesNotified.clear();
-    json = "";
-    version++;
-  }
-  
-  public ArrayList<String> getMachinesToNotify() {
-    ArrayList<String> machinesToNotify = new ArrayList<>();
-    for (String machine : machines) {
-      if (!machinesNotified.contains(machine)) {
-        machinesToNotify.add(machine);
-      }
-    }
-    return machinesToNotify;
   }
   
   
-  public abstract void removeDeadMachines(Groups groups);
+  public abstract HashSet<String> getMachinesToNotify();
   
-  public boolean hasNoLiveMachines() {
-    return machines.isEmpty();
-  }
+  public abstract void updateMachineState(Groups groups);
   
-  public void addMachine(String machine) {
-    machines.add(machine);
-  }
+  public abstract boolean hasNoLiveMachines();
   
-  public void addToNotifiedMachines(ArrayList<String> machines) {
+  public abstract HashSet<String> getInitialMachines();
+  
+  public void addToNotifiedMachines(HashSet<String> machines) {
     machinesNotified.addAll(machines);
   }
   
@@ -110,7 +72,6 @@ public abstract class Topic {
   }
   
   public void setHigh(Threshold high) {
-    //changing high removes the low threshold
     this.low = null;
     this.high = high;
   }
@@ -159,7 +120,7 @@ public abstract class Topic {
   public boolean isScheduledForRemoval() {
     return scheduledForRemoval;
   }
-
+  
   public String getGroupId() {
     return groupId;
   }
@@ -178,7 +139,6 @@ public abstract class Topic {
         .composeString();
     ObjectComposer obj = composer.startObject();
     obj.put("index", index)
-        .put("version", version)
         .put("startTime", startTime)
         .put("uniqueId", uniqueId)
         .put("groupId", groupId)
@@ -203,6 +163,11 @@ public abstract class Topic {
   
   public String getJson() {
     return json;
+  }
+
+  public void setReplaces(String replacesTopicId, TopicStorage storage) throws MissingTopicException {
+    if (storage.uniqueIdExists(replacesTopicId) == false) throw new MissingTopicException();
+    this.replacesTopicId = replacesTopicId;
   }
   
   

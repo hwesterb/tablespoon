@@ -5,7 +5,9 @@
  */
 package se.kth.tablespoon.client.general;
 
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  *
@@ -13,7 +15,14 @@ import java.util.ArrayList;
  */
 public class Group {
   
+<<<<<<< Updated upstream
   private final ArrayList<String> machines = new ArrayList<String>();
+||||||| merged common ancestors
+  private final ArrayList<String> machines = new ArrayList<>();
+=======
+  public final Lock reentrantLock = new ReentrantLock();
+  private final HashSet<String> machines = new HashSet<>();
+>>>>>>> Stashed changes
   private final String groupId;
 
   public Group(String groupId) {
@@ -21,16 +30,47 @@ public class Group {
   }
   
   public void addMachine(String machine) {
+    lock();
     machines.add(machine);
+    unlock();
   }
   
-  public ArrayList<String> getMachines() {
+    
+  public void removeMachine(String machine) {
+    lock();
+    machines.remove(machine);
+    unlock();
+  }
+  
+  public void clear() {
+    lock();
+    machines.clear();
+    unlock();
+  }
+  
+  
+  public void lock() {
+    this.reentrantLock.lock();
+  }
+  
+  public void unlock() {
+    this.reentrantLock.unlock();
+  }
+  
+  public HashSet<String> getMachines() {
     return machines;
   }
 
   public String getGroupId() {
     return groupId;
   }
+
+  @Override
+  public String toString() {
+    return "Group{" + "reentrantLock=" + reentrantLock + ", machines=" + machines + ", groupId=" + groupId + '}';
+  }
+  
+  
   
   
 }

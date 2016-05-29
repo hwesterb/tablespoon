@@ -40,8 +40,109 @@ public class Agent {
     agentCycle(0);
   }
   
+<<<<<<< Updated upstream
   private void connect() throws IOException {
     riemannClient = RiemannClient.tcp(config.getRiemannHost(),
+||||||| merged common ancestors
+  private void sendCycle() throws IOException {
+    while (true) {
+      topicLoader.readTopicFiles();
+      ArrayList<RiemannEvent> events = new ArrayList<>();
+      synchronized (metricListener.getGlobalQueue()) {
+        while (metricListener.globalIsEmpty() == false) {
+          events.addAll(extract());
+        }
+      }
+      List<Event> batch = new ArrayList<>();
+      for (RiemannEvent event : events) {
+        batch.add(event.prepare(rbc.client));
+      }
+      if (batch.isEmpty()) Time.sleep(500);
+      else sendBatch(batch);
+    }
+  }
+  
+  private ArrayList<RiemannEvent> extract() throws IOException {
+    Metric metric = metricListener.getGlobalQueue().poll();
+    ArrayList<Topic> relevant = topics.getRelevantTopicsBeloningToIndex(metric.getCollectIndex());
+    if (relevant.isEmpty()) return new ArrayList<>();
+    topics.clean(metric, relevant);
+    return topics.extractRiemannEvents(metric, relevant);
+  }
+  
+  private void sendBatch(List<Event> batch) throws IOException {
+    try {
+      IPromise<Msg> promise = rbc.client.sendEvents(batch);
+      Msg msg = promise.deref(config.getRiemannDereferenceTime(),
+          java.util.concurrent.TimeUnit.MILLISECONDS);
+      if (msg.hasOk() == false) throw new IOException("Timed out after "
+          + config.getRiemannDereferenceTime() + ".");
+    } catch (IOException ex) {
+      slf4jLogger.error(ex.getMessage());
+      if (rbc.isConnected()) sendBatch(batch);
+      else {
+        slf4jLogger.error("Batch of size " + batch.size()
+            + " discarded.");
+        throw new IOException();
+      }
+    }
+  }
+  
+  private void connect() throws IOException, UnsupportedJVMException {
+    RiemannClient riemannClient = RiemannClient.tcp(config.getRiemannHost(),
+=======
+  private void sendCycle() throws IOException {
+    while (true) {
+      topicLoader.readTopicFiles();
+      ArrayList<Metric> metrics = new ArrayList<>();
+      synchronized (metricListener.getGlobalQueue()) {
+        while (metricListener.globalIsEmpty() == false) {
+          metrics.add(metricListener.getGlobalQueue().poll());
+        }
+      }
+      ArrayList<RiemannEvent> events = new ArrayList<>();
+      events.addAll(extract(metrics));
+      List<Event> batch = new ArrayList<>();
+      for (RiemannEvent event : events) {
+        batch.add(event.prepare(rbc.client));
+      }
+      if (batch.isEmpty()) Time.sleep(500);
+      else sendBatch(batch);
+    }
+  }
+  
+  private ArrayList<RiemannEvent> extract(ArrayList<Metric> metrics) throws IOException {
+    ArrayList<RiemannEvent> riemannEvents = new ArrayList<>();
+    for (Metric metric : metrics) {
+      ArrayList<Topic> relevant = topics.getRelevantTopicsBeloningToIndex(metric.getCollectIndex());
+      if (relevant.isEmpty()) continue;
+      topics.clean(metric, relevant);
+      riemannEvents.addAll(topics.extractRiemannEvents(metric, relevant));
+    }
+    return riemannEvents;
+  }
+  
+  private void sendBatch(List<Event> batch) throws IOException {
+    try {
+      IPromise<Msg> promise = rbc.client.sendEvents(batch);
+      Msg msg = promise.deref(config.getRiemannDereferenceTime(),
+          java.util.concurrent.TimeUnit.MILLISECONDS);
+      if (msg.hasOk() == false) throw new IOException("Timed out after "
+          + config.getRiemannDereferenceTime() + ".");
+    } catch (IOException ex) {
+      slf4jLogger.error(ex.getMessage());
+      if (rbc.isConnected()) sendBatch(batch);
+      else {
+        slf4jLogger.error("Batch of size " + batch.size()
+            + " discarded.");
+        throw new IOException();
+      }
+    }
+  }
+  
+  private void connect() throws IOException, UnsupportedJVMException {
+    RiemannClient riemannClient = RiemannClient.tcp(config.getRiemannHost(),
+>>>>>>> Stashed changes
         config.getRiemannPort());
     riemannClient.connect();
     this.es = new EventSender(metricListener.getGlobalQueue(), riemannClient, topics);

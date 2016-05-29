@@ -5,9 +5,15 @@
 */
 package se.kth.tablespoon.client.general;
 
+<<<<<<< Updated upstream
 import se.kth.tablespoon.client.general.Group;
 import se.kth.tablespoon.client.general.Groups;
 import java.util.ArrayList;
+||||||| merged common ancestors
+import java.util.ArrayList;
+=======
+import java.util.HashSet;
+>>>>>>> Stashed changes
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
@@ -68,7 +74,7 @@ public class GroupsTest {
   public void testRetainWithSnapshot() {
     System.out.println("retainWithSnapshot");
     groups.takeSnapshop();
-    ArrayList<String> machines = new ArrayList<>();
+    HashSet<String> machines = new HashSet<>();
     machines.add("1");
     machines.add("4");
     machines.add("19");

@@ -5,9 +5,17 @@
 */
 package se.kth.tablespoon.client.general;
 
+<<<<<<< Updated upstream
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.TreeMap;
+||||||| merged common ancestors
+import java.util.ArrayList;
+import java.util.TreeMap;
+=======
+import java.util.HashSet;
+import java.util.HashMap;
+>>>>>>> Stashed changes
 
 /**
  *
@@ -15,8 +23,8 @@ import java.util.TreeMap;
  */
 public class Groups implements Iterable<String> {
   
-  private final TreeMap<String, Group> groups = new TreeMap<>();
-  private final ArrayList<String> machineSnapshot = new ArrayList<>();
+  private final HashMap<String, Group> groups = new HashMap<>();
+  private final HashSet<String> machineSnapshot = new HashSet<>();
   
   public void addMachine(String groupId, String machine) {
     Group group = groups.get(groupId);
@@ -32,20 +40,33 @@ public class Groups implements Iterable<String> {
   }
   
   public void remove(String groupId) {
+    Group group = groups.get(groupId);
+    group.clear();
     groups.remove(groupId);
   }
   
   public void takeSnapshop() {
     machineSnapshot.clear();
+<<<<<<< Updated upstream
     for (String machine : this) {
       machineSnapshot.add(machine);
+||||||| merged common ancestors
+    for (Group group : groups.values()) {
+      machineSnapshot.addAll(group.getMachines());
+=======
+    for (Group group : groups.values()) {
+      group.lock();
+      machineSnapshot.addAll(group.getMachines());
+      group.unlock();
+>>>>>>> Stashed changes
     }
   }
   
-  public void retainWithSnapshot(ArrayList<String> machines) {
+  public void retainWithSnapshot(HashSet<String> machines) {
     machines.retainAll(machineSnapshot);
   }
   
+<<<<<<< Updated upstream
   @Override
   public Iterator<String> iterator() {
     return new MachineIterator(groups);
@@ -92,3 +113,9 @@ public class Groups implements Iterable<String> {
   
   
 }
+||||||| merged common ancestors
+}
+=======
+  
+}
+>>>>>>> Stashed changes

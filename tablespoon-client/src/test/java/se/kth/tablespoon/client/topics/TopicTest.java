@@ -15,6 +15,7 @@ import se.kth.tablespoon.client.events.Resource;
 import se.kth.tablespoon.client.events.ResourceType;
 import se.kth.tablespoon.client.events.Threshold;
 import static org.junit.Assert.*;
+import se.kth.tablespoon.client.general.Group;
 import se.kth.tablespoon.client.general.Groups;
 
 /**
@@ -25,9 +26,13 @@ public class TopicTest {
 
   @Test
   public void test() throws ThresholdException {
-    TopicStorage storage = new TopicStorage(new Groups());
+    Groups groups = new Groups();
+    Group group = new Group("A");
+    groups.add(group);
+    TopicStorage storage = new TopicStorage(groups);
     Resource resource = new Resource(ResourceType.CPU);
-    Topic topic = TopicFactory.create(storage, resource, EventType.REGULAR, 1, null);
+    Topic topic = TopicFactory.createGroupTopic(storage.generateUniqueId(), 
+        resource, EventType.REGULAR, 1, group);
     topic.setDuration(12);
     topic.setHigh(new Threshold(40.0, Comparator.GREATER_THAN));
     boolean shouldfail = false;

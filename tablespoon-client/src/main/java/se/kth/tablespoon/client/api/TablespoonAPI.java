@@ -5,6 +5,7 @@
 */
 package se.kth.tablespoon.client.api;
 
+import java.util.HashSet;
 import se.kth.tablespoon.client.broadcasting.SubscriberBroadcaster;
 import se.kth.tablespoon.client.general.Group;
 import se.kth.tablespoon.client.events.Threshold;
@@ -15,6 +16,7 @@ import se.kth.tablespoon.client.topics.TopicStorage;
 import se.kth.tablespoon.client.events.EventType;
 import se.kth.tablespoon.client.events.Resource;
 import se.kth.tablespoon.client.general.Groups;
+import se.kth.tablespoon.client.topics.GroupTopic;
 import se.kth.tablespoon.client.topics.MissingTopicException;
 import se.kth.tablespoon.client.topics.TopicRemovalException;
 
@@ -39,6 +41,10 @@ public class TablespoonAPI {
     return instance;
   }
   
+  public Submitter submitter() {
+    return new Submitter();
+  }
+  
   protected TablespoonAPI() { }
   
   public void prepareAPI(TopicStorage storage, Groups groups, SubscriberBroadcaster sb) {
@@ -47,126 +53,179 @@ public class TablespoonAPI {
     this.sb = sb;
   }
   
-  /**
-   * This call creates a new topic which applies to one group. No thresholds are
-   * active upon creation. This can be changed with the <code>changeTopic</code>
-   * call.
-   * @param subscriber A <code>Subscriber</code> which receives <code>TablespoonEvent</code>.
-   * @param groupId Id which specifies a group.
-   * @param eventType Specifies how to gather and filter information.
-   * @param resource Type of resource which should be collected.
-   * @param duration Duration of a topic. Will expire automatically after duration.
-   * Set value 0 for topic without time bound.
-   * @param sendRate The rate at which the agent sends messages.
-   * @return An unique id which specifies the topic.
-   */
-  public String createTopic(Subscriber subscriber, String groupId, EventType eventType,
-      Resource resource, int duration, int sendRate) {
-    Topic topic = registerNewTopic(groupId, eventType, resource, duration, sendRate);
-    topic.unlock();
-    sb.registerSubscriber(subscriber, topic);
-    storage.notifyBroadcaster();
-    return topic.getUniqueId();
+  
+  public class Submitter {
+    
+    private Subscriber subscriber;
+    private String groupId;
+    private EventType eventType;
+    private Resource resource;
+    private boolean durationSet = false;
+    private int duration;
+    private boolean sendRateSet = false;
+    private int sendRate;
+    private HashSet<String> machines;
+    private Threshold high;
+    private Threshold low;
+    private String replacesTopicId;
+    private boolean replicate;
+    
+    /**
+     * This parameter is mandatory.
+     * @param subscriber A <code>Subscriber</code> which receives <code>TablespoonEvent</code>.
+     * @return <code>Submitter</code> for <code>TablespoonAPI</code>.
+     */
+    Submitter subscriber(Subscriber subscriber) {
+      this.subscriber = subscriber;
+      return this;
+    }
+    
+    /**
+     * This parameter is mandatory if not replicated.
+     * @param eventType Specifies how to gather and filter information.
+     * @return <code>Submitter</code> for <code>TablespoonAPI</code>.
+     */
+    Submitter eventType(EventType eventType) {
+      this.eventType = eventType;
+      return this;
+    }
+    
+    /**
+     * This parameter is mandatory if not replicated.
+     * @param resource Type of resource which should be collected.
+     * @return <code>Submitter</code> for <code>TablespoonAPI</code>.
+     */
+    Submitter resource(Resource resource) {
+      this.resource = resource;
+      return this;
+    }
+    
+    /**
+     * This parameter is mandatory if not replicated. Lowest possible send rate is 1.
+     * @param sendRate The rate at which the agent sends messages.
+     * @return <code>Submitter</code> for <code>TablespoonAPI</code>.
+     */
+    Submitter sendRate(int sendRate) {
+      sendRateSet = true;
+      this.sendRate = sendRate;
+      return this;
+    }
+    
+    /**
+     * This parameter is not mandatory. If this parameter is not set the topic
+     * will be active until removed.
+     * @param duration Duration of a topic. Will expire automatically after duration.
+     * @return <code>Submitter</code> for <code>TablespoonAPI</code>.
+     */
+    Submitter duration(int duration) {
+      durationSet = true;
+      this.duration = duration;
+      return this;
+    }
+    
+    /**
+     * This parameter is mandatory if not replicated. Use either this or
+     * {@link #machines(HashSet<String>) machines}.
+     * @param groupId Id which specifies a group.
+     * @return <code>Submitter</code> for <code>TablespoonAPI</code>.
+     */
+    Submitter groupId(String groupId) {
+      this.machines = null;
+      this.groupId = groupId;
+      return this;
+    }
+    
+    /**
+     * This parameter is not mandatory if not replicated. Use either this or
+     *  {@link #groupId(String) groupId}.
+     * @param machines The machines where the topic should be active.
+     * @return <code>Submitter</code> for <code>TablespoonAPI</code>.
+     */
+    Submitter machines(HashSet<String> machines) {
+      this.groupId = null;
+      this.machines = machines;
+      return this;
+    }
+    
+    /**
+     * This parameter is not mandatory.
+     * @param high A <code>Threshold</code> that determines the percentage or
+     * percentile when filtering events.
+     * @return
+     */
+    Submitter high(Threshold high) {
+      this.high = high;
+      return this;
+    }
+    
+    /**
+     * This parameter is not mandatory.
+     * @param low A <code>Threshold</code> that determines the percentage or
+     * percentile when filtering events.
+     * @return
+     */
+    Submitter low(Threshold low) {
+      this.low = low;
+      return this;
+    }
+    
+    Submitter replaces(String uniqueId, boolean replicate) {
+      this.replacesTopicId = uniqueId;
+      this.replicate = replicate;
+      return this;
+    }
+    
+    
+    /**
+     * Submits the API call. Is then handled asynchronously.
+     * @return An unique id which specifies the topic.
+     * @throws ThresholdException Thrown if low >= high, or if <code>Comparator</code>
+     * are incompatible.
+     * @throws MissingTopicException Thrown if the topic is replaced is not in the storage.
+     */
+    String submit() throws ThresholdException, MissingTopicException, MissingParameterException {
+      Topic topic;
+      if (replicate) replicate();
+      if (subscriber == null) throw new MissingParameterException("subscriber");
+      if (resource == null) throw new MissingParameterException("resource");
+      if (durationSet == false && sendRate < 1) throw new MissingParameterException("sendRate");
+      if (groupId == null || machines != null) throw new MissingParameterException("groupId or machines");
+      if (eventType == null) throw new MissingParameterException("eventType");
+      if (resource == null) throw new MissingParameterException("resource");
+      if (groupId != null) {
+        Group group = groups.get(groupId);
+        topic = TopicFactory.createGroupTopic(storage.generateUniqueId(), resource, eventType, sendRate, group);
+      } else {
+        topic = TopicFactory.createMachineTopic(storage.generateUniqueId(), resource, eventType, sendRate, machines);
+      }
+      if (replacesTopicId != null) topic.setReplaces(replacesTopicId, storage);
+      if (duration > 0) topic.setDuration(duration);
+      if (high != null) topic.setHigh(high);
+      if (low != null) topic.setLow(low);
+      storage.add(topic);
+      sb.registerSubscriber(subscriber, topic);
+      storage.notifyBroadcaster();
+      return topic.getUniqueId();
+    }
+    
+    private void replicate() throws MissingTopicException {
+      Topic relatedTopic = storage.get(replacesTopicId);
+      if (relatedTopic instanceof GroupTopic) {
+        groupId = (groupId != null) ? groupId : relatedTopic.getGroupId();
+      } else {
+        machines = (machines != null) ? machines : relatedTopic.getInitialMachines();
+      }
+      eventType = (eventType != null) ? eventType : relatedTopic.getEventType();
+      resource = (resource != null) ? resource : new Resource(relatedTopic.getIndex());
+      duration = (durationSet) ? duration : relatedTopic.getDuration();
+      sendRate = (sendRateSet) ? sendRate : relatedTopic.getSendRate();
+      high = (high != null) ? high : relatedTopic.getHigh();
+      low = (low != null) ? low : relatedTopic.getLow();
+    }
+    
   }
   
-  /**
-   * This call creates a new topic which applies to one group. One thresholds are
-   * active upon creation. This can be changed with the <code>changeTopic</code>
-   * call.
-   * @param subscriber A <code>Subscriber</code> which receives <code>TablespoonEvent</code>.
-   * @param groupId Id which specifies a group.
-   * @param eventType Specifies how to gather and filter information.
-   * @param resource Type of resource which should be collected.
-   * @param duration Duration of a topic. Will expire automatically after duration.
-   * Set value 0 for topic without time bound.
-   * @param sendRate The rate at which the agent sends messages.
-   * @param threshold A <code>Threshold</code> that determines the percentage or
-   * percentile when filtering events.
-   * @return An unique id which specifies the topic.
-   */
-  public String createTopic(Subscriber subscriber, String groupId, EventType eventType,
-      Resource resource, int duration, int sendRate, Threshold threshold) {
-    Topic topic = registerNewTopic(groupId, eventType, resource, duration, sendRate);
-    topic.setHigh(threshold);
-    topic.unlock();
-    sb.registerSubscriber(subscriber, topic);
-    storage.notifyBroadcaster();
-    return topic.getUniqueId();
-  }
   
-  /**
-   * This call creates a new topic which applies to one group. Two thresholds are
-   * active upon creation. This can be changed with the <code>changeTopic</code>
-   * call.
-   * @param subscriber A <code>Subscriber</code> which receives <code>TablespoonEvent</code>.
-   * @param groupId Id which specifies a group.
-   * @param eventType Specifies how to gather and filter information.
-   * @param resource Type of resource which should be collected.
-   * @param duration Duration of a topic. Will expire automatically after duration.
-   * Set value 0 for topic without time bound.
-   * @param sendRate The rate at which the agent sends messages.
-   * @param high A <code>Threshold</code> that determines the percentage or
-   * percentile when filtering events.
-   * @param low A <code>Threshold</code> that determines the percentage or
-   * percentile when filtering events.
-   * @return An unique id which specifies the topic.
-   * @throws ThresholdException Thrown if low >= high, or if <code>Comparator</code>
-   * are incompatible.
-   */
-  public String createTopic(Subscriber subscriber, String groupId, EventType eventType,
-      Resource resource, int duration, int sendRate, Threshold high, Threshold low) throws ThresholdException {
-    Topic topic = registerNewTopic(groupId, eventType, resource, duration, sendRate);
-    topic.setHigh(high);
-    topic.setLow(low);
-    topic.unlock();
-    sb.registerSubscriber(subscriber, topic);
-    storage.notifyBroadcaster();
-    return topic.getUniqueId();
-  }
-  
-  private Topic registerNewTopic(String groupId, EventType eventType, Resource resource,
-      int duration, int sendRate) {
-    Group group = groups.get(groupId);
-    Topic topic = TopicFactory.create(storage, resource, eventType, sendRate, group);
-    if (duration > 0) topic.setDuration(duration);
-    topic.setSendRate(sendRate);
-    return topic;
-  }
-  
-  /**
-   * This call changes a topic. It will block if the specific
-   * topic is currently being handled.
-   * @param uniqueId An unique id which specifies the topic.
-   * @param threshold A <code>Threshold</code> that determines the percentage or
-   * percentile when filtering events.
-   * @throws MissingTopicException Thrown if the topic is not present in the storage.
-   */
-  public void changeTopic(String uniqueId, Threshold threshold) throws MissingTopicException {
-    Topic topic = storage.getAndChange(uniqueId);
-    topic.setHigh(threshold);
-    topic.unlock();
-    storage.notifyBroadcaster();
-  }
-  /**
-   * This call changes a topic. It will block if the specific
-   * topic is currently being handled.
-   * @param uniqueId An unique id which specifies the topic.
-   * @param high A <code>Threshold</code> that determines the percentage or
-   * percentile when filtering events.
-   * @param low A <code>Threshold</code> that determines the percentage or
-   * percentile when filtering events.
-   * @throws ThresholdException Thrown if low >= high, or if <code>Comparator</code>
-   * are incompatible.
-   * @throws MissingTopicException Thrown if the topic is not present in the storage.
-   */
-  public void changeTopic(String uniqueId, Threshold high, Threshold low)
-      throws ThresholdException, MissingTopicException {
-    Topic topic = storage.getAndChange(uniqueId);
-    topic.setHigh(high);
-    topic.setLow(low);
-    topic.unlock();
-    storage.notifyBroadcaster();
-  }
   
   /**
    * This call removes a topic.
