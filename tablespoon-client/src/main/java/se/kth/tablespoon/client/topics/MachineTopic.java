@@ -18,9 +18,9 @@ public class MachineTopic extends Topic {
   private final HashSet<String> initialMachines = new HashSet<>();
   private final HashSet<String> activeMachines = new HashSet<>();
   
-  public MachineTopic(int index, long startTime, String uniqueId, EventType type, 
+  public MachineTopic(int collectIndex, long startTime, String uniqueId, EventType type, 
       int sendRate, HashSet<String> machines) {
-    super(index, startTime, uniqueId, type, sendRate, "not specified");
+    super(collectIndex, startTime, uniqueId, type, sendRate, "not specified");
     this.initialMachines.addAll(machines);
     this.activeMachines.addAll(machines);
   }

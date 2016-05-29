@@ -7,15 +7,11 @@ package se.kth.tablespoon.client.general;
 
 
 import java.util.HashSet;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
-/**
- *
- * @author henke
- */
 public class Groups {
   
-  private final HashMap<String, Group> groups = new HashMap<>();
+  private final ConcurrentHashMap<String, Group> groups = new ConcurrentHashMap<>();
   private final HashSet<String> machineSnapshot = new HashSet<>();
   
   public void addMachine(String groupId, String machine) {
@@ -40,9 +36,7 @@ public class Groups {
   public void takeSnapshop() {
     machineSnapshot.clear();
     for (Group group : groups.values()) {
-      group.lock();
       machineSnapshot.addAll(group.getMachines());
-      group.unlock();
     }
   }
   

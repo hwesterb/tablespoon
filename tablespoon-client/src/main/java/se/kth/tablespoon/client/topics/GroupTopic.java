@@ -18,8 +18,8 @@ public class GroupTopic extends Topic {
   
   Group group;
   
-  public GroupTopic(int index, long startTime, String uniqueId, EventType type, int sendRate, Group group) {
-    super(index, startTime, uniqueId, type, sendRate, group.getGroupId());
+  public GroupTopic(int collectIndex, long startTime, String uniqueId, EventType type, int sendRate, Group group) {
+    super(collectIndex, startTime, uniqueId, type, sendRate, group.getGroupId());
     this.group = group;
   }
   
@@ -31,22 +31,17 @@ public class GroupTopic extends Topic {
   @Override
   public HashSet<String> getMachinesToNotify() {
     HashSet<String> machinesToNotify = new HashSet<>();
-    group.lock();
     for (String machine : group.getMachines()) {
       if (!machinesNotified.contains(machine)) {
         machinesToNotify.add(machine);
       }
     }
-    group.unlock();
     return machinesToNotify;
   }
   
   @Override
   public boolean hasNoLiveMachines() {
-    group.lock();
-    boolean state =  group.getMachines().isEmpty();
-    group.unlock();
-    return state;
+    return group.getMachines().isEmpty();
   }
 
   @Override

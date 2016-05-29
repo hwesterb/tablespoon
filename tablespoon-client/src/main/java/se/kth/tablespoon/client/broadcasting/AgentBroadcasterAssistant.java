@@ -22,8 +22,8 @@ public class AgentBroadcasterAssistant implements Runnable {
   }
   
   private void broadcastTopics() {
-    // TODO: Make this iteration thread safe.
     for (Topic topic : storage.getTopics()) {
+      topic.lock();
       HashSet<String> machinesToNotify = topic.getMachinesToNotify();
       if (machinesToNotify.size() > 0) {
         try {
@@ -39,6 +39,7 @@ public class AgentBroadcasterAssistant implements Runnable {
           slf4jLogger.debug(ex.getMessage());
         }
       }
+      topic.unlock();
     }
   }
   

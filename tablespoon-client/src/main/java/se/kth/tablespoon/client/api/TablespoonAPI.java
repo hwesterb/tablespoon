@@ -20,9 +20,8 @@ import se.kth.tablespoon.client.topics.GroupTopic;
 import se.kth.tablespoon.client.topics.MissingTopicException;
 import se.kth.tablespoon.client.topics.TopicRemovalException;
 
-
 /**
- * Tablespoon API for creating, changing and removing topics. Topics defines events
+ * Tablespoon API for creating, replacing, replicating and removing topics. Topics defines events
  * which are system measurements. Events are sent to event stream processor and filtered
  * according to the content of the topic.
  */

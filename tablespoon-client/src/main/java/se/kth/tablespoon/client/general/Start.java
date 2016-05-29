@@ -9,7 +9,6 @@ import se.kth.tablespoon.client.api.TablespoonAPI;
 import se.kth.tablespoon.client.broadcasting.AgentBroadcasterAssistant;
 import se.kth.tablespoon.client.broadcasting.AgentBroadcaster;
 import se.kth.tablespoon.client.broadcasting.RiemannSubscriberBroadcaster;
-import se.kth.tablespoon.client.broadcasting.SubscriberBroadcaster;
 import se.kth.tablespoon.client.topics.TopicStorage;
 
 /**

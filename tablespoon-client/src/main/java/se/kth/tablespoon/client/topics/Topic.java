@@ -13,13 +13,15 @@ import com.fasterxml.jackson.jr.ob.JSONComposer;
 import com.fasterxml.jackson.jr.ob.comp.ObjectComposer;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.concurrent.locks.ReentrantLock;
 import se.kth.tablespoon.client.general.Groups;
 
 
 public abstract class Topic {
   
   protected final HashSet<String> machinesNotified = new HashSet<>();
-  private final int index;
+  private ReentrantLock lock = new ReentrantLock();
+  private final int collectIndex;
   private final long startTime;
   private int sendRate;
   private int duration = 0;
@@ -33,8 +35,8 @@ public abstract class Topic {
   private boolean scheduledForRemoval = false;
   
   
-  public Topic(int index, long startTime, String uniqueId, EventType type, int sendRate, String groupId) {
-    this.index = index;
+  public Topic(int collectIndex, long startTime, String uniqueId, EventType type, int sendRate, String groupId) {
+    this.collectIndex = collectIndex;
     this.startTime = startTime;
     this.uniqueId = uniqueId;
     this.eventType = type;
@@ -42,6 +44,13 @@ public abstract class Topic {
     this.groupId = groupId;
   }
   
+  public void lock() {
+    this.lock.lock();
+  }
+  
+  public void unlock() {
+    this.lock.unlock();
+  }
   
   public void scheduledForRemoval() throws TopicRemovalException {
     if (duration > 0) throw new TopicRemovalException("The event will expire when duration is over.");
@@ -86,7 +95,7 @@ public abstract class Topic {
   }
   
   public int getIndex() {
-    return index;
+    return collectIndex;
   }
   
   public long getStartTime() {
@@ -138,7 +147,7 @@ public abstract class Topic {
         .with(JSON.Feature.PRETTY_PRINT_OUTPUT)
         .composeString();
     ObjectComposer obj = composer.startObject();
-    obj.put("index", index)
+    obj.put("collectIndex", collectIndex)
         .put("startTime", startTime)
         .put("uniqueId", uniqueId)
         .put("groupId", groupId)
@@ -147,12 +156,13 @@ public abstract class Topic {
     if (scheduledForRemoval) {
       obj.put("scheduledForRemoval", true);
     } else {
+      if (replacesTopicId != null) obj.put("replacesTopicId", replacesTopicId);
       if (duration > 0) obj.put("duration", duration);
-      if (high!= null) obj.startObjectField("high")
+      if (high != null) obj.startObjectField("high")
           .put("percentage", high.percentage)
           .put("comparator", high.comparator.toString())
           .end();
-      if (low!= null) obj.startObjectField("low")
+      if (low != null) obj.startObjectField("low")
           .put("percentage", low.percentage)
           .put("comparator", low.comparator.toString())
           .end();

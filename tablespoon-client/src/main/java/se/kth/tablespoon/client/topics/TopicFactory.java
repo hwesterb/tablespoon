@@ -21,17 +21,17 @@ public class TopicFactory {
   
   public static Topic createGroupTopic(String uniqueId, Resource resource,
       EventType type, int sendRate, Group group) {
-    return new GroupTopic(getIndex(resource), Time.now(),
+    return new GroupTopic(getCollectIndex(resource), Time.now(),
         uniqueId, type, sendRate, group);
   }
   
   public static Topic createMachineTopic(String uniqueId, Resource resource,
       EventType type, int sendRate, HashSet<String> machines) {
-    return new MachineTopic(getIndex(resource), Time.now(),
+    return new MachineTopic(getCollectIndex(resource), Time.now(),
         uniqueId, type, sendRate, machines);
   }
   
-  private static int getIndex(Resource resource) {
+  private static int getCollectIndex(Resource resource) {
     int index;
     if (resource.isCollectIndexPriority()) {
       index = resource.getCollectIndex();

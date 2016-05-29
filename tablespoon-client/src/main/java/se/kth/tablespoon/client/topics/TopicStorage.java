@@ -9,18 +9,14 @@ import se.kth.tablespoon.client.general.Groups;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map.Entry;
-import java.util.HashMap;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import se.kth.tablespoon.client.util.Time;
 
 
-/**
- *
- * @author henke
- */
 public class TopicStorage {
   
-  private final HashMap<String, Topic> storage = new HashMap<>();
+  private final ConcurrentHashMap<String, Topic> storage = new ConcurrentHashMap<>();
   private final Groups groups;
   private boolean changed = false;
   
@@ -41,7 +37,9 @@ public class TopicStorage {
   public void remove(String uniqueId) throws TopicRemovalException, MissingTopicException {
     Topic topic = storage.get(uniqueId);
     if (topic==null) throw new MissingTopicException();
+    topic.lock();
     topic.scheduledForRemoval();
+    topic.unlock();
   }
   
   public void notifyBroadcaster() {
@@ -68,7 +66,7 @@ public class TopicStorage {
       Topic topic = entry.getValue();
       topic.updateMachineState(groups);
       if ((topic.getDuration() > 0 &&
-          (topic.getStartTime() + topic.getDuration()) < now) || 
+          (topic.getStartTime() + topic.getDuration()) < now) ||
           topic.hasNoLiveMachines()) {
         entries.remove();
       }
@@ -78,7 +76,6 @@ public class TopicStorage {
   public Collection<Topic> getTopics() {
     return storage.values();
   }
-  
   
   public boolean isEmpty() {
     return storage.isEmpty();
