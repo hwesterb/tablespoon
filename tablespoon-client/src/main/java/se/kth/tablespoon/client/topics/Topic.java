@@ -1,39 +1,31 @@
-/*
-* To topicHasChanged this license header, choose License Headers in Project Properties.
-* To topicHasChanged this template file, choose Tools | Templates
-* and open the template in the editor.
-*/
 package se.kth.tablespoon.client.topics;
 
 import se.kth.tablespoon.client.events.Threshold;
-import se.kth.tablespoon.client.events.Comparator;
 import se.kth.tablespoon.client.events.EventType;
 import com.fasterxml.jackson.jr.ob.JSON;
 import com.fasterxml.jackson.jr.ob.JSONComposer;
 import com.fasterxml.jackson.jr.ob.comp.ObjectComposer;
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.Set;
 import se.kth.tablespoon.client.general.Groups;
+import se.kth.tablespoon.client.util.RuleSupport;
 
 
 public abstract class Topic {
   
   protected final HashSet<String> machinesNotified = new HashSet<>();
-  private ReentrantLock lock = new ReentrantLock();
   private final int collectIndex;
+  protected final String groupId;
   private final long startTime;
+  private final EventType eventType;
   private int sendRate;
   private int duration = 0;
-  private final EventType eventType;
   private Threshold high;
   private Threshold low;
   private final String uniqueId;
   private String replacesTopicId;
-  protected final String groupId;
   private String json = "";
-  private boolean scheduledForRemoval = false;
-  
   
   public Topic(int collectIndex, long startTime, String uniqueId, EventType type, int sendRate, String groupId) {
     this.collectIndex = collectIndex;
@@ -44,28 +36,13 @@ public abstract class Topic {
     this.groupId = groupId;
   }
   
-  public void lock() {
-    this.lock.lock();
-  }
-  
-  public void unlock() {
-    this.lock.unlock();
-  }
-  
-  public void scheduledForRemoval() throws TopicRemovalException {
-    if (duration > 0) throw new TopicRemovalException("The event will expire when duration is over.");
-    scheduledForRemoval = true;
-    machinesNotified.clear();
-  }
-  
-  
   public abstract HashSet<String> getMachinesToNotify();
   
   public abstract void updateMachineState(Groups groups);
   
   public abstract boolean hasNoLiveMachines();
   
-  public abstract HashSet<String> getInitialMachines();
+  public abstract Set<String> getMachines();
   
   public void addToNotifiedMachines(HashSet<String> machines) {
     machinesNotified.addAll(machines);
@@ -87,14 +64,15 @@ public abstract class Topic {
   
   public void setLow(Threshold low) throws ThresholdException {
     if (high==null ||
-        getNormalizedComparatorType(high.comparator) == getNormalizedComparatorType(low.comparator) ||
+        RuleSupport.getNormalizedComparatorType(high.comparator) ==
+        RuleSupport.getNormalizedComparatorType(low.comparator) ||
         high.percentage <= low.percentage) {
       throw new ThresholdException();
     }
     this.low = low;
   }
   
-  public int getIndex() {
+  public int getCollectIndex() {
     return collectIndex;
   }
   
@@ -126,20 +104,8 @@ public abstract class Topic {
     return uniqueId;
   }
   
-  public boolean isScheduledForRemoval() {
-    return scheduledForRemoval;
-  }
-  
   public String getGroupId() {
     return groupId;
-  }
- 
-  private Comparator getNormalizedComparatorType(Comparator comparator) {
-    if (comparator.equals(Comparator.GREATER_THAN) || comparator.equals(Comparator.GREATER_THAN_OR_EQUAL)) {
-      return Comparator.GREATER_THAN_OR_EQUAL;
-    } else {
-      return Comparator.LESS_THAN_OR_EQUAL;
-    }
   }
   
   public void generateJson() throws IOException {
@@ -153,20 +119,16 @@ public abstract class Topic {
         .put("groupId", groupId)
         .put("eventType", eventType.toString())
         .put("sendRate", sendRate);
-    if (scheduledForRemoval) {
-      obj.put("scheduledForRemoval", true);
-    } else {
-      if (replacesTopicId != null) obj.put("replacesTopicId", replacesTopicId);
-      if (duration > 0) obj.put("duration", duration);
-      if (high != null) obj.startObjectField("high")
-          .put("percentage", high.percentage)
-          .put("comparator", high.comparator.toString())
-          .end();
-      if (low != null) obj.startObjectField("low")
-          .put("percentage", low.percentage)
-          .put("comparator", low.comparator.toString())
-          .end();
-    }
+    if (replacesTopicId != null) obj.put("replacesTopicId", replacesTopicId);
+    if (duration > 0) obj.put("duration", duration);
+    if (high != null) obj.startObjectField("high")
+        .put("percentage", high.percentage)
+        .put("comparator", high.comparator.toString())
+        .end();
+    if (low != null) obj.startObjectField("low")
+        .put("percentage", low.percentage)
+        .put("comparator", low.comparator.toString())
+        .end();
     obj.end();
     json = composer.finish();
   }
@@ -174,7 +136,19 @@ public abstract class Topic {
   public String getJson() {
     return json;
   }
-
+  
+  public String getRemovalJson() throws IOException {
+    return JSON.std
+        .with(JSON.Feature.PRETTY_PRINT_OUTPUT)
+        .composeString()
+        .startObject()
+        .put("collectIndex", collectIndex)
+        .put("uniqueId", uniqueId)
+        .put("remove", true)
+        .end()
+        .finish();
+  }
+  
   public void setReplaces(String replacesTopicId, TopicStorage storage) throws MissingTopicException {
     if (storage.uniqueIdExists(replacesTopicId) == false) throw new MissingTopicException();
     this.replacesTopicId = replacesTopicId;

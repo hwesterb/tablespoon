@@ -1,8 +1,3 @@
-/*
-* To change this license header, choose License Headers in Project Properties.
-* To change this template file, choose Tools | Templates
-* and open the template in the editor.
-*/
 package se.kth.tablespoon.client.broadcasting;
 
 import io.riemann.riemann.Proto.Event;
@@ -15,10 +10,6 @@ import se.kth.tablespoon.client.api.Subscriber;
 import se.kth.tablespoon.client.topics.Topic;
 import se.kth.tablespoon.client.util.Time;
 
-/**
- *
- * @author henke
- */
 class RiemannEventFetcher {
   
   private final Subscriber subscriber;

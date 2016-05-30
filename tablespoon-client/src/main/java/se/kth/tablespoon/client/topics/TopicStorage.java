@@ -1,22 +1,22 @@
-/*
-* To getAndChange this license header, choose License Headers in Project Properties.
-* To getAndChange this template file, choose Tools | Templates
-* and open the template in the editor.
-*/
 package se.kth.tablespoon.client.topics;
 
+import java.io.IOException;
 import se.kth.tablespoon.client.general.Groups;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import se.kth.tablespoon.client.broadcasting.AgentBroadcaster;
+import se.kth.tablespoon.client.broadcasting.BroadcastException;
 import se.kth.tablespoon.client.util.Time;
 
 
 public class TopicStorage {
   
   private final ConcurrentHashMap<String, Topic> storage = new ConcurrentHashMap<>();
+  private final ConcurrentLinkedQueue<String> topicsScehduledForRemoval =  new ConcurrentLinkedQueue<>();
   private final Groups groups;
   private boolean changed = false;
   
@@ -24,7 +24,8 @@ public class TopicStorage {
     this.groups = groups;
   }
   
-  public void add(Topic topic) {
+  public void add(Topic topic) throws IOException {
+    topic.generateJson();
     storage.put(topic.getUniqueId(), topic);
   }
   
@@ -34,22 +35,29 @@ public class TopicStorage {
     return topic;
   }
   
-  public void remove(String uniqueId) throws TopicRemovalException, MissingTopicException {
-    Topic topic = storage.get(uniqueId);
-    if (topic==null) throw new MissingTopicException();
-    topic.lock();
-    topic.scheduledForRemoval();
-    topic.unlock();
+  public void remove(String uniqueId) throws MissingTopicException {
+    if (storage.get(uniqueId)==null) throw new MissingTopicException();
+    topicsScehduledForRemoval.add(uniqueId);
+  }
+  
+  public void broadcastRemoval(AgentBroadcaster broadcaster) throws IOException, BroadcastException {
+    String uniqueId;
+    while ((uniqueId = topicsScehduledForRemoval.peek()) != null) {
+      Topic topic = storage.get(uniqueId);
+      if (topic != null) broadcaster.sendToMachines(topic.getMachines(), topic.getRemovalJson(), uniqueId);
+      storage.remove(uniqueId);
+      topicsScehduledForRemoval.poll();
+    }
   }
   
   public void notifyBroadcaster() {
     synchronized (this) {
-      storageHasChanged(true);
+      stateHasChanged(true);
       this.notify();
     }
   }
   
-  public void storageHasChanged(boolean changed) {
+  public void stateHasChanged(boolean changed) {
     this.changed = changed;
   }
   

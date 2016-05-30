@@ -1,19 +1,11 @@
-/*
-* To change this license header, choose License Headers in Project Properties.
-* To change this template file, choose Tools | Templates
-* and open the template in the editor.
-*/
 package se.kth.tablespoon.client.topics;
 
 import java.util.HashSet;
+import java.util.Set;
 import se.kth.tablespoon.client.events.EventType;
 import se.kth.tablespoon.client.general.Group;
 import se.kth.tablespoon.client.general.Groups;
 
-/**
- *
- * @author henke
- */
 public class GroupTopic extends Topic {
   
   Group group;
@@ -25,7 +17,7 @@ public class GroupTopic extends Topic {
   
   @Override
   public void updateMachineState(Groups groups) {
-    // This happens automatically as machines are bound to group machines.
+    // This happens automatically as getMachines are bound to group getMachines.
   }
   
   @Override
@@ -43,11 +35,10 @@ public class GroupTopic extends Topic {
   public boolean hasNoLiveMachines() {
     return group.getMachines().isEmpty();
   }
-
+  
   @Override
-  public HashSet<String> getInitialMachines() {
-    // This is function is needed when replicating a MachineTopic, not a GroupTopic.
-    throw new UnsupportedOperationException("Not supported yet.");
+  public Set<String> getMachines() {
+    return group.getMachines();
   }
   
 }

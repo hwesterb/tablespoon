@@ -78,7 +78,7 @@ public class Resource {
   
   private int collectIndex;
   private ResourceType resourceType;
-  private boolean collectIndexPriority;
+  private final boolean collectIndexPriority;
   
   
   public Resource(int collectIndex) {

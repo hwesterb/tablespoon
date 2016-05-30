@@ -1,8 +1,3 @@
-/*
-* To change this license header, choose License Headers in Project Properties.
-* To change this template file, choose Tools | Templates
-* and open the template in the editor.
-*/
 package se.kth.tablespoon.client.events;
 
 import java.util.HashMap;
@@ -11,10 +6,6 @@ import static se.kth.tablespoon.client.events.ResourceType.DSK;
 import static se.kth.tablespoon.client.events.ResourceType.MEM;
 import static se.kth.tablespoon.client.events.ResourceType.NET;
 
-/**
- *
- * @author henke
- */
 public class CollectlMapping {
   
   HashMap<Integer, ResourceType> mapping = new HashMap();

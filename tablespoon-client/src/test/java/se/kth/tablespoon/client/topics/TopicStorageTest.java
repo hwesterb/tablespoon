@@ -1,10 +1,6 @@
-/*
-* To getAndChange this license header, choose License Headers in Project Properties.
-* To getAndChange this template file, choose Tools | Templates
-* and open the template in the topicitor.
-*/
 package se.kth.tablespoon.client.topics;
 
+import java.io.IOException;
 import java.util.HashSet;
 import org.junit.Test;
 import se.kth.tablespoon.client.events.EventType;
@@ -15,20 +11,16 @@ import se.kth.tablespoon.client.general.Group;
 import se.kth.tablespoon.client.general.Groups;
 import se.kth.tablespoon.client.util.Time;
 
-/**
- *
- * @author henke
- */
 public class TopicStorageTest {
   
-  static int SLEEP_TIME = 3000;
+  static int SLEEP_TIME = 5000;
   static TopicStorage storage;
   static Resource resource;
   static Groups groups;
   static Group group;
   
   @BeforeClass
-  public static void beforeClass() {
+  public static void setUp() {
     resource = new Resource(0);
     groups = new Groups();
     group = new Group("A");
@@ -43,7 +35,7 @@ public class TopicStorageTest {
   
 
   @Test
-  public void testAdd() {
+  public void testAdd() throws IOException {
     HashSet<String> machines = new HashSet<>();
     machines.add("1");
     Topic topic = TopicFactory.createMachineTopic(storage.generateUniqueId(),
@@ -59,7 +51,7 @@ public class TopicStorageTest {
   }
   
   @Test
-  public void testCleanPresent() {
+  public void testCleanPresent() throws IOException {
     HashSet<String> machines = new HashSet<>();
     machines.add("2");
     Topic topic = TopicFactory.createMachineTopic(storage.generateUniqueId(),
@@ -78,7 +70,7 @@ public class TopicStorageTest {
   }
   
   @Test
-  public void testCleanWithDuration() {
+  public void testCleanWithDuration() throws IOException {
     HashSet<String> machines = new HashSet<>();
     machines.add("3");
     Topic topic = TopicFactory.createMachineTopic(storage.generateUniqueId(),
@@ -90,8 +82,9 @@ public class TopicStorageTest {
     storage.clean();
     assertTrue(storage.isEmpty());
   }
+  
   @Test
-  public void testCleanGroupClear() {
+  public void testCleanGroupClear() throws IOException {
     Topic topic = TopicFactory.createGroupTopic(storage.generateUniqueId(),
         resource, EventType.REGULAR, 1, group);
     storage.add(topic);
