@@ -1,8 +1,3 @@
-/*
-* To change this license header, choose License Headers in Project Properties.
-* To change this template file, choose Tools | Templates
-* and open the template in the editor.
-*/
 package se.kth.tablespoon.client.broadcasting;
 
 
@@ -19,7 +14,7 @@ import se.kth.tablespoon.client.topics.Topic;
 class EventConverter {
   
   static TablespoonEvent changeFormat(Event event, Topic topic) {
-    ResourceType resourceType = CollectlMapping.getInstance().getResourceType(topic.getIndex());
+    ResourceType resourceType = CollectlMapping.getInstance().getResourceType(topic.getCollectIndex());
     TablespoonEvent tablespoonEvent = new TablespoonEvent(topic.getGroupId(),
         event.getHost(),
         event.getMetricD(),

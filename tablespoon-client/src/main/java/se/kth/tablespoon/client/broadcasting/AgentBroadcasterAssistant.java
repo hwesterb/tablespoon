@@ -7,10 +7,6 @@ import org.slf4j.LoggerFactory;
 import se.kth.tablespoon.client.topics.Topic;
 import se.kth.tablespoon.client.topics.TopicStorage;
 
-/**
- *
- * @author henke
- */
 public class AgentBroadcasterAssistant implements Runnable {
   
   private AgentBroadcaster broadcaster;
@@ -21,16 +17,18 @@ public class AgentBroadcasterAssistant implements Runnable {
     this.storage = storage;
   }
   
+  private void broadcastRemoval() {
+    try {
+      storage.broadcastRemoval(broadcaster);
+    } catch (IOException | BroadcastException   ex) {
+      slf4jLogger.debug(ex.getMessage());
+    }
+  }
+  
   private void broadcastTopics() {
     for (Topic topic : storage.getTopics()) {
-      topic.lock();
       HashSet<String> machinesToNotify = topic.getMachinesToNotify();
       if (machinesToNotify.size() > 0) {
-        try {
-          topic.generateJson();
-        } catch (IOException ex) {
-          slf4jLogger.debug(ex.getMessage());
-        }
         try {
           broadcaster.sendToMachines(machinesToNotify, topic.getJson(), topic.getUniqueId());
           topic.addToNotifiedMachines(machinesToNotify);
@@ -39,7 +37,6 @@ public class AgentBroadcasterAssistant implements Runnable {
           slf4jLogger.debug(ex.getMessage());
         }
       }
-      topic.unlock();
     }
   }
   
@@ -50,20 +47,20 @@ public class AgentBroadcasterAssistant implements Runnable {
   @Override
   public void run() {
     while (true) {
-      broadcastTopics();
       storage.clean();
+      broadcastRemoval();
+      broadcastTopics();
       waitForChange();
     }
   }
-  
-  
+ 
   private void waitForChange() {
     synchronized (storage) {
       try {
         while (!storage.isStorageChanged()) {
           storage.wait();
         }
-        storage.storageHasChanged(false);
+        storage.stateHasChanged(false);
       } catch (InterruptedException ex) {
         slf4jLogger.debug(ex.getMessage());
       }

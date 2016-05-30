@@ -1,11 +1,6 @@
-
-/*
-* To change this license header, choose License Headers in Project Properties.
-* To change this template file, choose Tools | Templates
-* and open the template in the editor.
-*/
 package se.kth.tablespoon.client.api;
 
+import java.io.IOException;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
@@ -24,7 +19,7 @@ import se.kth.tablespoon.client.util.Time;
 
 public class TablespoonAPITest {
   
-  static final int SLEEP_TIME = 1500;
+  static final int SLEEP_TIME = 3000;
   static Groups groups;
   static Group groupA;
   static Group groupB;
@@ -67,7 +62,7 @@ public class TablespoonAPITest {
   }
   
   @Test
-  public void testCreateTopic() throws ThresholdException, MissingTopicException, MissingParameterException {
+  public void testCreateTopic() throws ThresholdException, MissingTopicException, MissingParameterException, IOException {
     String groupId = "B";
     EventType eventType = EventType.REGULAR;
     Resource resource = new Resource(ResourceType.CPU);

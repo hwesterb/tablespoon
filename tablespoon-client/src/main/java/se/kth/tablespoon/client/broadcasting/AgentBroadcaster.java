@@ -1,14 +1,10 @@
 package se.kth.tablespoon.client.broadcasting;
 
-import java.util.HashSet;
+import java.util.Set;
 
-/**
- *
- * @author henke
- */
 public interface AgentBroadcaster {
  
-  public void sendToMachines(HashSet<String> machines, String json, String topicId) throws BroadcastException;
+  public void sendToMachines(Set<String> machines, String json, String topicId) throws BroadcastException;
 
   
 }
