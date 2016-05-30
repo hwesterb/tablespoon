@@ -1,8 +1,3 @@
-/*
-* To change this license header, choose License Headers in Project Properties.
-* To change this template file, choose Tools | Templates
-* and open the template in the editor.
-*/
 package se.kth.tablespoon.agent.events;
 
 import se.kth.tablespoon.agent.file.ReplacingTopicException;
@@ -63,7 +58,7 @@ public class Topics {
       Topic topic = iterator.next();
       if (durationHasEnded(metric.getTimeStamp(), topic) || topic.isScheduledForRemoval()) {
         slf4jLogger.info("Removing topic " + topic.getUniqueId() + " from memory.");
-        topics.put(topic.getUniqueId(), null);
+        topics.remove(topic.getUniqueId());
       }
     }
   }

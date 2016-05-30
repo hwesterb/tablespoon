@@ -1,8 +1,3 @@
-/*
-* To change this license header, choose License Headers in Project Properties.
-* To change this template file, choose Tools | Templates
-* and open the template in the editor.
-*/
 package se.kth.tablespoon.agent.file;
 
 import java.io.IOException;
@@ -35,7 +30,7 @@ public class TopicLoader extends FileLoader {
     for (String fileName : list) {
       try {
         String uniqueId = findUniqueId(fileName);
-        updateOrCreate(uniqueId, TOPICS_DIRECTORY, fileName);
+        removeOrCreate(uniqueId, TOPICS_DIRECTORY, fileName);
       } catch (TopicAlreadyExistsException | WrongFileNameFormatException | JsonException | IOException ex) {
         slf4jLogger.debug(ex.getMessage());
       }
@@ -43,7 +38,7 @@ public class TopicLoader extends FileLoader {
     }
   }
   
-  private void updateOrCreate(String uniqueId, String directory, String fileName)
+  private void removeOrCreate(String uniqueId, String directory, String fileName)
       throws TopicAlreadyExistsException, IOException, JsonException {
     Topic topic = topics.findTopic(uniqueId);
     if (topic==null) {

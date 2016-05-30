@@ -1,8 +1,3 @@
-/*
-* To change this license header, choose License Headers in Project Properties.
-* To change this template file, choose Tools | Templates
-* and open the template in the editor.
-*/
 package se.kth.tablespoon.agent.file;
 
 import java.io.FileWriter;
@@ -11,14 +6,9 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 import org.junit.Test;
 import se.kth.tablespoon.agent.events.Topics;
 
-/**
- *
- * @author henke
- */
 public class FileLoaderTest {
   
   private void writeNewFile(String json, String directory, String fileName) throws IOException {

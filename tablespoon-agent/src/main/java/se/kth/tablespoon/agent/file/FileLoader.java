@@ -1,8 +1,3 @@
-/*
-* To change this license header, choose License Headers in Project Properties.
-* To change this template file, choose Tools | Templates
-* and open the template in the editor.
-*/
 package se.kth.tablespoon.agent.file;
 
 import com.fasterxml.jackson.jr.ob.JSON;
@@ -15,10 +10,6 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- *
- * @author henke
- */
 public abstract class  FileLoader {
   
   final Logger slf4jLogger = LoggerFactory.getLogger(FileLoader.class);
