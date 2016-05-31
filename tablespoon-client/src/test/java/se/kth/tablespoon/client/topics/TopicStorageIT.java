@@ -11,7 +11,7 @@ import se.kth.tablespoon.client.general.Group;
 import se.kth.tablespoon.client.general.Groups;
 import se.kth.tablespoon.client.util.Time;
 
-public class TopicStorageTest {
+public class TopicStorageIT {
   
   static int SLEEP_TIME = 5000;
   static TopicStorage storage;
