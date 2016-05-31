@@ -17,7 +17,7 @@ import se.kth.tablespoon.client.topics.ThresholdException;
 import se.kth.tablespoon.client.topics.TopicStorage;
 import se.kth.tablespoon.client.util.Time;
 
-public class TablespoonAPITest {
+public class TablespoonAPIIT {
   
   static final int SLEEP_TIME = 3000;
   static Groups groups;
