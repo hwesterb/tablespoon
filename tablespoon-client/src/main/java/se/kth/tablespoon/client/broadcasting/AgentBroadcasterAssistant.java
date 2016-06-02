@@ -53,17 +53,17 @@ public class AgentBroadcasterAssistant implements Runnable {
       waitForChange();
     }
   }
- 
+  
   private void waitForChange() {
     synchronized (storage) {
-      try {
-        while (!storage.isStorageChanged()) {
+      while (!storage.isStorageChanged()) {
+        try {
           storage.wait();
+        } catch (InterruptedException ex) {
+          slf4jLogger.debug(ex.getMessage());
         }
-        storage.stateHasChanged(false);
-      } catch (InterruptedException ex) {
-        slf4jLogger.debug(ex.getMessage());
       }
+      storage.stateHasChanged(false);
     }
   }
   
