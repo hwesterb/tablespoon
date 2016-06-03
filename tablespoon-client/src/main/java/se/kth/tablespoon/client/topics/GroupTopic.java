@@ -6,7 +6,7 @@ import se.kth.tablespoon.client.events.EventType;
 import se.kth.tablespoon.client.general.Group;
 import se.kth.tablespoon.client.general.Groups;
 
-public class GroupTopic extends Topic {
+public final class GroupTopic extends Topic {
   
   Group group;
   

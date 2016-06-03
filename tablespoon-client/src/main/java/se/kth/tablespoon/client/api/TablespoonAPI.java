@@ -70,7 +70,7 @@ public class TablespoonAPI {
      * @param subscriber A <code>Subscriber</code> which receives <code>TablespoonEvent</code>.
      * @return <code>Submitter</code> for <code>TablespoonAPI</code>.
      */
-    Submitter subscriber(Subscriber subscriber) {
+    public Submitter subscriber(Subscriber subscriber) {
       this.subscriber = subscriber;
       return this;
     }
@@ -80,7 +80,7 @@ public class TablespoonAPI {
      * @param eventType Specifies how to gather and filter information.
      * @return <code>Submitter</code> for <code>TablespoonAPI</code>.
      */
-    Submitter eventType(EventType eventType) {
+    public Submitter eventType(EventType eventType) {
       this.eventType = eventType;
       return this;
     }
@@ -90,7 +90,7 @@ public class TablespoonAPI {
      * @param resource Type of resource which should be collected.
      * @return <code>Submitter</code> for <code>TablespoonAPI</code>.
      */
-    Submitter resource(Resource resource) {
+    public Submitter resource(Resource resource) {
       this.resource = resource;
       return this;
     }
@@ -100,7 +100,7 @@ public class TablespoonAPI {
      * @param sendRate The rate at which the agent sends messages.
      * @return <code>Submitter</code> for <code>TablespoonAPI</code>.
      */
-    Submitter sendRate(int sendRate) {
+    public Submitter sendRate(int sendRate) {
       sendRateSet = true;
       this.sendRate = sendRate;
       return this;
@@ -112,7 +112,7 @@ public class TablespoonAPI {
      * @param duration Duration of a topic. Will expire automatically after duration.
      * @return <code>Submitter</code> for <code>TablespoonAPI</code>.
      */
-    Submitter duration(int duration) {
+    public Submitter duration(int duration) {
       durationSet = true;
       this.duration = duration;
       return this;
@@ -124,7 +124,7 @@ public class TablespoonAPI {
      * @param groupId Id which specifies a group.
      * @return <code>Submitter</code> for <code>TablespoonAPI</code>.
      */
-    Submitter groupId(String groupId) {
+    public Submitter groupId(String groupId) {
       this.machines = null;
       this.groupId = groupId;
       return this;
@@ -136,7 +136,7 @@ public class TablespoonAPI {
      * @param machines The getMachines where the topic should be active.
      * @return <code>Submitter</code> for <code>TablespoonAPI</code>.
      */
-    Submitter machines(Set<String> machines) {
+    public Submitter machines(Set<String> machines) {
       this.groupId = null;
       this.machines = machines;
       return this;
@@ -148,7 +148,7 @@ public class TablespoonAPI {
      * percentile when filtering events.
      * @return <code>Submitter</code> for <code>TablespoonAPI</code>.
      */
-    Submitter high(Threshold high) {
+    public Submitter high(Threshold high) {
       this.high = high;
       return this;
     }
@@ -159,12 +159,12 @@ public class TablespoonAPI {
      * percentile when filtering events.
      * @return <code>Submitter</code> for <code>TablespoonAPI</code>.
      */
-    Submitter low(Threshold low) {
+    public Submitter low(Threshold low) {
       this.low = low;
       return this;
     }
     
-    Submitter replaces(String uniqueId, boolean replicate) {
+    public Submitter replaces(String uniqueId, boolean replicate) {
       this.replacesTopicId = uniqueId;
       this.replicate = replicate;
       return this;
@@ -182,7 +182,7 @@ public class TablespoonAPI {
      * @throws MissingParameterException Thrown if mandatory parameter is not specified.
      * @throws IOException If json could not be generated.
      */
-    String submit() throws ThresholdException, MissingTopicException, MissingParameterException, IOException {
+    public String submit() throws ThresholdException, MissingTopicException, MissingParameterException, IOException {
       Topic topic;
       if (replicate) replicate();
       if (subscriber == null) throw new MissingParameterException("subscriber");

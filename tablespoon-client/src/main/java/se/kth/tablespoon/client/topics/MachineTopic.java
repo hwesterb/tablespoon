@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import se.kth.tablespoon.client.general.Groups;
 
-public class MachineTopic extends Topic {
+public final class MachineTopic extends Topic {
   
   private final Set<String> machines = 
       Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
