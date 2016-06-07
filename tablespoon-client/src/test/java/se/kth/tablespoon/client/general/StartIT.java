@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Set;
-import static org.junit.Assert.assertEquals;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import se.kth.tablespoon.client.api.MissingParameterException;
@@ -44,9 +43,9 @@ public class StartIT {
   @Test
   public void test() throws ThresholdException, MissingTopicException, MissingParameterException, IOException {
     subscriber = new SubscriberForIntegerationTest();
-    EventType eventType = EventType.REGULAR;
+    EventType eventType = EventType.GROUP_AVERAGE;
     Resource resource = new Resource(ResourceType.CPU);
-    int sendRate = 1;
+    int sendRate = 3;
     String uniqueId = TablespoonAPI.
         getInstance().
         submitter().
@@ -55,26 +54,33 @@ public class StartIT {
         eventType(eventType).
         resource(resource).
         sendRate(sendRate).
+        duration(20).
         submit();
     while(subscriber.getRecievedRequests() == 0) {
       Time.sleep(1000);
       System.out.println("Waiting for requests");
     }
+    System.out.println(subscriber.recentEvent);
   }
   
   
   public static class SubscriberForIntegerationTest implements Subscriber {
     
     private int recievedRequests;
+    private TablespoonEvent recentEvent;
     
     public int getRecievedRequests() {
       return recievedRequests;
     }
-    
+
+    public TablespoonEvent getRecentEvent() {
+      return recentEvent;
+    }
     
     @Override
     public void onEventArrival(TablespoonEvent event) {
       recievedRequests++;
+      recentEvent = event;
     }
     
   }
