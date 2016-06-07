@@ -10,8 +10,8 @@ import org.junit.Test;
 import se.kth.tablespoon.agent.events.Topics;
 
 public class FileLoaderTest {
-  
-  private void writeNewFile(String json, String directory, String fileName) throws IOException {
+ 
+  public void write(String json, String directory, String fileName) throws IOException {
     FileWriter fw = new FileWriter(FileLoader.class.getClassLoader().getResource(directory).getPath() + "/" + fileName);
     IOUtils.write(json,fw);
     IOUtils.closeQuietly(fw);
@@ -24,7 +24,7 @@ public class FileLoaderTest {
   }
   
   private void generateJsonAndWrite(String file, double threshold) throws IOException {
-    writeNewFile(someJson(file, 12, threshold), "topics", file + ".json" );
+    write(someJson(file, 12, threshold), "topics", file + ".json" );
   }
   
   @Test
@@ -50,9 +50,9 @@ public class FileLoaderTest {
     Topics topics = new Topics();
     TopicLoader fl = new TopicLoader(topics);
     String directory = "topics";
-    String fileName = "pqowiepoqwkepoqkwens120392js_1.json";
+    String fileName = "pqowiepoqwkepoqkwens120392js.json";
     String jsonIn = "{\"collectIndex\" : 0,}\"";
-    writeNewFile(jsonIn, directory, fileName);
+    write(jsonIn, directory, fileName);
     List<String> list = fl.listFilesInDirectory(directory);
     System.out.println("Number of files found: " + list.size());
     String jsonOut = "";

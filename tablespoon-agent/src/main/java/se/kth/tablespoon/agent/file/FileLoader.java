@@ -14,16 +14,14 @@ public abstract class  FileLoader {
   
   final Logger slf4jLogger = LoggerFactory.getLogger(FileLoader.class);
   
-  
   protected List<String> listFilesInDirectory(String directory) throws IOException {
-    List<String> files = IOUtils.readLines(FileLoader.class.getClassLoader()
-        .getResourceAsStream(directory + "/"), Charsets.UTF_8);
+    List<String> files = IOUtils.readLines(getBuffer(directory + "/"), Charsets.UTF_8);
     return files;
   }
   
-  protected BufferedInputStream getBuffer(String directory, String file) {
+  protected BufferedInputStream getBuffer(String resource) {
     return IOUtils.buffer(FileLoader.class.getClassLoader()
-        .getResourceAsStream(directory + "/" + file));
+        .getResourceAsStream(resource));
   }
   
   public String getJsonAndDelete(String directory, String fileName) throws IOException {
@@ -33,7 +31,7 @@ public abstract class  FileLoader {
   }
   
   protected String loadJsonFromFile(String directory, String file) throws IOException {
-    BufferedInputStream in = getBuffer(directory, file);
+    BufferedInputStream in = getBuffer(directory + "/" + file);
     byte[] contents = new byte[1024];
     int bytesRead = 0;
     String json = null;

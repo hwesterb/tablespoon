@@ -47,6 +47,7 @@ public class Agent {
   
   private void sendCycle() throws IOException {
     while (true) {
+      if (rbc.isConnected() == false) throw new IOException();
       topicLoader.readTopicFiles();
       ArrayList<RiemannEvent> events = new ArrayList<>();
       synchronized (metricListener.getMetricQueue()) {
@@ -107,8 +108,10 @@ public class Agent {
           + " seconds before attempting to connect again...");
       Time.sleep(config.getRiemannReconnectionTime());
       return true;
+    } else {
+      slf4jLogger.info("No more reconnection tries.");
+      return false;
     }
-    return false;
   }
   
   private void agentCycle(int tries) {

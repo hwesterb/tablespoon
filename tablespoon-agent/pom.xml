@@ -34,6 +34,7 @@
                     <excludes>
                         <exclude>**/logback.xml</exclude>
                         <exclude>**/config.json</exclude>
+                        <exclude>**/a0986132-a503-4cee-ae85-83ac17ddcec.json</exclude>
                     </excludes>
                     <archive>
                         <manifest>
