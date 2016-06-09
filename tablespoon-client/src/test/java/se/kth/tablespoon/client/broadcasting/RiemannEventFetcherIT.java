@@ -41,7 +41,7 @@ public class RiemannEventFetcherIT {
     topic.generateJson();
     System.out.println(topic.getJson());
     st = new SubscriberTester();
-    ref = new RiemannEventFetcher(st, topic);
+    ref = new RiemannEventFetcher(st, topic, rClient);
     rClient = RiemannClient.tcp("localhost", 5555);
     rClient.connect();
     while(rClient.isConnected() == false) {
@@ -54,7 +54,7 @@ public class RiemannEventFetcherIT {
   @Test
   public void test() throws IOException {
     while(st.getCounter() < 2) {
-      if (ref.shouldQuery()) ref.queryRiemannAndSend(rClient);
+      if (ref.shouldQuery()) ref.query();
       if (st.getEvent() != null) assertTrue(st.getEvent().getValue() < THRESHOLD);
       Time.sleep(400);
     }

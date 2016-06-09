@@ -16,7 +16,7 @@ public class Start {
   public static void setUp(Groups groups, AgentBroadcaster broadcaster, String riemannHost, int riemannPort) {
     TopicStorage storage = new TopicStorage(groups);
     AgentBroadcasterAssistant aba = new AgentBroadcasterAssistant(storage);
-    RiemannSubscriberBroadcaster rsb = new RiemannSubscriberBroadcaster(riemannHost, riemannPort);
+    RiemannSubscriberBroadcaster rsb = new RiemannSubscriberBroadcaster(riemannHost, riemannPort, storage);
     TablespoonAPI api = TablespoonAPI.getInstance();
     api.prepareAPI(storage, groups, rsb);
     Thread abaThread = new Thread(aba);

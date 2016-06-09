@@ -3,53 +3,44 @@ package se.kth.tablespoon.client.broadcasting;
 import io.riemann.riemann.Proto.Event;
 import io.riemann.riemann.client.RiemannClient;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
 import se.kth.tablespoon.client.api.Subscriber;
 import se.kth.tablespoon.client.topics.Topic;
 import se.kth.tablespoon.client.util.Time;
 
-class RiemannEventFetcher {
+public class RiemannEventFetcher extends EventFetcher {
   
-  private final Subscriber subscriber;
-  private final Topic topic;
-  private long lastQueryTimeMs = 0;
-  private final LinkedHashSet<MachineTime> seen;
-  private final int SENT_EVENTS_QUEUE_SIZE = 2000;
+  private final RiemannClient riemannClient;
   
-  RiemannEventFetcher(Subscriber subscriber, Topic topic) {
-    this.seen = new LinkedHashSet<>();
-    this.subscriber = subscriber;
-    this.topic = topic;
+  public RiemannEventFetcher(Subscriber subscriber, Topic topic, RiemannClient riemannClient) {
+    super(subscriber, topic);
+    this.riemannClient = riemannClient;
   }
   
-  boolean shouldQuery() {
-    return Time.nowMs() - lastQueryTimeMs >= (topic.getSendRate() * 1000) / 2;
-  }
-  
-  void queryRiemannAndSend(RiemannClient rClient) throws IOException {
+  @Override
+  public void query() {
     lastQueryTimeMs = Time.nowMs();
-    List<Event> events =  rClient.query("service = \"" + topic.getUniqueId() + "\"").deref();
-    sendEvents(events);
-    cleanSeen();
+    try {
+      List<Event> events = riemannClient.query("service = \"" + topic.getUniqueId() + "\"").
+          deref(20, java.util.concurrent.TimeUnit.SECONDS);
+      notifySubscriber(events);
+      clean();
+    } catch (IOException ex) {
+      slf4jLogger.debug(ex.getMessage());
+    }
   }
   
-  private void sendEvents(List<Event> events) {
+  private void notifySubscriber(List<Event> events) {
     for (Event event : events) {
       MachineTime mt = new MachineTime(event.getHost(), event.getTime());
-      if (seen.add(mt)) continue;
+      if (passedThrough.add(mt)) continue;
       subscriber.onEventArrival(EventConverter.changeFormat(event, topic));
     }
   }
-  
-  private void cleanSeen() {
-    Iterator<MachineTime> iterator = seen.iterator();
-    while (iterator.hasNext() && seen.size() >= SENT_EVENTS_QUEUE_SIZE) {
-      iterator.remove();
-    }
+
+  @Override
+  public void run() {
+    query();
   }
-  
-  
   
 }

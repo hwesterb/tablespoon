@@ -4,16 +4,22 @@ package se.kth.tablespoon.client.broadcasting;
 import io.riemann.riemann.client.RiemannClient;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.kth.tablespoon.client.api.Subscriber;
 import se.kth.tablespoon.client.topics.Topic;
+import se.kth.tablespoon.client.topics.TopicStorage;
 import se.kth.tablespoon.client.util.Time;
 
 public class RiemannSubscriberBroadcaster implements Runnable, SubscriberBroadcaster {
   
   private final static Logger slf4jLogger = LoggerFactory.getLogger(SubscriberBroadcaster.class);
-  ArrayList<RiemannEventFetcher> fetchers = new ArrayList<>();
+  private final ThreadPoolExecutor tpe = new ThreadPoolExecutor(100, 100, 60, TimeUnit.SECONDS,
+      new LinkedBlockingQueue<Runnable>());
+  private final TopicStorage storage;
   RiemannClient riemannClient;
   private final String host;
   private final int port;
@@ -21,22 +27,19 @@ public class RiemannSubscriberBroadcaster implements Runnable, SubscriberBroadca
   private final int RECONNECTION_TRIES = 100;
   private int tries = 0;
   
-  public RiemannSubscriberBroadcaster(String host, int port) {
+  public RiemannSubscriberBroadcaster(String host, int port, TopicStorage storage) {
     this.host = host;
     this.port = port;
+    this.storage = storage;
   }
   
   private void broadcastEvents() throws IOException {
     while(true) {
-      for (RiemannEventFetcher fetcher : fetchers) {
-        if (fetcher.shouldQuery()) fetcher.queryRiemannAndSend(riemannClient);
+      for (Topic topic : storage.getTopics()) {
+        topic.fetch(tpe);
+        Time.sleep(10);
       }
     }
-  }
-  
-  @Override
-  public void registerSubscriber(Subscriber subscriber, Topic topic) {
-    fetchers.add(new RiemannEventFetcher(subscriber, topic));
   }
   
   @Override
@@ -45,7 +48,7 @@ public class RiemannSubscriberBroadcaster implements Runnable, SubscriberBroadca
   }
   
   @Override
-  public void broadcast() {    
+  public void broadcast() {
     try {
       connect();
       //resetting number of tries if connection was established
@@ -87,6 +90,15 @@ public class RiemannSubscriberBroadcaster implements Runnable, SubscriberBroadca
         slf4jLogger.info("Closed the connection with the Riemann client.");
       }
     }
+  }
+  
+  public RiemannClient getRiemannClient() {
+    return riemannClient;
+  }
+  
+  @Override
+  public void registerSubscriber(Subscriber subscriber, Topic topic) {
+    topic.createFetcher(subscriber, riemannClient);
   }
   
 }

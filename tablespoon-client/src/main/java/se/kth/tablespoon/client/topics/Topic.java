@@ -5,9 +5,14 @@ import se.kth.tablespoon.client.events.EventType;
 import com.fasterxml.jackson.jr.ob.JSON;
 import com.fasterxml.jackson.jr.ob.JSONComposer;
 import com.fasterxml.jackson.jr.ob.comp.ObjectComposer;
+import io.riemann.riemann.client.RiemannClient;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ThreadPoolExecutor;
+import se.kth.tablespoon.client.api.Subscriber;
+import se.kth.tablespoon.client.broadcasting.EventFetcher;
+import se.kth.tablespoon.client.broadcasting.RiemannEventFetcher;
 import se.kth.tablespoon.client.general.Groups;
 import se.kth.tablespoon.client.util.RuleSupport;
 
@@ -15,11 +20,12 @@ import se.kth.tablespoon.client.util.RuleSupport;
 public abstract class Topic {
   
   protected final HashSet<String> machinesNotified = new HashSet<>();
+  public EventFetcher eventFetcher;
   private final int collectIndex;
   protected final String groupId;
   private final long startTime;
   private final EventType eventType;
-  private int sendRate;
+  private final int sendRate;
   private int duration = 0;
   private Threshold high;
   private Threshold low;
@@ -48,9 +54,8 @@ public abstract class Topic {
     machinesNotified.addAll(machines);
   }
   
-  
-  public void setSendRate(int sendRate) {
-    this.sendRate = sendRate;
+  public void createFetcher(Subscriber subscriber, RiemannClient riemannClient) {
+    eventFetcher = new RiemannEventFetcher(subscriber, this, riemannClient);
   }
   
   public void setDuration(int duration) {
@@ -71,7 +76,7 @@ public abstract class Topic {
     }
     this.low = low;
   }
-  
+
   public int getCollectIndex() {
     return collectIndex;
   }
@@ -153,7 +158,9 @@ public abstract class Topic {
     if (storage.uniqueIdExists(replacesTopicId) == false) throw new MissingTopicException();
     this.replacesTopicId = replacesTopicId;
   }
-  
-  
+
+  public void fetch(ThreadPoolExecutor tpe) {
+   if (eventFetcher.shouldQuery()) tpe.execute(eventFetcher);
+  }
   
 }
