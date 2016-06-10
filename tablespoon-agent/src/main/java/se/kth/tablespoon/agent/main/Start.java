@@ -17,9 +17,9 @@ public class Start {
   private static final int WAIT_FOR_QUEUE_TO_FILL_TIME = 1000;
   private static final int WAIT_FOR_THREAD_TO_DIE_TIME = 500;
   private static MetricListener metricListener;
-  private static Agent agent;
   private static Thread collectlThread;
   private final static Logger slf4jLogger = LoggerFactory.getLogger(Start.class);
+  static Agent agent;
   
   public static void main(String[] args) {
     slf4jLogger.info("Starting tablespoon agent.");

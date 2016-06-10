@@ -3,7 +3,7 @@ package se.kth.tablespoon.agent.events;
 import se.kth.tablespoon.agent.file.ReplacingTopicException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.kth.tablespoon.agent.metrics.Metric;
@@ -11,8 +11,8 @@ import se.kth.tablespoon.agent.metrics.Metric;
 public class Topics {
   
   private final Configuration config = Configuration.getInstance();
-  private final TreeMap<String, Topic> topics = new TreeMap<>();
-    private final static Logger slf4jLogger = LoggerFactory.getLogger(Topics.class);
+  private final ConcurrentHashMap<String, Topic> topics = new  ConcurrentHashMap<>();
+  private final static Logger slf4jLogger = LoggerFactory.getLogger(Topics.class);
   
   public void addTopic(Topic topic) {
     topics.put(topic.getUniqueId(), topic);
@@ -64,8 +64,8 @@ public class Topics {
   }
   
   public void remove(Topic topic) {
-         slf4jLogger.info("Removing topic " + topic.getUniqueId() + " from memory.");
-        topics.put(topic.getUniqueId(), null);
+    slf4jLogger.info("Removing topic " + topic.getUniqueId() + " from memory.");
+    topics.put(topic.getUniqueId(), null);
   }
   
   public void replace(String topicId, String replacesTopicId) throws ReplacingTopicException {
@@ -78,9 +78,9 @@ public class Topics {
   
   private boolean durationHasEnded(long timeStamp, Topic topic) {
     if (topic.hasDuration()) {
-        if ((timeStamp - topic.getLocalStartTime()) > topic.getDuration()) {
-          return true;
-        }
+      if ((timeStamp - topic.getLocalStartTime()) > topic.getDuration()) {
+        return true;
+      }
     }
     return false;
   }
@@ -92,8 +92,8 @@ public class Topics {
     }
     return relevantTopics;
   }
-
-
+  
+  
   
   
 }
