@@ -167,8 +167,7 @@ public abstract class Topic {
   }
   
   public void fetch(ThreadPoolExecutor tpe) {
-//    System.out.println("queryBusy " + queryBusy);
-    if (queryBusy.get() == false) {
+    if (queryBusy.get() == false && eventFetcher.shouldQuery()) {
       queryBusy.set(true);
       tpe.execute(eventFetcher);
     }

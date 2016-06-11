@@ -21,7 +21,6 @@ public class RiemannEventFetcherIT {
   static Topic topic;
   static RiemannClient rClient;
   static SubscriberTester st;
-  static double THRESHOLD = 10.3;
   static final ThreadPoolExecutor tpe = new ThreadPoolExecutor(100, 100, 60, TimeUnit.SECONDS,
       new LinkedBlockingQueue<Runnable>());
   
