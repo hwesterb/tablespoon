@@ -29,6 +29,7 @@ public class Agent {
   private final TopicLoader topicLoader;
   private final Topics topics;
   private RiemannBatchClient rbc;
+  private int sentEvents = 0;
   
   public IRiemannClient getRiemannClient() {
     return rbc;
@@ -88,6 +89,7 @@ public class Agent {
         throw new IOException();
       }
     }
+    sentEvents += batch.size();
   }
   
   private void connect() throws IOException, UnsupportedJVMException {
@@ -137,6 +139,11 @@ public class Agent {
         slf4jLogger.info("Closed the connection with the Riemann client.");
       }
     }
+  }
+  
+  // For testing purposes.
+  public int getSentEvents() {
+    return sentEvents;
   }
   
 }

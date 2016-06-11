@@ -1,12 +1,8 @@
 {
-  "collectIndex" : 8,
-  "startTime" : 1464079663,
+  "collectIndex" : 0,
+  "startTime" : 1465551214,
   "uniqueId" : "a0986132-a503-4cee-ae85-83ac17ddcec",
   "groupId" : "A",
   "eventType" : "REGULAR",
-  "sendRate" : 2,
-  "high" : {
-    "percentage" : 10.3,
-    "comparator" : "LESS_THAN"
-  }
+  "sendRate" : 1
 }
