@@ -33,6 +33,7 @@ public abstract class EventFetcher implements Runnable {
   protected void clean() {
     Iterator<MachineTime> iterator = passedThrough.iterator();
     while (iterator.hasNext() && passedThrough.size() >= SENT_EVENTS_QUEUE_SIZE) {
+      iterator.next();
       iterator.remove();
     }
   }

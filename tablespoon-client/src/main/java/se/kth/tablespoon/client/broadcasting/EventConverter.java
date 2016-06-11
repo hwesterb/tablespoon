@@ -18,6 +18,7 @@ class EventConverter {
     TablespoonEvent tablespoonEvent = new TablespoonEvent(topic.getGroupId(),
         event.getHost(),
         event.getMetricD(),
+        event.getTime(),
         topic.getEventType(),
         resourceType,
         topic.getHigh(),
