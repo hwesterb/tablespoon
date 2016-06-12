@@ -28,5 +28,4 @@ class MachineTime {
     hash = 89 * hash + (int) (this.timeStamp ^ (this.timeStamp >>> 32));
     return hash;
   }
-  
 }

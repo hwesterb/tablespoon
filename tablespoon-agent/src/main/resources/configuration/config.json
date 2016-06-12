@@ -3,6 +3,6 @@
   "riemannPort": 5555,
   "riemannReconnectionTries": 100,
   "riemannReconnectionTime": 5000,
-  "riemannEventTtl": 10,
+  "riemannEventTtl": 60,
   "riemannDereferenceTime": 5000
 }

@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.atomic.AtomicBoolean;
 import se.kth.tablespoon.client.api.Subscriber;
 import se.kth.tablespoon.client.broadcasting.EventFetcher;
 import se.kth.tablespoon.client.broadcasting.RiemannEventFetcher;
@@ -32,6 +33,7 @@ public abstract class Topic {
   private final String uniqueId;
   private String replacesTopicId;
   private String json = "";
+  private AtomicBoolean queryBusy = new AtomicBoolean(false);
   
   public Topic(int collectIndex, long startTime, String uniqueId, EventType type, int sendRate, String groupId) {
     this.collectIndex = collectIndex;
@@ -76,7 +78,7 @@ public abstract class Topic {
     }
     this.low = low;
   }
-
+  
   public int getCollectIndex() {
     return collectIndex;
   }
@@ -131,7 +133,7 @@ public abstract class Topic {
         .put("comparator", high.comparator.toString())
         .end();
     if (low != null) obj.startObjectField("low")
-        .put("percentage", low.percentage)
+        .put("percenprotected final ReentrantLock lock =  new ReentrantLock(); tage", low.percentage)
         .put("comparator", low.comparator.toString())
         .end();
     obj.end();
@@ -154,13 +156,21 @@ public abstract class Topic {
         .finish();
   }
   
+  public void queryDone() {
+    queryBusy.set(false);
+  }
+  
+  
   public void setReplaces(String replacesTopicId, TopicStorage storage) throws MissingTopicException {
     if (storage.uniqueIdExists(replacesTopicId) == false) throw new MissingTopicException();
     this.replacesTopicId = replacesTopicId;
   }
-
+  
   public void fetch(ThreadPoolExecutor tpe) {
-   if (eventFetcher.shouldQuery()) tpe.execute(eventFetcher);
+    if (queryBusy.get() == false && eventFetcher.shouldQuery()) {
+      queryBusy.set(true);
+      tpe.execute(eventFetcher);
+    }
   }
   
 }

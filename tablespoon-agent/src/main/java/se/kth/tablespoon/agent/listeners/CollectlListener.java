@@ -56,7 +56,7 @@ public class CollectlListener extends MetricListener {
   
   private void defineTheHeaders(String line) {
     if (line.startsWith("#")) {
-//      printCollectlList(line);
+      // printCollectlList(line) will print all columns.
       mls = CollectlStringParser.handleHeaders(line);
       headersDefined = true;
     }

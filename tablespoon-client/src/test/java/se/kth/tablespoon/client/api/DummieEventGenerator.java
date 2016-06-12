@@ -41,7 +41,7 @@ public class DummieEventGenerator implements Runnable {
     }
     String machine = "machine" + rnd.nextInt(10);
 
-    return new TablespoonEvent(groupId, machine, value, eventType, resourceType, high, low);
+    return new TablespoonEvent(groupId, machine, value, Time.now(), eventType, resourceType, high, low);
   }
 
   private int oneThreshold() {
