@@ -30,7 +30,7 @@ public class TablespoonAPIIT {
   static SubscriberTester subscriberB;
   static SubscriberTester subscriberA;
   static SubscriberBroadcasterTester sbt;
-  static TablespoonAPI api;
+  static TablespoonApi api;
   
   @BeforeClass
   public static void setUp() {
@@ -55,8 +55,7 @@ public class TablespoonAPIIT {
     subscriberA = new SubscriberTester();
     Time.sleep(SLEEP_TIME*2);
     sbt = new SubscriberBroadcasterTester();
-    api = TablespoonAPI.getInstance();
-    api.prepareAPI(storage, groups, sbt);
+    api = new TablespoonApi(storage, groups, sbt);
     aba.registerBroadcaster(abt);
     Time.sleep(SLEEP_TIME);
   }

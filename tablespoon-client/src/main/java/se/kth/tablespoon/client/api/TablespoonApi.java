@@ -17,40 +17,27 @@ import se.kth.tablespoon.client.topics.GroupTopic;
 import se.kth.tablespoon.client.topics.MissingTopicException;
 
 /**
- * Tablespoon API for creating, replacing, replicating and removing topics. Topics defines events
- * which are system measurements. Events are sent to event stream processor and filtered
- * according to the content of the topic.
+ * Tablespoon API for creating, replacing, replicating and removing topics. Topics defines events which are system
+ * measurements. Events are sent to event stream processor and filtered according to the content of the topic.
  */
-public class TablespoonAPI {
-  
+public class TablespoonApi {
+
   private TopicStorage storage;
   private Groups groups;
   private SubscriberBroadcaster sb;
-  private static TablespoonAPI instance = null;
-  
-  // TODO: make into Singleton.
-  public static TablespoonAPI getInstance() {
-    if(instance == null) {
-      instance = new TablespoonAPI();
-    }
-    return instance;
-  }
-  
-  public Submitter submitter() {
-    return new Submitter();
-  }
-  
-  protected TablespoonAPI() { }
-  
-  public void prepareAPI(TopicStorage storage, Groups groups, SubscriberBroadcaster sb) {
+
+  public TablespoonApi(TopicStorage storage, Groups groups, SubscriberBroadcaster sb) {
     this.storage = storage;
     this.groups = groups;
     this.sb = sb;
   }
-  
-  
+
+  public Submitter submitter() {
+    return new Submitter();
+  }
+
   public class Submitter {
-    
+
     private Subscriber subscriber;
     private String groupId;
     private EventType eventType;
@@ -64,9 +51,10 @@ public class TablespoonAPI {
     private Threshold low;
     private String replacesTopicId;
     private boolean replicate;
-    
+
     /**
      * This parameter is mandatory.
+     *
      * @param subscriber A <code>Subscriber</code> which receives <code>TablespoonEvent</code>.
      * @return <code>Submitter</code> for <code>TablespoonAPI</code>.
      */
@@ -74,9 +62,10 @@ public class TablespoonAPI {
       this.subscriber = subscriber;
       return this;
     }
-    
+
     /**
      * This parameter is mandatory if not replicated.
+     *
      * @param eventType Specifies how to gather and filter information.
      * @return <code>Submitter</code> for <code>TablespoonAPI</code>.
      */
@@ -84,9 +73,10 @@ public class TablespoonAPI {
       this.eventType = eventType;
       return this;
     }
-    
+
     /**
      * This parameter is mandatory if not replicated.
+     *
      * @param resource Type of resource which should be collected.
      * @return <code>Submitter</code> for <code>TablespoonAPI</code>.
      */
@@ -94,9 +84,10 @@ public class TablespoonAPI {
       this.resource = resource;
       return this;
     }
-    
+
     /**
      * This parameter is mandatory if not replicated. Lowest possible send rate is 1.
+     *
      * @param sendRate The rate at which the agent sends messages.
      * @return <code>Submitter</code> for <code>TablespoonAPI</code>.
      */
@@ -105,10 +96,10 @@ public class TablespoonAPI {
       this.sendRate = sendRate;
       return this;
     }
-    
+
     /**
-     * This parameter is not mandatory. If this parameter is not set the topic
-     * will be active until removed.
+     * This parameter is not mandatory. If this parameter is not set the topic will be active until removed.
+     *
      * @param duration Duration of a topic. Will expire automatically after duration.
      * @return <code>Submitter</code> for <code>TablespoonAPI</code>.
      */
@@ -117,10 +108,10 @@ public class TablespoonAPI {
       this.duration = duration;
       return this;
     }
-    
+
     /**
-     * This parameter is mandatory if not replicated. Use either this or
-     * {@link #machines(HashSet<String>) getMachines}.
+     * This parameter is mandatory if not replicated. Use either this or {@link #machines(HashSet<String>) getMachines}.
+     *
      * @param groupId Id which specifies a group.
      * @return <code>Submitter</code> for <code>TablespoonAPI</code>.
      */
@@ -129,10 +120,10 @@ public class TablespoonAPI {
       this.groupId = groupId;
       return this;
     }
-    
+
     /**
-     * This parameter is not mandatory if not replicated. Use either this or
-     *  {@link #groupId(String) groupId}.
+     * This parameter is not mandatory if not replicated. Use either this or {@link #groupId(String) groupId}.
+     *
      * @param machines The getMachines where the topic should be active.
      * @return <code>Submitter</code> for <code>TablespoonAPI</code>.
      */
@@ -141,72 +132,92 @@ public class TablespoonAPI {
       this.machines = machines;
       return this;
     }
-    
+
     /**
      * This parameter is not mandatory.
-     * @param high A <code>Threshold</code> that determines the percentage or
-     * percentile when filtering events.
+     *
+     * @param high A <code>Threshold</code> that determines the percentage or percentile when filtering events.
      * @return <code>Submitter</code> for <code>TablespoonAPI</code>.
      */
     public Submitter high(Threshold high) {
       this.high = high;
       return this;
     }
-    
+
     /**
      * This parameter is not mandatory.
-     * @param low A <code>Threshold</code> that determines the percentage or
-     * percentile when filtering events.
+     *
+     * @param low A <code>Threshold</code> that determines the percentage or percentile when filtering events.
      * @return <code>Submitter</code> for <code>TablespoonAPI</code>.
      */
     public Submitter low(Threshold low) {
       this.low = low;
       return this;
     }
-    
+
     public Submitter replaces(String uniqueId, boolean replicate) {
       this.replacesTopicId = uniqueId;
       this.replicate = replicate;
       return this;
     }
-    
-    
+
     /**
      * Submits the API call. The call is then handled asynchronously.
+     *
      * @return An unique id which specifies the topic.
-     * @throws ThresholdException Thrown if low >= high, or if <code>Comparator</code>
-     * are incompatible.
-     * @throws MissingTopicException Thrown if the topic that is being replaced
-     * is not present. It might have been removed due to its duration being overdue,
-     * or that no machines were active on that topic.
+     * @throws ThresholdException Thrown if low >= high, or if <code>Comparator</code> are incompatible.
+     * @throws MissingTopicException Thrown if the topic that is being replaced is not present. It might have been
+     * removed due to its duration being overdue, or that no machines were active on that topic.
      * @throws MissingParameterException Thrown if mandatory parameter is not specified.
      * @throws IOException If json could not be generated.
      */
     public String submit() throws ThresholdException, MissingTopicException, MissingParameterException, IOException {
       Topic topic;
-      if (replicate) replicate();
-      if (subscriber == null) throw new MissingParameterException("subscriber");
-      if (resource == null) throw new MissingParameterException("resource");
-      if (durationSet == false && sendRate < 1) throw new MissingParameterException("sendRate");
-      if (groupId == null || machines != null) throw new MissingParameterException("groupId or machines");
-      if (eventType == null) throw new MissingParameterException("eventType");
-      if (resource == null) throw new MissingParameterException("resource");
+      if (replicate) {
+        replicate();
+      }
+      if (subscriber == null) {
+        throw new MissingParameterException("subscriber");
+      }
+      if (resource == null) {
+        throw new MissingParameterException("resource");
+      }
+      if (durationSet == false && sendRate < 1) {
+        throw new MissingParameterException("sendRate");
+      }
+      if (groupId == null || machines != null) {
+        throw new MissingParameterException("groupId or machines");
+      }
+      if (eventType == null) {
+        throw new MissingParameterException("eventType");
+      }
+      if (resource == null) {
+        throw new MissingParameterException("resource");
+      }
       if (groupId != null) {
         Group group = groups.get(groupId);
         topic = TopicFactory.createGroupTopic(storage.generateUniqueId(), resource, eventType, sendRate, group);
       } else {
         topic = TopicFactory.createMachineTopic(storage.generateUniqueId(), resource, eventType, sendRate, machines);
       }
-      if (replacesTopicId != null) topic.setReplaces(replacesTopicId, storage);
-      if (duration > 0) topic.setDuration(duration);
-      if (high != null) topic.setHigh(high);
-      if (low != null) topic.setLow(low);
+      if (replacesTopicId != null) {
+        topic.setReplaces(replacesTopicId, storage);
+      }
+      if (duration > 0) {
+        topic.setDuration(duration);
+      }
+      if (high != null) {
+        topic.setHigh(high);
+      }
+      if (low != null) {
+        topic.setLow(low);
+      }
       storage.add(topic);
       sb.registerSubscriber(subscriber, topic);
       storage.notifyBroadcaster();
       return topic.getUniqueId();
     }
-    
+
     private void replicate() throws MissingTopicException {
       Topic relatedTopic = storage.get(replacesTopicId);
       if (relatedTopic instanceof GroupTopic) {
@@ -221,11 +232,12 @@ public class TablespoonAPI {
       high = (high != null) ? high : relatedTopic.getHigh();
       low = (low != null) ? low : relatedTopic.getLow();
     }
-    
+
   }
-  
+
   /**
    * This call removes a topic.
+   *
    * @param uniqueId An unique id which specifies the topic.
    * @throws MissingTopicException Thrown if the topic is not present in the storage.
    */
@@ -233,5 +245,5 @@ public class TablespoonAPI {
     storage.remove(uniqueId);
     storage.notifyBroadcaster();
   }
-  
+
 }
