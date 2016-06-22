@@ -112,8 +112,8 @@ public class TablespoonApi {
     }
 
     /**
-     * This parameter is not mandatory. If this parameter is not set, the retrieval
-     * delay will be set to 50% of the send rate.
+     * This parameter is not mandatory. If this parameter is not set, the retrieval delay will be set to 50% of the send rate.
+     * 
      * @param retrievalDelay An artifical delay added to prevent excessive querying
      * when it is not necessary. If 0 is set the client will query whenever
      * a thread is available. The unit is milliseconds.
@@ -126,8 +126,8 @@ public class TablespoonApi {
     }
     
     /**
-     * This parameter is mandatory if not replicated. Use either this or
-     * {@link #machines(HashSet<String>) getMachines}.
+     * This parameter is mandatory if not replicated. Use either this or {@link #machines(HashSet<String>) getMachines}.
+     * 
      * @param groupId Id which specifies a group.
      * @return <code>Submitter</code> for <code>TablespoonAPI</code>.
      */
