@@ -24,8 +24,8 @@ public abstract class EventFetcher implements Runnable {
     this.topic = topic;
   }
   
-  public boolean shouldQuery() {
-    return Time.nowMs() - lastQueryTimeMs >= (topic.getSendRate() * 1000) / 2;
+  public boolean shouldQuery(int retrievalDelay) {
+    return Time.nowMs() - lastQueryTimeMs >= retrievalDelay;
   }
   
   public abstract void query();

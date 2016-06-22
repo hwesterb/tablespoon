@@ -17,6 +17,7 @@ class EventConverter {
     ResourceType resourceType = CollectlMapping.getInstance().getResourceType(topic.getCollectIndex());
     TablespoonEvent tablespoonEvent = new TablespoonEvent(topic.getGroupId(),
         event.getHost(),
+        topic.getCollectIndex(),
         event.getMetricD(),
         event.getTime(),
         topic.getEventType(),
