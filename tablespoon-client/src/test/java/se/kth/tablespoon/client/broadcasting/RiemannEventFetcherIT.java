@@ -7,7 +7,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import se.kth.tablespoon.client.api.SubscriberTester;
+import se.kth.tablespoon.client.api.TestSubscriber;
 import se.kth.tablespoon.client.events.EventType;
 import se.kth.tablespoon.client.general.Group;
 import se.kth.tablespoon.client.topics.GroupTopic;
@@ -16,20 +16,33 @@ import se.kth.tablespoon.client.util.Time;
 
 
 public class RiemannEventFetcherIT {
-  
   static RiemannEventFetcher ref;
-  static Topic topic;
+  static Group group;
   static RiemannClient rClient;
-  static SubscriberTester st;
+  static TestSubscriber st;
   static final ThreadPoolExecutor tpe = new ThreadPoolExecutor(100, 100, 60, TimeUnit.SECONDS,
       new LinkedBlockingQueue<Runnable>());
   
   @BeforeClass
   public static void setUpClass() throws IOException {
-    String uniqueId = "a0986132-a503-4cee-ae85-83ac17ddcec";
-    Group group = new Group("A");
+    
+    group = new Group("A");
     group.addMachine("1");
-    topic = new GroupTopic(
+    
+    st = new TestSubscriber();
+    rClient = RiemannClient.tcp("localhost", 5555);
+    rClient.connect();
+    while(rClient.isConnected() == false) {
+      System.out.println("Waiting for connection to be accepted.");
+      Time.sleep(100);
+    }
+    
+  }
+  
+  @Test
+  public void test() throws IOException {
+    String uniqueId = "a0986132-a503-4cee-ae85-83ac17ddcec";
+    Topic topic = new GroupTopic(
         0,
         Time.now(),
         uniqueId,
@@ -40,22 +53,13 @@ public class RiemannEventFetcherIT {
     System.out.println("Start this event on the agent:");
     topic.generateJson();
     System.out.println(topic.getJson());
-    st = new SubscriberTester();
-    rClient = RiemannClient.tcp("localhost", 5555);
-    rClient.connect();
-    while(rClient.isConnected() == false) {
-      System.out.println("Waiting for connection to be accepted.");
-      Time.sleep(100);
-    }
     topic.createFetcher(st, rClient);
-  }
-  
-  @Test
-  public void testLatencyExperiment() throws IOException {
     while(true) {
       topic.fetch(tpe);
       Time.sleep(1);
     }
+    
   }
   
+ 
 }

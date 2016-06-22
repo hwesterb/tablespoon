@@ -27,8 +27,8 @@ public class TablespoonAPIIT {
   static AgentBroadcasterAssistant aba;
   static Thread abaThread;
   static AgentBroadcasterTester abt;
-  static SubscriberTester subscriberB;
-  static SubscriberTester subscriberA;
+  static TestSubscriber subscriberB;
+  static TestSubscriber subscriberA;
   static SubscriberBroadcasterTester sbt;
   static TablespoonAPI api;
   
@@ -51,8 +51,8 @@ public class TablespoonAPIIT {
     groupB.addMachine("5");
     groups.add(groupB);
     abt = new AgentBroadcasterTester();
-    subscriberB = new SubscriberTester();
-    subscriberA = new SubscriberTester();
+    subscriberB = new TestSubscriber();
+    subscriberA = new TestSubscriber();
     Time.sleep(SLEEP_TIME*2);
     sbt = new SubscriberBroadcasterTester();
     api = TablespoonAPI.getInstance();
@@ -76,7 +76,7 @@ public class TablespoonAPIIT {
         duration(duration).
         sendRate(sendRate).
         submit();
-    subscriberB.setUniqueId(uniqueId);
+    subscriberB.uniqueId = uniqueId;
     Time.sleep(SLEEP_TIME);
     assertEquals(2, abt.getRecievedRequests());
   }
@@ -85,7 +85,7 @@ public class TablespoonAPIIT {
   public void replicateTopic() throws Exception {
     api.submitter().
         subscriber(subscriberB).
-        replaces(subscriberB.getUniqueId(), true).
+        replaces(subscriberB.uniqueId, true).
         high(new Threshold(80.0, Comparator.LESS_THAN)).
         submit();
     Time.sleep(SLEEP_TIME);
@@ -107,7 +107,7 @@ public class TablespoonAPIIT {
         low(low).
         high(high).
         submit();
-    subscriberA.setUniqueId(uniqueId);
+    subscriberA.uniqueId = uniqueId;
     Time.sleep(SLEEP_TIME);
     assertEquals(8, abt.getRecievedRequests());
   }
@@ -115,7 +115,7 @@ public class TablespoonAPIIT {
   
   @Test
   public void testRemoveTopic() throws Exception {
-    api.removeTopic(subscriberA.getUniqueId());
+    api.removeTopic(subscriberA.uniqueId);
     Time.sleep(SLEEP_TIME);
     assertEquals(12, abt.getRecievedRequests());
   }
