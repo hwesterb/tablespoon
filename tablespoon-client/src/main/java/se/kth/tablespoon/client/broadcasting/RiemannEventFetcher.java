@@ -17,8 +17,6 @@ public class RiemannEventFetcher extends EventFetcher {
     this.riemannClient = riemannClient;
   }
   
-  
-  
   @Override
   public void query() {
     lastQueryTimeMs = Time.nowMs();
@@ -33,7 +31,9 @@ public class RiemannEventFetcher extends EventFetcher {
   }
   
   private void notifySubscriber(List<Event> events) {
+    if (events==null) return; // TODO: better handling
     for (Event event : events) {
+      if (event==null) return; // TODO: better handling
       MachineTime mt = new MachineTime(event.getHost(), event.getTime());
       if (passedThrough.add(mt) == false) continue;
       subscriber.onEventArrival(EventConverter.changeFormat(event, topic));

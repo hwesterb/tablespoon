@@ -17,7 +17,7 @@ import se.kth.tablespoon.client.util.Time;
 public class RiemannSubscriberBroadcaster implements Runnable, SubscriberBroadcaster {
   
   private final static Logger slf4jLogger = LoggerFactory.getLogger(SubscriberBroadcaster.class);
-  private final ThreadPoolExecutor tpe = new ThreadPoolExecutor(100, 100, 60, TimeUnit.SECONDS,
+  private final ThreadPoolExecutor tpe = new ThreadPoolExecutor(16, 16, 60, TimeUnit.SECONDS,
       new LinkedBlockingQueue<Runnable>());
   private final TopicStorage storage;
   RiemannClient riemannClient;
