@@ -15,7 +15,7 @@ public class CollectlListener extends MetricListener {
     return new String[]{
       "/bin/sh",
       "-c",
-      "collectl -P -o U -s +m"
+      "collectl -P -o U 2 -s +m"
     };
   }
   

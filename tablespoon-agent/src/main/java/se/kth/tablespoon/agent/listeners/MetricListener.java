@@ -14,7 +14,6 @@ import se.kth.tablespoon.agent.util.Time;
 
 public abstract class MetricListener implements Runnable {
   
-  private final boolean LATENCY_EXPERIMENT = true;
   protected final Queue<Metric> metricQueue = new LinkedList<>();
   protected Process process;
   protected BufferedReader br;
@@ -36,15 +35,8 @@ public abstract class MetricListener implements Runnable {
   protected void addMetricToGlobal(String line) {
     ArrayList<Metric> metrics = MetricFactory.createMetrics(line, mls, config);
     createCustomMetrics(metrics);
-    latencyExperiment(metrics.get(0));
     synchronized (metricQueue) {
       metricQueue.addAll(metrics);
-    }
-  }
-  
-  private void latencyExperiment(Metric metric) {
-    if (LATENCY_EXPERIMENT) {
-      System.out.println(metric.getTimeStamp() + " " + Time.nowMs());
     }
   }
   

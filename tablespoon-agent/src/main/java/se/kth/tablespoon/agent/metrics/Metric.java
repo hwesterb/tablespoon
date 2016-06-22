@@ -44,8 +44,11 @@ public class Metric {
   public double getValue() {
     return value;
   }
-  
-  
+
+  @Override
+  public String toString() {
+    return "Metric{" + "collectIndex=" + collectIndex + ", resourceType=" + resourceType + ", format=" + format + ", timeStamp=" + timeStamp + ", name=" + name + ", value=" + value + '}';
+  }
   
   
 }

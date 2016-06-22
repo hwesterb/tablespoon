@@ -119,16 +119,14 @@ public class Agent {
   private void agentCycle(int tries) {
     try {
       connect();
-      //resetting number of tries if connection was established
+      // Resetting number of tries if connection was established
       tries = 0;
       sendCycle();
-    } catch (IOException e) {
+    } catch (IOException | UnsupportedJVMException e) {
+      // One of these exceptions are thrown when connection is lost
       if (reconnect(tries)) {
         agentCycle(++tries);
       }
-    } catch (UnsupportedJVMException ex) {
-      slf4jLogger.error(ex.getMessage());
-      System.exit(0);
     }
   }
   

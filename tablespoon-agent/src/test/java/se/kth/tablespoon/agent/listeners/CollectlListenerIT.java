@@ -39,13 +39,15 @@ public class CollectlListenerIT {
       Time.sleep(300);
     }
     assertEquals("User", cl.getEventLayouts()[0].getName());
-    assertEquals(MetricFormat.PERSEC, cl.getEventLayouts()[9].getFormat());
-    assertEquals("Tot", cl.getEventLayouts()[19].getName());
-    assertEquals("Used", cl.getEventLayouts()[20].getName());
-    assertEquals(65, cl.getEventLayouts().length);
-    // 65 in every collection + 1 custom = 66
-    assertEquals(0, cl.getMetricQueue().size() % 66);
+    assertEquals("Totl", cl.getEventLayouts()[8].getName());
+    assertEquals(MetricFormat.PERCENTAGE, cl.getEventLayouts()[9].getFormat());
+    assertEquals("Run", cl.getEventLayouts()[19].getName());
+    assertEquals("Blk", cl.getEventLayouts()[20].getName());
+    assertEquals(68, cl.getEventLayouts().length);
+    assertEquals(0, cl.getMetricQueue().size() % 69);
+    
     int i = 0;
+    
     for (MetricLayout el : cl.getEventLayouts()) {
       assertNotNull("Iteration " + i + " failed.", el.getSource());
       i++;
