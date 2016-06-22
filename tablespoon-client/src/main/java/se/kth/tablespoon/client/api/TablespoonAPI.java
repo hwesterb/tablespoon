@@ -58,12 +58,15 @@ public class TablespoonAPI {
     private boolean durationSet = false;
     private int duration;
     private boolean sendRateSet = false;
+    private int retrievalDelay;
+    private boolean retrievalDelaySet = false;
     private int sendRate;
     private Set<String> machines;
     private Threshold high;
     private Threshold low;
     private String replacesTopicId;
     private boolean replicate;
+    
     
     /**
      * This parameter is mandatory.
@@ -115,6 +118,20 @@ public class TablespoonAPI {
     public Submitter duration(int duration) {
       durationSet = true;
       this.duration = duration;
+      return this;
+    }
+    
+    /**
+     * This parameter is not mandatory. If this parameter is not set, the retrieval
+     * delay will be set to 50% of the send rate.
+     * @param retrievalDelay An artifical delay added to prevent excessive querying
+     * when it is not necessary. If 0 is set the client will query whenever
+     * a thread is available. The unit is milliseconds.
+     * @return <code>Submitter</code> for <code>TablespoonAPI</code>.
+     */
+    public Submitter retrivalDelay(int retrievalDelay) {
+      this.retrievalDelay = retrievalDelay;
+      retrievalDelaySet = true;
       return this;
     }
     
@@ -201,6 +218,10 @@ public class TablespoonAPI {
       if (duration > 0) topic.setDuration(duration);
       if (high != null) topic.setHigh(high);
       if (low != null) topic.setLow(low);
+      if (retrievalDelaySet) topic.setRetrievalDelay(retrievalDelay);
+      else {
+        topic.setRetrievalDelay((sendRate * 1000) / 2);
+      }
       storage.add(topic);
       sb.registerSubscriber(subscriber, topic);
       storage.notifyBroadcaster();
@@ -218,6 +239,7 @@ public class TablespoonAPI {
       resource = (resource != null) ? resource : new Resource(relatedTopic.getCollectIndex());
       duration = (durationSet) ? duration : relatedTopic.getDuration();
       sendRate = (sendRateSet) ? sendRate : relatedTopic.getSendRate();
+      retrievalDelay = (retrievalDelaySet) ? retrievalDelay : relatedTopic.getRetrievalDelay();
       high = (high != null) ? high : relatedTopic.getHigh();
       low = (low != null) ? low : relatedTopic.getLow();
     }

@@ -33,6 +33,7 @@ public abstract class Topic {
   private final String uniqueId;
   private String replacesTopicId;
   private String json = "";
+  private int retrievalDelay;
   private AtomicBoolean queryBusy = new AtomicBoolean(false);
   
   public Topic(int collectIndex, long startTime, String uniqueId, EventType type, int sendRate, String groupId) {
@@ -78,6 +79,10 @@ public abstract class Topic {
     }
     this.low = low;
   }
+
+  public void setRetrievalDelay(int retrievalDelay) {
+    this.retrievalDelay = retrievalDelay;
+  }
   
   public int getCollectIndex() {
     return collectIndex;
@@ -115,6 +120,10 @@ public abstract class Topic {
     return groupId;
   }
   
+  public int getRetrievalDelay() {
+    return retrievalDelay;
+  }
+  
   public void generateJson() throws IOException {
     JSONComposer<String> composer = JSON.std
         .with(JSON.Feature.PRETTY_PRINT_OUTPUT)
@@ -133,7 +142,7 @@ public abstract class Topic {
         .put("comparator", high.comparator.toString())
         .end();
     if (low != null) obj.startObjectField("low")
-        .put("percenprotected final ReentrantLock lock =  new ReentrantLock(); tage", low.percentage)
+        .put("percentage", low.percentage)
         .put("comparator", low.comparator.toString())
         .end();
     obj.end();
@@ -167,7 +176,7 @@ public abstract class Topic {
   }
   
   public void fetch(ThreadPoolExecutor tpe) {
-    if (queryBusy.get() == false && eventFetcher.shouldQuery()) {
+    if (queryBusy.get() == false && eventFetcher.shouldQuery(retrievalDelay)) {
       queryBusy.set(true);
       tpe.execute(eventFetcher);
     }
