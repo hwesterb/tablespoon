@@ -9,7 +9,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import se.kth.tablespoon.client.api.MissingParameterException;
 import se.kth.tablespoon.client.api.Subscriber;
-import se.kth.tablespoon.client.api.TablespoonAPI;
+import se.kth.tablespoon.client.api.TablespoonApi;
 import se.kth.tablespoon.client.api.TablespoonEvent;
 import se.kth.tablespoon.client.broadcasting.AgentBroadcaster;
 import se.kth.tablespoon.client.broadcasting.BroadcastException;
@@ -27,12 +27,13 @@ public class StartIT {
   private static SubscriberForIntegerationTest subscriber;
   private static String groupId;
   private static String machineId;
+  private static TablespoonApi api;
   
   @BeforeClass
   public static void setUpClass() {
     groups = new Groups();
     AgentBroadcasterForIntegerationTest ab = new AgentBroadcasterForIntegerationTest();
-    Start.setUp(groups, ab, "localhost", 5555);
+    api = Start.setUp(groups, ab, "localhost", 5555);
     groupId = "A";
     machineId = "1";
     Group group = new Group(groupId);
@@ -46,8 +47,7 @@ public class StartIT {
     EventType eventType = EventType.GROUP_AVERAGE;
     Resource resource = new Resource(ResourceType.CPU);
     int sendRate = 3;
-    String uniqueId = TablespoonAPI.
-        getInstance().
+    String uniqueId = api.
         submitter().
         subscriber(subscriber).
         groupId(groupId).
