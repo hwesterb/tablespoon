@@ -46,7 +46,7 @@ public class CollectlMapping {
       case CPU:
         return 8;  // 8 - [CPU]Totl%
       case NET:
-        return 52; // 52 - [NET]RxKBTot
+        return 53; // 53 - [NET]TxKBTot
       case DSK:
         return 59; // 59 - [DSK]ReadTot
       case MEM:
