@@ -3,6 +3,10 @@ package se.kth.tablespoon.client.api;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import se.kth.tablespoon.client.broadcasting.AgentBroadcasterAssistant;
 import se.kth.tablespoon.client.broadcasting.SubscriberBroadcaster;
 import se.kth.tablespoon.client.general.Group;
 import se.kth.tablespoon.client.events.Threshold;
@@ -25,6 +29,8 @@ public class TablespoonApi {
   private TopicStorage storage;
   private Groups groups;
   private SubscriberBroadcaster sb;
+  private final static Logger slf4jLogger = LoggerFactory.getLogger(TablespoonApi.class);
+
 
   public TablespoonApi(TopicStorage storage, Groups groups, SubscriberBroadcaster sb) {
     this.storage = storage;
@@ -126,7 +132,7 @@ public class TablespoonApi {
     }
     
     /**
-     * This parameter is mandatory if not replicated. Use either this or {@link #machines(HashSet<String>) getMachines}.
+     * This parameter is mandatory if not replicated. Use either this or {@link #machines(Set<String>) getMachines}.
      * 
      * @param groupId Id which specifies a group.
      * @return <code>Submitter</code> for <code>TablespoonAPI</code>.
@@ -227,6 +233,7 @@ public class TablespoonApi {
       storage.add(topic);
       sb.registerSubscriber(subscriber, topic);
       storage.notifyBroadcaster();
+      slf4jLogger.info("Topic " + topic.getUniqueId() + " was successfully submitted in API. ");
       return topic.getUniqueId();
     }
 
