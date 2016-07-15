@@ -23,8 +23,8 @@ public class RiemannSubscriberBroadcaster implements Runnable, SubscriberBroadca
   RiemannClient riemannClient;
   private final String host;
   private final int port;
-  private final int RECONNECTION_TIME = 5000;
-  private final int RECONNECTION_TRIES = 100;
+  private final int RECONNECTION_TIME = 1000;
+  private final int RECONNECTION_TRIES = 100000;
   private int tries = 0;
   
   public RiemannSubscriberBroadcaster(String host, int port, TopicStorage storage) {
@@ -37,7 +37,7 @@ public class RiemannSubscriberBroadcaster implements Runnable, SubscriberBroadca
     while(true) {
       for (Topic topic : storage.getTopics()) {
         topic.fetch(tpe);
-        Time.sleep(10);
+        Time.sleep(50);
       }
     }
   }

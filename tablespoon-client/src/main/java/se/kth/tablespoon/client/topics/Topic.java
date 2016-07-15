@@ -16,7 +16,8 @@ import se.kth.tablespoon.client.broadcasting.EventFetcher;
 import se.kth.tablespoon.client.broadcasting.RiemannEventFetcher;
 import se.kth.tablespoon.client.general.Groups;
 import se.kth.tablespoon.client.util.RuleSupport;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class Topic {
   
@@ -35,6 +36,7 @@ public abstract class Topic {
   private String json = "";
   private int retrievalDelay;
   private AtomicBoolean queryBusy = new AtomicBoolean(false);
+  private final static Logger slf4jLogger = LoggerFactory.getLogger(Topic.class);
   
   public Topic(int collectIndex, long startTime, String uniqueId, EventType type, int sendRate, String groupId) {
     this.collectIndex = collectIndex;

@@ -2,6 +2,10 @@ package se.kth.tablespoon.client.broadcasting;
 
 import java.io.IOException;
 import java.util.HashSet;
+
+import com.fasterxml.jackson.jr.ob.JSON;
+import com.fasterxml.jackson.jr.ob.JSONComposer;
+import com.fasterxml.jackson.jr.ob.comp.ObjectComposer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.kth.tablespoon.client.topics.Topic;
@@ -74,8 +78,21 @@ public class AgentBroadcasterAssistant implements Runnable {
     }
   }
   
-  
-  
-  
+  public String getAgentConfig(String ip,int port) throws IOException{
+
+    JSONComposer<String> composer = JSON.std
+            .with(JSON.Feature.PRETTY_PRINT_OUTPUT)
+            .composeString();
+    ObjectComposer obj = composer.startObject();
+    obj.put("riemannHost", ip)
+            .put("riemannPort", port)
+            .put("riemannReconnectionTries", 10000)
+            .put("riemannReconnectionTime", 5000)
+            .put("riemannEventTtl", 60)
+            .put("riemannDereferenceTime", 5000)
+            .end();
+    obj.end();
+    return composer.finish();
+  }
 }
 
