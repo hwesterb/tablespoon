@@ -27,10 +27,10 @@ public class RiemannEventFetcher extends EventFetcher {
     try {
       List<Event> events = riemannClient.query("service = \"" + topic.getUniqueId() + "\"").
           deref(20, java.util.concurrent.TimeUnit.SECONDS);
-      logger.debug(events.size() + " event(s) were fetched for topic " + topic.getUniqueId());
+      logger.debug(events.size() + " event(s) were fetched for topic '" + topic.toString() + "'");
       if (events.size() > 0) {
         notifySubscriber(events);
-      logger.debug("subscribers are notified for resutls" + topic.getUniqueId());
+      logger.debug("subscribers are notified for resutls of : " + topic.toString());
       }
       clean();
     } catch (Exception ex) {
@@ -57,7 +57,7 @@ public class RiemannEventFetcher extends EventFetcher {
   @Override
   public void run() {
     try {
-      logger.debug("Going to query topic " + topic.getUniqueId());
+      logger.debug("Going to query topic: " + topic.toString());
       query();
       topic.queryDone();
     } catch (Exception e) {

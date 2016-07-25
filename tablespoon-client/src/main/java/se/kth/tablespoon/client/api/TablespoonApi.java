@@ -230,10 +230,10 @@ public class TablespoonApi {
       else {
         topic.setRetrievalDelay((sendRate * 1000) / 2);
       }
-      storage.add(topic);
       sb.subscribe(subscriber, topic);
+      storage.add(topic);
       storage.notifyBroadcaster();
-      slf4jLogger.info("Topic " + topic.getUniqueId() + " was successfully submitted in API. ");
+      slf4jLogger.info("Topic'(" + topic.toString() + "' was successfully submitted in API. ");
       return topic.getUniqueId();
     }
 

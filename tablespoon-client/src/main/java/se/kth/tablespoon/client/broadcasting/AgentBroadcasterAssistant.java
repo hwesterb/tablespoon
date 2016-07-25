@@ -34,12 +34,12 @@ public class AgentBroadcasterAssistant implements Runnable {
     slf4jLogger.info("Broadcasting available topics to machines. ");
     for (Topic topic : storage.getTopics()) {
       HashSet<String> machinesToNotify = topic.getMachinesToNotify();
-      slf4jLogger.info("The number of machines to be notified for topic " + topic.getUniqueId() + " is: " + machinesToNotify.size() + ".");
+      slf4jLogger.info("The number of machines to be notified for topic '" + topic.toString() + "' is: " + machinesToNotify.size() + ".");
       if (machinesToNotify.size() > 0) {
         try {
           broadcaster.sendToMachines(machinesToNotify, topic.getJson(), topic.getUniqueId());
           topic.addToNotifiedMachines(machinesToNotify);
-          slf4jLogger.info("Topic " + topic.getUniqueId() + " was sent to AgentBroadcaster. ");
+          slf4jLogger.info("Topic '" + topic.toString() + "' was sent to AgentBroadcaster. ");
         } catch (BroadcastException ex) {
           //TODO: handle this
           slf4jLogger.debug(ex.getMessage());

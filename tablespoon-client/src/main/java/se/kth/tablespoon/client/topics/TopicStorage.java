@@ -82,11 +82,11 @@ public class TopicStorage {
       Topic topic = entry.getValue();
       topic.updateMachineState(groups);
       if ((topic.getDuration() > 0 && (topic.getStartTime() + topic.getDuration()) < now)) {
-        slf4jLogger.info("Topic " + topic.getUniqueId() + " was removed due to expired duration. ");
+        slf4jLogger.info("Topic '" + topic.toString() + "' was removed due to expired duration. ");
         entries.remove();
       }
       else if(topic.hasNoLiveMachines()) {
-        slf4jLogger.info("Topic " + topic.getUniqueId() + " was removed due to having no live machines. ");
+        slf4jLogger.info("Topic '" + topic.toString() + "' was removed due to having no live machines. ");
         entries.remove();
       }
     }

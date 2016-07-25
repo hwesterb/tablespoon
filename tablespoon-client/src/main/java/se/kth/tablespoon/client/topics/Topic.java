@@ -169,7 +169,7 @@ public abstract class Topic {
   
   public synchronized void queryDone() {
     queryBusy.set(false);
-    logger.debug("fetcher finished the query for " + getUniqueId());
+    logger.debug("fetcher finished the query for : " + toString());
   }
   
   
@@ -179,16 +179,17 @@ public abstract class Topic {
   }
   
   public synchronized void fetch(ExecutorService tpe) {
-    logger.debug("check if we can start the fetcher for " + getUniqueId());
+    logger.debug("check if we can start the fetcher for : " + toString());
     if (queryBusy.get() == false && eventFetcher.shouldQuery(retrievalDelay)) {
       queryBusy.set(true);
-      logger.debug("staring fetcher for " + getUniqueId());
+      logger.debug("staring fetcher for topic: " + toString());
       tpe.submit(eventFetcher);
     } else {
-      logger.debug("Not a good time to start the fetcher for " + getUniqueId());
+      logger.debug("Not a good time to start the fetcher for : " + toString());
     }
   }
 
+  @Override
   public String toString(){
     StringBuilder sb = new StringBuilder();
     if(collectIndex <= 20){
@@ -204,14 +205,15 @@ public abstract class Topic {
       sb.append("DSK ");
     }
     if(high != null){
-      sb.append(high.comparator.symbol + " " + high.percentage + "%");
+      sb.append(high.comparator.symbol).append(" ").append(high.percentage).append("%");
       if(low != null){
-        sb.append(low.comparator.symbol + " " + low.comparator + "%");
+        sb.append(low.comparator.symbol).append(" ").append(low.comparator).append("%");
       }
     }
     else{
       sb.append("no thresholds");
     }
+    sb.append(" for group ").append(groupId);
     return sb.toString();
   }
 }

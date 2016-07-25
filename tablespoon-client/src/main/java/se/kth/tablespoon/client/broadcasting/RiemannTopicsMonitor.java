@@ -45,9 +45,9 @@ public class RiemannTopicsMonitor implements Runnable, SubscriberBroadcaster {
   public void broadcast() {
     logger.debug("Going to broadcast all topics ..");
     for (Topic topic : storage.getTopics()) {
-      logger.debug("fetching topic " + topic.getUniqueId());
+      logger.debug("fetching topic: " + topic.toString());
       topic.fetch(tpe);
-      logger.debug("topic " + topic.getUniqueId() + " was fetched successfully");
+      logger.debug("topic " + topic.toString() + " was fetched successfully");
       Time.sleep(50);
     }
   }
