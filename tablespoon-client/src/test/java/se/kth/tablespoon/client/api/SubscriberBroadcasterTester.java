@@ -1,7 +1,7 @@
 package se.kth.tablespoon.client.api;
 
-import se.kth.tablespoon.client.broadcasting.SubscriberBroadcaster;
 import se.kth.tablespoon.client.topics.Topic;
+import se.kth.tablespoon.client.broadcasting.SubscriberBroadcaster;
 
 
 public class SubscriberBroadcasterTester implements SubscriberBroadcaster{
@@ -12,7 +12,7 @@ public class SubscriberBroadcasterTester implements SubscriberBroadcaster{
   }
   
   @Override
-  public void registerSubscriber(Subscriber subscriber, Topic topic) {
+  public void subscribe(Subscriber subscriber, Topic topic) {
     // New subscriber was registered.
   }
   

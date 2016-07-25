@@ -9,7 +9,7 @@ import io.riemann.riemann.client.RiemannClient;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 import se.kth.tablespoon.client.api.Subscriber;
 import se.kth.tablespoon.client.broadcasting.EventFetcher;
@@ -36,7 +36,7 @@ public abstract class Topic {
   private String json = "";
   private int retrievalDelay;
   private AtomicBoolean queryBusy = new AtomicBoolean(false);
-  private final static Logger slf4jLogger = LoggerFactory.getLogger(Topic.class);
+  private final static Logger logger = LoggerFactory.getLogger(Topic.class);
   
   public Topic(int collectIndex, long startTime, String uniqueId, EventType type, int sendRate, String groupId) {
     this.collectIndex = collectIndex;
@@ -167,8 +167,9 @@ public abstract class Topic {
         .finish();
   }
   
-  public void queryDone() {
+  public synchronized void queryDone() {
     queryBusy.set(false);
+    logger.debug("fetcher finished the query for " + getUniqueId());
   }
   
   
@@ -177,10 +178,14 @@ public abstract class Topic {
     this.replacesTopicId = replacesTopicId;
   }
   
-  public void fetch(ThreadPoolExecutor tpe) {
+  public synchronized void fetch(ExecutorService tpe) {
+    logger.debug("check if we can start the fetcher for " + getUniqueId());
     if (queryBusy.get() == false && eventFetcher.shouldQuery(retrievalDelay)) {
       queryBusy.set(true);
-      tpe.execute(eventFetcher);
+      logger.debug("staring fetcher for " + getUniqueId());
+      tpe.submit(eventFetcher);
+    } else {
+      logger.debug("Not a good time to start the fetcher for " + getUniqueId());
     }
   }
   

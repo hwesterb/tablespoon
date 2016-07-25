@@ -7,6 +7,6 @@ public interface SubscriberBroadcaster{
   
   public void broadcast();
   
-  public void registerSubscriber(Subscriber subscriber, Topic topic);
+  public void subscribe(Subscriber subscriber, Topic topic);
    
 }

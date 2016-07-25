@@ -7,7 +7,6 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.kth.tablespoon.client.broadcasting.AgentBroadcasterAssistant;
-import se.kth.tablespoon.client.broadcasting.SubscriberBroadcaster;
 import se.kth.tablespoon.client.general.Group;
 import se.kth.tablespoon.client.events.Threshold;
 import se.kth.tablespoon.client.topics.ThresholdException;
@@ -19,6 +18,7 @@ import se.kth.tablespoon.client.events.Resource;
 import se.kth.tablespoon.client.general.Groups;
 import se.kth.tablespoon.client.topics.GroupTopic;
 import se.kth.tablespoon.client.topics.MissingTopicException;
+import se.kth.tablespoon.client.broadcasting.SubscriberBroadcaster;
 
 /**
  * Tablespoon API for creating, replacing, replicating and removing topics. Topics defines events which are system
@@ -231,7 +231,7 @@ public class TablespoonApi {
         topic.setRetrievalDelay((sendRate * 1000) / 2);
       }
       storage.add(topic);
-      sb.registerSubscriber(subscriber, topic);
+      sb.subscribe(subscriber, topic);
       storage.notifyBroadcaster();
       slf4jLogger.info("Topic " + topic.getUniqueId() + " was successfully submitted in API. ");
       return topic.getUniqueId();
