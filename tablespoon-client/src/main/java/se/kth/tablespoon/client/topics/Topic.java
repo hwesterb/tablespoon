@@ -188,5 +188,30 @@ public abstract class Topic {
       logger.debug("Not a good time to start the fetcher for " + getUniqueId());
     }
   }
-  
+
+  public String toString(){
+    StringBuilder sb = new StringBuilder();
+    if(collectIndex <= 20){
+      sb.append("CPU ");
+    }
+    else if(collectIndex <= 49 || collectIndex == 68){
+      sb.append("MEM ");
+    }
+    else if(collectIndex <= 58){
+      sb.append("NET ");
+    }
+    else if(collectIndex <= 67){
+      sb.append("DSK ");
+    }
+    if(high != null){
+      sb.append(high.comparator.symbol + " " + high.percentage + "%");
+      if(low != null){
+        sb.append(low.comparator.symbol + " " + low.comparator + "%");
+      }
+    }
+    else{
+      sb.append("no thresholds");
+    }
+    return sb.toString();
+  }
 }
