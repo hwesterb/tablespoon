@@ -90,6 +90,7 @@ public class Agent {
       }
     }
     sentEvents += batch.size();
+    slf4jLogger.info("Sent batch of " + batch.size() + " events, a total of " + sentEvents + " events has been sent.");
   }
   
   private void connect() throws IOException, UnsupportedJVMException {
